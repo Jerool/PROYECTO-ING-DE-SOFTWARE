@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="PROYECTO ING DE SOFTWARE/PROYECTO ING DE SOFTWARE.csproj" Id="4312ec5d-0c95-4837-96db-871e3ec4bd68" />
+  <Project Path="BE/BE.csproj" Id="0d838138-d123-4171-bca0-31731f79ccf0" />
+  <Project Path="BLL/BLL.csproj" Id="51387f40-c979-4dd9-b502-9b33a3969b9f" />
+  <Project Path="DAL/DAL.csproj" Id="74c66ea0-3ca0-4293-8f82-bb3b9af764c8" />
+  <Project Path="PROYECTO ING DE SOFTWARE/UI.csproj" Id="4312ec5d-0c95-4837-96db-871e3ec4bd68" />
+  <Project Path="Servicios/Servicios.csproj" Id="662e6a38-a516-4610-ae55-4a12fc4f0fcb" />
 </Solution>
