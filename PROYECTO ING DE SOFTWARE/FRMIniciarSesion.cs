@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
-    public partial class Form1 : Form
+    public partial class FRMIniciarSesion : Form
     {
-        public Form1()
+        public FRMIniciarSesion()
         {
             InitializeComponent();
         }

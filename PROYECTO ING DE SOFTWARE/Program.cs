@@ -16,7 +16,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FRMIniciarSesion());
         }
     }
 }
