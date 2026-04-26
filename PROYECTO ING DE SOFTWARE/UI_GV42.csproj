@@ -52,21 +52,28 @@
     <Compile Include="FRMIniciarSesion.Designer.cs">
       <DependentUpon>FRMIniciarSesion.cs</DependentUpon>
     </Compile>
-    <Compile Include="FRMMenuPrincipal.cs">
+    <Compile Include="FRMMenuPrincipalAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FRMMenuPrincipal.Designer.cs">
-      <DependentUpon>FRMMenuPrincipal.cs</DependentUpon>
+    <Compile Include="FRMMenuPrincipalAdmin.Designer.cs">
+      <DependentUpon>FRMMenuPrincipalAdmin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gestion_UsuarioDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Gestion_UsuarioDataSet.xsd</DependentUpon>
+    <Compile Include="FRMMenuPrincipalUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FRMMenuPrincipalUsuario.Designer.cs">
+      <DependentUpon>FRMMenuPrincipalUsuario.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FRMIniciarSesion.resx">
       <DependentUpon>FRMIniciarSesion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FRMMenuPrincipalAdmin.resx">
+      <DependentUpon>FRMMenuPrincipalAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FRMMenuPrincipalUsuario.resx">
+      <DependentUpon>FRMMenuPrincipalUsuario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -77,17 +84,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Gestion_UsuarioDataSet.xsc">
-      <DependentUpon>Gestion_UsuarioDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Gestion_UsuarioDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Gestion_UsuarioDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Gestion_UsuarioDataSet.xss">
-      <DependentUpon>Gestion_UsuarioDataSet.xsd</DependentUpon>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -102,13 +98,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BE\BE.csproj">
+    <ProjectReference Include="..\BE\BE_GV42.csproj">
       <Project>{0d838138-d123-4171-bca0-31731f79ccf0}</Project>
-      <Name>BE</Name>
+      <Name>BE_GV42</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BLL\BLL.csproj">
+    <ProjectReference Include="..\BLL\BLL_GV42.csproj">
       <Project>{51387f40-c979-4dd9-b502-9b33a3969b9f}</Project>
-      <Name>BLL</Name>
+      <Name>BLL_GV42</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Servicios\Servicios_GV42.csproj">
+      <Project>{662e6a38-a516-4610-ae55-4a12fc4f0fcb}</Project>
+      <Name>Servicios_GV42</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

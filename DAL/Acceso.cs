@@ -11,18 +11,37 @@ namespace DAL
 {
     public class Acceso
     {
-        // 1. Instancia privada estática
         private static Acceso _instancia;
-        private SqlConnection _conexion;
+        protected SqlConnection conexion = null;
+        
 
-        // 2. Constructor privado para evitar instanciación externa
         private Acceso()
+        {
+            conexion = new SqlConnection();
+        }
+
+        public static Acceso Instancia
+        {
+            get
+            {
+                if (_instancia == null)
+                {
+                    _instancia = new Acceso();
+                }
+                return _instancia;
+            }
+        }
+
+        public void conectar()
         {
             try
             {
-                _conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
-                _conexion.Open();
-                Console.WriteLine("Conexión exitosa");
+                if (conexion.State == System.Data.ConnectionState.Closed)
+                {
+                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True";
+                    conexion.Open();
+                    Console.WriteLine("Conexión exitosa");
+                }
             }
             catch (SqlException ex)
             {
@@ -30,60 +49,144 @@ namespace DAL
             }
         }
 
-        // 3. Propiedad pública para obtener la instancia única
-        public static Acceso ObtenerInstancia()
+        public void desconectar()
         {
-            if (_instancia == null)
+            try
             {
-                _instancia = new Acceso();
-            }
-            return _instancia;
-        }
-
-        // Método para ejecutar comandos de lectura (SELECT)
-        public DataTable Leer(string consulta, SqlParameter[] parametros = null)
-        {
-            DataTable tabla = new DataTable();
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-            {
-                if (parametros != null) comando.Parameters.AddRange(parametros);
-
-                SqlDataAdapter adaptador = new SqlDataAdapter(comando);
-                try
+                if (conexion.State == System.Data.ConnectionState.Open)
                 {
-                    adaptador.Fill(tabla);
-                }
-                catch (SqlException ex)
-                {
-                    throw new Exception("Error en la lectura de datos: " + ex.Message);
+                    conexion.Close();
+                    Console.WriteLine("Desconexión exitosa.");
                 }
             }
-            return tabla;
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error al desconectar: " + ex.Message);
+            }
         }
 
-        // Método para ejecutar comandos de escritura (INSERT, UPDATE, DELETE)
-        public int Escribir(string consulta, SqlParameter[] parametros = null)
+        public SqlTransaction IniciarTransaccion()
         {
+            conectar();
+            return conexion.BeginTransaction();
+        }
+
+        public void ConfirmarTransaccion(SqlTransaction tx)
+        {
+            try
+            {
+                if (tx != null)
+                {
+                    tx.Commit();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error al confirmar la transacción: " + ex.Message);
+            }
+            finally
+            {
+                desconectar();
+            }
+        }
+
+        public void CancelarTransaccion(SqlTransaction tx)
+        {
+            try
+            {
+                if (tx != null)
+                {
+                    tx.Rollback();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error al cancelar la transacción: " + ex.Message);
+            }
+        }
+
+        public int escribir(string query, SqlParameter[] parametro)
+        {
+            SqlTransaction tx = null;
             int filasAfectadas = 0;
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+            SqlCommand comando = new SqlCommand();
+            try
             {
-                if (parametros != null) comando.Parameters.AddRange(parametros);
-
-                try
+                comando.Parameters.Clear();
+                tx = IniciarTransaccion();
+                comando.Connection = tx.Connection; // Asignar la conexión de la transacción al comando
+                comando.Transaction = tx; // Asignar la transacción al comando
+                comando.CommandText = query;
+                if (parametro != null)
                 {
-                    _conexion.Open();
-                    filasAfectadas = comando.ExecuteNonQuery();
+                    comando.Parameters.AddRange(parametro);
                 }
-                catch (SqlException ex)
-                {
-                    throw new Exception("Error en la escritura de datos: " + ex.Message);
-                }
-                finally
-                {
-                    _conexion.Close();
-                }
+                filasAfectadas = comando.ExecuteNonQuery();
+                ConfirmarTransaccion(tx);
+                return filasAfectadas;
             }
-            return filasAfectadas;
+            catch (Exception ex)
+            {
+                CancelarTransaccion(tx);
+                Console.WriteLine("error", ex.Message);
+                return 0;
+            }
+        }
+
+        public DataTable leer(string query, SqlParameter[] parametro)
+        {
+            SqlCommand comando = new SqlCommand();
+            DataTable dt = new DataTable();
+            SqlDataAdapter adaptador = new SqlDataAdapter();
+            try
+            {
+                conectar();
+                comando.Connection = conexion;
+                comando.CommandText = query;
+                if (parametro != null)
+                    comando.Parameters.AddRange(parametro);
+
+                adaptador.SelectCommand = comando;
+                adaptador.Fill(dt);
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error en Leer: " + ex.Message);
+            }
+            finally
+            {
+                desconectar();
+            }
+            return dt;
+        }
+
+        public object leerEscalar(string query, SqlParameter[] parametro)
+        {
+            SqlCommand comando = new SqlCommand();
+            object resultado = null;
+            try
+            {
+                conectar();
+                comando.Connection = conexion;
+                comando.CommandText = query;
+
+                if (parametro != null)
+                {
+                    comando.Parameters.Clear();
+                    comando.Parameters.AddRange(parametro);
+                }
+                resultado = comando.ExecuteScalar();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error al ejecutar ExecuteScalar: " + ex.Message);
+            }
+            finally
+            {
+                comando.Parameters.Clear();
+                desconectar();
+            }
+            return resultado;
         }
     }
 }

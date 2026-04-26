@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
-    public partial class FRMMenuPrincipal : Form
+    public partial class FRMMenuPrincipalAdmin : Form
     {
-        public FRMMenuPrincipal()
+        public FRMMenuPrincipalAdmin()
         {
             InitializeComponent();
         }
