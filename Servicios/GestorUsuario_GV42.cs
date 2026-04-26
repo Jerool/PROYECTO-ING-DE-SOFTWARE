@@ -48,12 +48,12 @@ namespace Servicios
 
         public void ActualizarIntentos(string login, int intentos, bool bloqueo)
         {
-            string query = "UPDATE Usuario SET Intentos = @Intentos, Bloqueo = @Bloqueo WHERE Login = @Login";
+            string query = "UPDATE Usuario SET Intentos = @Intentos, Bloqueo = @Bloqueo WHERE UserName = @UserName";
 
             SqlParameter[] parametros = {
                 new SqlParameter("@Intentos", intentos),
                 new SqlParameter("@Bloqueo",  bloqueo),
-                new SqlParameter("@Login",    login)
+                new SqlParameter("@UserName",    login)
             };
 
             _acceso.escribir(query, parametros);
@@ -61,10 +61,10 @@ namespace Servicios
 
         public void ResetearIntentos(string login)
         {
-            string query = "UPDATE Usuario SET Intentos = 0 WHERE Login = @Login";
+            string query = "UPDATE Usuario SET Intentos = 0 WHERE UserName = @UserName";
 
             SqlParameter[] parametros = {
-                new SqlParameter("@Login", login)
+                new SqlParameter("@UserName", login)
             };
 
             _acceso.escribir(query, parametros);

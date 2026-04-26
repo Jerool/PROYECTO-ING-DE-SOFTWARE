@@ -63,14 +63,14 @@ namespace Servicios
             set { _Email = value; }
         }
 
-        private bool _Bloqueo = false;
+        private bool _Bloqueo;
         public bool Bloqueo
         {
             get { return _Bloqueo; }
             set { _Bloqueo = value; }
         }
 
-        private bool _Activo = true;
+        private bool _Activo;
 
         public bool Activo
         {
@@ -78,7 +78,7 @@ namespace Servicios
             set { _Activo  = value; }
         }
 
-        private int _Intentos = 0;
+        private int _Intentos;
         public int Intentos
         {
             get { return _Intentos; }
