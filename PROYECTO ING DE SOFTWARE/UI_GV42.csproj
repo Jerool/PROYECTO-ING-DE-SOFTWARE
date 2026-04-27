@@ -64,8 +64,17 @@
     <Compile Include="FRMMenuPrincipalUsuario.Designer.cs">
       <DependentUpon>FRMMenuPrincipalUsuario.cs</DependentUpon>
     </Compile>
+    <Compile Include="FRMGestionUsuariosAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FRMGestionUsuariosAdmin.Designer.cs">
+      <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FRMGestionUsuariosAdmin.resx">
+      <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FRMIniciarSesion.resx">
       <DependentUpon>FRMIniciarSesion.cs</DependentUpon>
     </EmbeddedResource>

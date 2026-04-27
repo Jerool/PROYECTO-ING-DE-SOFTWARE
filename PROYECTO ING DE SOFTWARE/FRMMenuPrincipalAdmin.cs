@@ -12,9 +12,39 @@ namespace PROYECTO_ING_DE_SOFTWARE
 {
     public partial class FRMMenuPrincipalAdmin : Form
     {
+        public Form formularioactual = null;
         public FRMMenuPrincipalAdmin()
         {
             InitializeComponent();
+        }
+
+        public void AbrirFormularioHijo(Form f)
+        {
+            if (formularioactual == null)
+            {
+                f.MdiParent = this;
+                f.Show();
+                f.Enabled = true;
+                formularioactual = f;
+                f.Dock = DockStyle.Fill;
+            }
+            else if (formularioactual.GetType() == f.GetType())
+            {
+                formularioactual.Close();
+                formularioactual = null;
+            }
+            else
+            {
+                formularioactual.Close();
+                formularioactual = null;
+                AbrirFormularioHijo(f);
+            }
+        }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FRMGestionUsuariosAdmin frm = new FRMGestionUsuariosAdmin();
+            AbrirFormularioHijo(frm);
         }
     }
 }
