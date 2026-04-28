@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditoria_GV42.cs" />
     <Compile Include="Encriptador_GV42.cs" />
     <Compile Include="Entidades_VG42.cs" />
     <Compile Include="GestorBitacora_GV42.cs" />
