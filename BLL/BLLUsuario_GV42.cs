@@ -176,5 +176,11 @@ namespace BLL
             Auditoria_GV42.Instancia.RegistrarEvento(login, "Contraseña", "Contraseña cambiada exitosamente", "Baja");
             return ResultadoCambioContrasena.Exitoso;
         }
+
+        public static void CerrarSesión()
+        {
+            SessionManager_GV42.Instancia.CerrarSesion();
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Usuario", "Logout realizado", "Alta");
+        }
     }
 }

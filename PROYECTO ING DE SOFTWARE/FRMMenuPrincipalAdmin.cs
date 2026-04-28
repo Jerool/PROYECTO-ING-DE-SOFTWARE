@@ -1,4 +1,5 @@
-﻿using Servicios;
+﻿using BLL;
+using Servicios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,7 +62,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                SessionManager_GV42.Instancia.CerrarSesion();
+                BLLUsuario_GV42.CerrarSesión();  
                 FRMIniciarSesion frm = new FRMIniciarSesion();
                 frm.Show();
                 this.Close();
