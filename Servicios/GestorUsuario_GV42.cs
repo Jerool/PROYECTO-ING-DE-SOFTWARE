@@ -98,12 +98,16 @@ namespace Servicios
             return MapearLista(_acceso.leer(query, null));
         }
 
-        public void Desbloquear(string dni)
+        public void Desbloquear(string dni, string contrasenaCifrada)
         {
-            string query = "UPDATE Usuario SET Bloqueo = 0, Intentos = 0 WHERE DNI = @DNI";
-            SqlParameter[] p = { new SqlParameter("@DNI", dni) };
+            string query = "UPDATE Usuario SET Bloqueo = 0, Intentos = 0, Contrasena = @Contrasena WHERE DNI = @DNI";
+            SqlParameter[] p = {
+                new SqlParameter("@Contrasena", contrasenaCifrada),
+                new SqlParameter("@DNI", dni)
+            };
             _acceso.escribir(query, p);
         }
+
 
         public void ActivarDesactivar(string dni, bool activo)
         {

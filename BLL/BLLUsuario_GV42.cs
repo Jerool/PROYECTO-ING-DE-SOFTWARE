@@ -84,11 +84,24 @@ namespace BLL
 
         public List<Usuario> ListarTodos() => _gestorUsuario.ListarTodos();
 
-        public void Desbloquear(string dni)
+        public void Desbloquear(string dni, string login)
         {
-            _gestorUsuario.Desbloquear(dni);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Desbloqueado", "Media");
+            // Usar el login para buscar el usuario (ya está implementado)
+            Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
+
+            // Regenerar la contraseña: nombre + últimos 3 del DNI
+            string ultimos3 = dni.Length >= 3 ? dni.Substring(dni.Length - 3) : dni;
+            string contrasenaPlana = usuario.Nombre.ToLower() + ultimos3;
+            string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
+
+            // Desbloquear y resetear contraseña
+            _gestorUsuario.Desbloquear(dni, contrasenaCifrada);
+
+            Bitacora_GV42.Instancia.RegistrarEvento(
+                SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
+                "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
+
         public void ActivarDesactivar(string dni, bool activo)
         {
             _gestorUsuario.ActivarDesactivar(dni, activo);

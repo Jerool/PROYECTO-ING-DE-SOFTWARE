@@ -143,7 +143,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void Desbloquear()
         {
-            _bll.Desbloquear(_usuarioSeleccionado.DNI);
+            _bll.Desbloquear(_usuarioSeleccionado.DNI, _usuarioSeleccionado.Login);
             MessageBox.Show($"Usuario {_usuarioSeleccionado.Login} desbloqueado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ModoConsulta();
             CargarGrilla(rbActivos.Checked);
