@@ -179,8 +179,8 @@ namespace BLL
 
         public static void CerrarSesión()
         {
-            SessionManager_GV42.Instancia.CerrarSesion();
             Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Usuario", "Logout realizado", "Alta");
+            SessionManager_GV42.Instancia.CerrarSesion();
         }
     }
 }

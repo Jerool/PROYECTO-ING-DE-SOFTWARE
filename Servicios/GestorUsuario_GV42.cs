@@ -73,7 +73,7 @@ namespace Servicios
         public void AgregarUsuario(Usuario usuario)
         {
             string query = "INSERT INTO Usuario (DNI, Apellido, Nombre, UserName, Contrasena, Rol, Email, Bloqueo, Activo, Intentos) " +
-                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @Rol, @Email, 1, 0, 0)";
+                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @Rol, @Email, 0, 1, 0)";
             SqlParameter[] p = {
                 new SqlParameter("@DNI",   usuario.DNI),
                 new SqlParameter("@Ape",   usuario.Apellido),
