@@ -30,7 +30,8 @@ namespace BLL
 
         public ResultadoLogin IntentarLogin(string login, string contrasena)
         {
-            if (SessionManager_GV42.HaySesionActiva())
+           
+            if (SessionManager_GV42.Instancia.HaySesionActiva())
             {
                 Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
                 return ResultadoLogin.SesionActiva;
@@ -74,7 +75,7 @@ namespace BLL
             }
 
             _gestorUsuario.ResetearIntentos(login);
-            SessionManager_GV42.IniciarSesion(usuario);
+            SessionManager_GV42.Instancia.IniciarSesion(usuario);
             Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
             return ResultadoLogin.Exitoso;
         }
@@ -86,17 +87,17 @@ namespace BLL
         public void Desbloquear(string dni)
         {
             _gestorUsuario.Desbloquear(dni);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Desbloqueado", "Media");
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Desbloqueado", "Media");
         }
         public void ActivarDesactivar(string dni, bool activo)
         {
             _gestorUsuario.ActivarDesactivar(dni, activo);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
         }
         public void ModificarEmail(string dni, string email)
         {
             _gestorUsuario.ModificarEmail(dni, email);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
         }
 
         public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
@@ -122,7 +123,7 @@ namespace BLL
             };
 
             _gestorUsuario.AgregarUsuario(u);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
         }
 
         

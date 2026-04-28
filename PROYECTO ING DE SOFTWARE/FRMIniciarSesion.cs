@@ -29,7 +29,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             string login = txtLogIn.Text.Trim();
             string contrasena = txtContrasena.Text.Trim();
-
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(contrasena))
             {
                 MessageBox.Show("Completá todos los campos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -64,7 +63,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void AbrirFormularioSegunRol()
         {
-            string rol = SessionManager_GV42.ObtenerUsuarioActual().Rol;
+            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().Rol;
 
             Form formulario;
 

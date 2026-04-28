@@ -8,30 +8,40 @@ namespace Servicios
 {
     public class SessionManager_GV42
     {
-        private static Usuario _usuarioActual = null;
+        private static SessionManager_GV42 _instancia;
 
-        // Verificar si hay una sesión activa
-        public static bool HaySesionActiva()
+        private SessionManager_GV42() { } 
+
+        public static SessionManager_GV42 Instancia
+        {
+            get
+            {
+                if (_instancia == null)
+                _instancia = new SessionManager_GV42();
+                return _instancia;
+            }
+        }
+
+        private Usuario _usuarioActual = null;
+
+        public bool HaySesionActiva()
         {
             return _usuarioActual != null;
         }
 
-        // Iniciar sesión (guardar usuario)
-        public static void IniciarSesion(Usuario usuario)
+        public void IniciarSesion(Usuario usuario)
         {
             _usuarioActual = usuario;
         }
 
-        // Cerrar sesión
-        public static void CerrarSesion()
+        public void CerrarSesion()
         {
             _usuarioActual = null;
         }
 
-        // Obtener el usuario actual
-        public static Usuario ObtenerUsuarioActual()
+        public Usuario ObtenerUsuarioActual()
         {
             return _usuarioActual;
-        } 
+        }
     }
 }
