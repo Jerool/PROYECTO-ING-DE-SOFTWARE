@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Servicios;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -44,6 +45,33 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FRMGestionUsuariosAdmin frm = new FRMGestionUsuariosAdmin();
+            AbrirFormularioHijo(frm);
+        }
+
+        private void reLoginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FRMIniciarSesion frm = new FRMIniciarSesion();
+            //frm.Show();
+            //this.Close();
+            AbrirFormularioHijo(frm);
+        }
+
+        private void logOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                SessionManager_GV42.Instancia.CerrarSesion();
+                FRMIniciarSesion frm = new FRMIniciarSesion();
+                frm.Show();
+                this.Close();
+            }
+            else { return;}
+        }
+
+        private void cambiarClaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FRMCambiarContrasenia frm = new FRMCambiarContrasenia();
             AbrirFormularioHijo(frm);
         }
     }

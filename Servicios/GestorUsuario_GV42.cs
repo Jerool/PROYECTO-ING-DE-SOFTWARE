@@ -150,5 +150,13 @@ namespace Servicios
             }
             return lista;
         }
+
+        public void CambiarContrasena(string login, string contrasenaCifrada)
+        {
+            string query = "UPDATE Usuario SET Contrasena = @Contrasena WHERE UserName = @Login";
+        SqlParameter[] p = { new SqlParameter("@Contrasena", contrasenaCifrada), new SqlParameter("@Login", login)
+    };
+            _acceso.escribir(query, p);
+        }
     }
 }

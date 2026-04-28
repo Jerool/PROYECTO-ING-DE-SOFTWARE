@@ -62,14 +62,14 @@
             // usuariosToolStripMenuItem
             // 
             this.usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.usuariosToolStripMenuItem.Text = "Usuarios";
             this.usuariosToolStripMenuItem.Click += new System.EventHandler(this.usuariosToolStripMenuItem_Click);
             // 
             // bitacoraToolStripMenuItem
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             // 
             // usuarioToolStripMenuItem
@@ -85,20 +85,23 @@
             // reLoginToolStripMenuItem
             // 
             this.reLoginToolStripMenuItem.Name = "reLoginToolStripMenuItem";
-            this.reLoginToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.reLoginToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reLoginToolStripMenuItem.Text = "Re_Login";
+            this.reLoginToolStripMenuItem.Click += new System.EventHandler(this.reLoginToolStripMenuItem_Click);
             // 
             // cambiarClaveToolStripMenuItem
             // 
             this.cambiarClaveToolStripMenuItem.Name = "cambiarClaveToolStripMenuItem";
-            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cambiarClaveToolStripMenuItem.Text = "Cambiar Clave";
+            this.cambiarClaveToolStripMenuItem.Click += new System.EventHandler(this.cambiarClaveToolStripMenuItem_Click);
             // 
             // logOutToolStripMenuItem
             // 
             this.logOutToolStripMenuItem.Name = "logOutToolStripMenuItem";
-            this.logOutToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.logOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logOutToolStripMenuItem.Text = "LogOut";
+            this.logOutToolStripMenuItem.Click += new System.EventHandler(this.logOutToolStripMenuItem_Click);
             // 
             // FRMMenuPrincipalAdmin
             // 

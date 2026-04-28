@@ -52,6 +52,12 @@
     <Compile Include="FRMBitacoraDeEventos.Designer.cs">
       <DependentUpon>FRMBitacoraDeEventos.cs</DependentUpon>
     </Compile>
+    <Compile Include="FRMCambiarContrasenia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FRMCambiarContrasenia.Designer.cs">
+      <DependentUpon>FRMCambiarContrasenia.cs</DependentUpon>
+    </Compile>
     <Compile Include="FRMIniciarSesion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FRMBitacoraDeEventos.resx">
       <DependentUpon>FRMBitacoraDeEventos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FRMCambiarContrasenia.resx">
+      <DependentUpon>FRMCambiarContrasenia.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FRMGestionUsuariosAdmin.resx">
       <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>

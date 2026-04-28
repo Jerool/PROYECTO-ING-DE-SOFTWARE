@@ -33,26 +33,26 @@ namespace BLL
            
             if (SessionManager_GV42.Instancia.HaySesionActiva())
             {
-                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
+                Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
                 return ResultadoLogin.SesionActiva;
             }
 
             Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
             if (usuario == null)
             {
-                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
+                Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
                 return ResultadoLogin.UsuarioInexistente;
             }
 
             if (usuario.Bloqueo)
             {
-                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
+                Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
                 return ResultadoLogin.UsuarioBloqueado;
             }
 
             if (!usuario.Activo)
             {
-                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inactivo", "Alta");
+                Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inactivo", "Alta");
                 return ResultadoLogin.UsuarioInactivo;
             }
 
@@ -63,20 +63,26 @@ namespace BLL
                 if (usuario.Intentos >= 3)
                 {
                     _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: true);
-                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
+                    Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
                     return ResultadoLogin.BloqueadoPorIntentos;
                 }
                 else
                 {
                     _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: false);
-                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {usuario.Intentos}/3", "Media");
+                    Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {usuario.Intentos}/3", "Media");
                     return ResultadoLogin.ContrasenaIncorrecta;
                 }
             }
 
             _gestorUsuario.ResetearIntentos(login);
-            SessionManager_GV42.Instancia.IniciarSesion(usuario);
-            BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
+
+            bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
+            if (!sesionIniciada)
+            {
+                Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Alta");
+                return ResultadoLogin.SesionActiva;
+            }
+            Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
             return ResultadoLogin.Exitoso;
         }
 
@@ -97,7 +103,7 @@ namespace BLL
             // Desbloquear y resetear contraseña
             _gestorUsuario.Desbloquear(dni, contrasenaCifrada);
 
-            BLLBitacora_GV42.Instancia.RegistrarEvento(
+            Auditoria_GV42.Instancia.RegistrarEvento(
                 SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
                 "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
@@ -105,12 +111,12 @@ namespace BLL
         public void ActivarDesactivar(string dni, bool activo)
         {
             _gestorUsuario.ActivarDesactivar(dni, activo);
-            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
         }
         public void ModificarEmail(string dni, string email)
         {
             _gestorUsuario.ModificarEmail(dni, email);
-            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
         }
 
         public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
@@ -136,9 +142,39 @@ namespace BLL
             };
 
             _gestorUsuario.AgregarUsuario(u);
-            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
         }
 
-        
+        public enum ResultadoCambioContrasena
+        {
+            Exitoso,
+            ContrasenaActualIncorrecta,
+            ContrasenasNoCoinciden,
+            UsuarioInexistente
+        }
+
+        public ResultadoCambioContrasena CambiarContrasena(string login, string contrasenaActual, string nuevaContrasena, string confirmarContrasena)
+        {
+            // 1. Verificar que las nuevas contraseñas coincidan
+            if (nuevaContrasena != confirmarContrasena)
+                return ResultadoCambioContrasena.ContrasenasNoCoinciden;
+
+            // 2. Buscar el usuario
+            Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
+            if (usuario == null)
+                return ResultadoCambioContrasena.UsuarioInexistente;
+
+            // 3. Verificar que la contraseña actual sea correcta
+            string contrasenaActualCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaActual);
+            if (usuario.Contrasena != contrasenaActualCifrada)
+                return ResultadoCambioContrasena.ContrasenaActualIncorrecta;
+
+            // 4. Cifrar y guardar la nueva contraseña
+            string nuevaContrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(nuevaContrasena);
+            _gestorUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
+
+            Auditoria_GV42.Instancia.RegistrarEvento(login, "Contraseña", "Contraseña cambiada exitosamente", "Baja");
+            return ResultadoCambioContrasena.Exitoso;
+        }
     }
 }
