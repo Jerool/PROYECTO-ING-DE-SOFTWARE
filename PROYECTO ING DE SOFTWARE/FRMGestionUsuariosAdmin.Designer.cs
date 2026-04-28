@@ -294,9 +294,9 @@
             this.lblMensaje.AutoSize = true;
             this.lblMensaje.Location = new System.Drawing.Point(368, 324);
             this.lblMensaje.Name = "lblMensaje";
-            this.lblMensaje.Size = new System.Drawing.Size(35, 13);
+            this.lblMensaje.Size = new System.Drawing.Size(34, 13);
             this.lblMensaje.TabIndex = 30;
-            this.lblMensaje.Text = "label9";
+            this.lblMensaje.Text = "Modo";
             // 
             // FRMGestionUsuariosAdmin
             // 

@@ -33,26 +33,26 @@ namespace BLL
            
             if (SessionManager_GV42.Instancia.HaySesionActiva())
             {
-                Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
                 return ResultadoLogin.SesionActiva;
             }
 
             Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
             if (usuario == null)
             {
-                Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
                 return ResultadoLogin.UsuarioInexistente;
             }
 
             if (usuario.Bloqueo)
             {
-                Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
                 return ResultadoLogin.UsuarioBloqueado;
             }
 
             if (!usuario.Activo)
             {
-                Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inactivo", "Alta");
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inactivo", "Alta");
                 return ResultadoLogin.UsuarioInactivo;
             }
 
@@ -63,20 +63,20 @@ namespace BLL
                 if (usuario.Intentos >= 3)
                 {
                     _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: true);
-                    Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
+                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
                     return ResultadoLogin.BloqueadoPorIntentos;
                 }
                 else
                 {
                     _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: false);
-                    Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {usuario.Intentos}/3", "Media");
+                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {usuario.Intentos}/3", "Media");
                     return ResultadoLogin.ContrasenaIncorrecta;
                 }
             }
 
             _gestorUsuario.ResetearIntentos(login);
             SessionManager_GV42.Instancia.IniciarSesion(usuario);
-            Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
+            BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
             return ResultadoLogin.Exitoso;
         }
 
@@ -97,7 +97,7 @@ namespace BLL
             // Desbloquear y resetear contraseña
             _gestorUsuario.Desbloquear(dni, contrasenaCifrada);
 
-            Bitacora_GV42.Instancia.RegistrarEvento(
+            BLLBitacora_GV42.Instancia.RegistrarEvento(
                 SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
                 "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
@@ -105,12 +105,12 @@ namespace BLL
         public void ActivarDesactivar(string dni, bool activo)
         {
             _gestorUsuario.ActivarDesactivar(dni, activo);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
         }
         public void ModificarEmail(string dni, string email)
         {
             _gestorUsuario.ModificarEmail(dni, email);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
         }
 
         public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
@@ -136,7 +136,7 @@ namespace BLL
             };
 
             _gestorUsuario.AgregarUsuario(u);
-            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
         }
 
         

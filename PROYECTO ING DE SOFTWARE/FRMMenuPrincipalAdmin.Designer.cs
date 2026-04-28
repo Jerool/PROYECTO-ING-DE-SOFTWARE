@@ -85,19 +85,19 @@
             // reLoginToolStripMenuItem
             // 
             this.reLoginToolStripMenuItem.Name = "reLoginToolStripMenuItem";
-            this.reLoginToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reLoginToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.reLoginToolStripMenuItem.Text = "Re_Login";
             // 
             // cambiarClaveToolStripMenuItem
             // 
             this.cambiarClaveToolStripMenuItem.Name = "cambiarClaveToolStripMenuItem";
-            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.cambiarClaveToolStripMenuItem.Text = "Cambiar Clave";
             // 
             // logOutToolStripMenuItem
             // 
             this.logOutToolStripMenuItem.Name = "logOutToolStripMenuItem";
-            this.logOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logOutToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.logOutToolStripMenuItem.Text = "LogOut";
             // 
             // FRMMenuPrincipalAdmin
