@@ -28,47 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvUsuarios = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.txtDni = new System.Windows.Forms.TextBox();
             this.txtApellido = new System.Windows.Forms.TextBox();
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtRol = new System.Windows.Forms.TextBox();
             this.txtUser = new System.Windows.Forms.TextBox();
-            this.txtBloqueado = new System.Windows.Forms.TextBox();
-            this.txtActivo = new System.Windows.Forms.TextBox();
             this.btnCrear = new System.Windows.Forms.Button();
             this.btnDesbloquear = new System.Windows.Forms.Button();
             this.btnModificar = new System.Windows.Forms.Button();
-            this.btnActivar = new System.Windows.Forms.Button();
+            this.btnActivarDesactivar = new System.Windows.Forms.Button();
             this.btnAplicar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnSalir = new System.Windows.Forms.Button();
             this.rbActivos = new System.Windows.Forms.RadioButton();
             this.rbTodos = new System.Windows.Forms.RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtBloqueado = new System.Windows.Forms.TextBox();
+            this.txtActivo = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lblMensaje = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dgvUsuarios
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(66, 30);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(495, 150);
-            this.dataGridView1.TabIndex = 0;
+            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUsuarios.Location = new System.Drawing.Point(66, 30);
+            this.dgvUsuarios.Name = "dgvUsuarios";
+            this.dgvUsuarios.Size = new System.Drawing.Size(495, 150);
+            this.dgvUsuarios.TabIndex = 0;
+            this.dgvUsuarios.SelectionChanged += new System.EventHandler(this.dgvUsuarios_SelectionChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(63, 229);
+            this.label1.Location = new System.Drawing.Point(63, 226);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 1;
@@ -77,7 +79,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(63, 266);
+            this.label2.Location = new System.Drawing.Point(63, 259);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(44, 13);
             this.label2.TabIndex = 2;
@@ -86,7 +88,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(63, 298);
+            this.label3.Location = new System.Drawing.Point(63, 292);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 13);
             this.label3.TabIndex = 3;
@@ -95,7 +97,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(63, 331);
+            this.label4.Location = new System.Drawing.Point(63, 325);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(32, 13);
             this.label4.TabIndex = 4;
@@ -104,7 +106,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(63, 361);
+            this.label5.Location = new System.Drawing.Point(63, 358);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(23, 13);
             this.label5.TabIndex = 5;
@@ -113,29 +115,11 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(63, 393);
+            this.label6.Location = new System.Drawing.Point(63, 391);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(57, 13);
             this.label6.TabIndex = 6;
             this.label6.Text = "UserName";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(63, 422);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Bloqueado";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(63, 452);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(37, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "Activo";
             // 
             // txtDni
             // 
@@ -153,14 +137,14 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(132, 295);
+            this.txtNombre.Location = new System.Drawing.Point(132, 292);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(100, 20);
             this.txtNombre.TabIndex = 11;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(132, 324);
+            this.txtEmail.Location = new System.Drawing.Point(132, 325);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(100, 20);
             this.txtEmail.TabIndex = 12;
@@ -174,24 +158,10 @@
             // 
             // txtUser
             // 
-            this.txtUser.Location = new System.Drawing.Point(132, 390);
+            this.txtUser.Location = new System.Drawing.Point(132, 391);
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(100, 20);
             this.txtUser.TabIndex = 14;
-            // 
-            // txtBloqueado
-            // 
-            this.txtBloqueado.Location = new System.Drawing.Point(132, 419);
-            this.txtBloqueado.Name = "txtBloqueado";
-            this.txtBloqueado.Size = new System.Drawing.Size(100, 20);
-            this.txtBloqueado.TabIndex = 15;
-            // 
-            // txtActivo
-            // 
-            this.txtActivo.Location = new System.Drawing.Point(132, 449);
-            this.txtActivo.Name = "txtActivo";
-            this.txtActivo.Size = new System.Drawing.Size(100, 20);
-            this.txtActivo.TabIndex = 16;
             // 
             // btnCrear
             // 
@@ -201,6 +171,7 @@
             this.btnCrear.TabIndex = 17;
             this.btnCrear.Text = "Crear";
             this.btnCrear.UseVisualStyleBackColor = true;
+            this.btnCrear.Click += new System.EventHandler(this.btnCrear_Click);
             // 
             // btnDesbloquear
             // 
@@ -210,6 +181,7 @@
             this.btnDesbloquear.TabIndex = 18;
             this.btnDesbloquear.Text = "Desbloquear";
             this.btnDesbloquear.UseVisualStyleBackColor = true;
+            this.btnDesbloquear.Click += new System.EventHandler(this.btnDesbloquear_Click);
             // 
             // btnModificar
             // 
@@ -219,15 +191,17 @@
             this.btnModificar.TabIndex = 19;
             this.btnModificar.Text = "Modificar";
             this.btnModificar.UseVisualStyleBackColor = true;
+            this.btnModificar.Click += new System.EventHandler(this.btnModificar_Click);
             // 
-            // btnActivar
+            // btnActivarDesactivar
             // 
-            this.btnActivar.Location = new System.Drawing.Point(724, 205);
-            this.btnActivar.Name = "btnActivar";
-            this.btnActivar.Size = new System.Drawing.Size(110, 37);
-            this.btnActivar.TabIndex = 20;
-            this.btnActivar.Text = "Activar/Desactivar";
-            this.btnActivar.UseVisualStyleBackColor = true;
+            this.btnActivarDesactivar.Location = new System.Drawing.Point(724, 205);
+            this.btnActivarDesactivar.Name = "btnActivarDesactivar";
+            this.btnActivarDesactivar.Size = new System.Drawing.Size(110, 37);
+            this.btnActivarDesactivar.TabIndex = 20;
+            this.btnActivarDesactivar.Text = "Activar/Desactivar";
+            this.btnActivarDesactivar.UseVisualStyleBackColor = true;
+            this.btnActivarDesactivar.Click += new System.EventHandler(this.btnActivarDesactivar_Click);
             // 
             // btnAplicar
             // 
@@ -237,6 +211,7 @@
             this.btnAplicar.TabIndex = 21;
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = true;
+            this.btnAplicar.Click += new System.EventHandler(this.btnAplicar_Click);
             // 
             // btnCancelar
             // 
@@ -246,6 +221,7 @@
             this.btnCancelar.TabIndex = 22;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // btnSalir
             // 
@@ -255,6 +231,7 @@
             this.btnSalir.TabIndex = 23;
             this.btnSalir.Text = "Salir";
             this.btnSalir.UseVisualStyleBackColor = true;
+            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
             // 
             // rbActivos
             // 
@@ -266,6 +243,7 @@
             this.rbActivos.TabStop = true;
             this.rbActivos.Text = "Activos";
             this.rbActivos.UseVisualStyleBackColor = true;
+            this.rbActivos.CheckedChanged += new System.EventHandler(this.rbActivos_CheckedChanged);
             // 
             // rbTodos
             // 
@@ -277,41 +255,88 @@
             this.rbTodos.TabStop = true;
             this.rbTodos.Text = "Todos";
             this.rbTodos.UseVisualStyleBackColor = true;
+            this.rbTodos.CheckedChanged += new System.EventHandler(this.rbTodos_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(63, 424);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(58, 13);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "Bloqueado";
+            // 
+            // txtBloqueado
+            // 
+            this.txtBloqueado.Location = new System.Drawing.Point(132, 424);
+            this.txtBloqueado.Name = "txtBloqueado";
+            this.txtBloqueado.Size = new System.Drawing.Size(100, 20);
+            this.txtBloqueado.TabIndex = 27;
+            // 
+            // txtActivo
+            // 
+            this.txtActivo.Location = new System.Drawing.Point(132, 457);
+            this.txtActivo.Name = "txtActivo";
+            this.txtActivo.Size = new System.Drawing.Size(100, 20);
+            this.txtActivo.TabIndex = 28;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(63, 457);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(37, 13);
+            this.label8.TabIndex = 29;
+            this.label8.Text = "Activo";
+            // 
+            // lblMensaje
+            // 
+            this.lblMensaje.AutoSize = true;
+            this.lblMensaje.Location = new System.Drawing.Point(368, 324);
+            this.lblMensaje.Name = "lblMensaje";
+            this.lblMensaje.Size = new System.Drawing.Size(35, 13);
+            this.lblMensaje.TabIndex = 30;
+            this.lblMensaje.Text = "label9";
             // 
             // FRMGestionUsuariosAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(885, 493);
+            this.Controls.Add(this.lblMensaje);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.txtActivo);
+            this.Controls.Add(this.txtBloqueado);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.rbTodos);
             this.Controls.Add(this.rbActivos);
             this.Controls.Add(this.btnSalir);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnAplicar);
-            this.Controls.Add(this.btnActivar);
+            this.Controls.Add(this.btnActivarDesactivar);
             this.Controls.Add(this.btnModificar);
             this.Controls.Add(this.btnDesbloquear);
             this.Controls.Add(this.btnCrear);
-            this.Controls.Add(this.txtActivo);
-            this.Controls.Add(this.txtBloqueado);
             this.Controls.Add(this.txtUser);
             this.Controls.Add(this.txtRol);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.txtApellido);
             this.Controls.Add(this.txtDni);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dgvUsuarios);
             this.Name = "FRMGestionUsuariosAdmin";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GestionUsuariosAdmin";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,31 +344,32 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvUsuarios;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtDni;
         private System.Windows.Forms.TextBox txtApellido;
         private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.TextBox txtRol;
         private System.Windows.Forms.TextBox txtUser;
-        private System.Windows.Forms.TextBox txtBloqueado;
-        private System.Windows.Forms.TextBox txtActivo;
         private System.Windows.Forms.Button btnCrear;
         private System.Windows.Forms.Button btnDesbloquear;
         private System.Windows.Forms.Button btnModificar;
-        private System.Windows.Forms.Button btnActivar;
+        private System.Windows.Forms.Button btnActivarDesactivar;
         private System.Windows.Forms.Button btnAplicar;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnSalir;
         private System.Windows.Forms.RadioButton rbActivos;
         private System.Windows.Forms.RadioButton rbTodos;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtBloqueado;
+        private System.Windows.Forms.TextBox txtActivo;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblMensaje;
     }
 }

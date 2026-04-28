@@ -20,6 +20,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             InitializeComponent();
             _bllUsuario = new BLLUsuario_GV42();
+
+            string hash = Encriptador_GV42.Instancia.EncriptarContrasena("lautaro212");
+            Console.WriteLine (hash);
         }
         
         private void btnIngresar_Click(object sender, EventArgs e)

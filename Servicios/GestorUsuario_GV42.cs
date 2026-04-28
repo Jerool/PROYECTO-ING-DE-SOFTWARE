@@ -22,7 +22,7 @@ namespace Servicios
         {
             string query = "SELECT DNI, Apellido, Nombre, UserName, Contrasena, Rol, Email, Bloqueo, Activo, Intentos FROM Usuario WHERE UserName = @UserName";
 
-            SqlParameter[] parametros = {new SqlParameter("@UserName", login)};
+            SqlParameter[] parametros = { new SqlParameter("@UserName", login) };
 
             DataTable dt = _acceso.leer(query, parametros);
 
@@ -68,6 +68,83 @@ namespace Servicios
             };
 
             _acceso.escribir(query, parametros);
+        }
+
+        public void AgregarUsuario(Usuario usuario)
+        {
+            string query = "INSERT INTO Usuario (DNI, Apellido, Nombre, UserName, Contrasena, Rol, Email, Bloqueo, Activo, Intentos) " +
+                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @Rol, @Email, 1, 0, 0)";
+            SqlParameter[] p = {
+                new SqlParameter("@DNI",   usuario.DNI),
+                new SqlParameter("@Ape",   usuario.Apellido),
+                new SqlParameter("@Nom",   usuario.Nombre),
+                new SqlParameter("@Login", usuario.Login),
+                new SqlParameter("@Clave", usuario.Contrasena),
+                new SqlParameter("@Rol",   usuario.Rol),
+                new SqlParameter("@Email", usuario.Email)
+            };
+            _acceso.escribir(query, p);
+        }
+
+        public List<Usuario> ListarActivos()
+        {
+            string query = "SELECT DNI, Apellido, Nombre, UserName, Contrasena, Rol, Email, Bloqueo, Activo, Intentos FROM Usuario WHERE Activo = 1";
+            return MapearLista(_acceso.leer(query, null));
+        }
+
+        public List<Usuario> ListarTodos()
+        {
+            string query = "SELECT DNI, Apellido, Nombre, UserName, Contrasena, Rol, Email, Bloqueo, Activo, Intentos FROM Usuario";
+            return MapearLista(_acceso.leer(query, null));
+        }
+
+        public void Desbloquear(string dni)
+        {
+            string query = "UPDATE Usuario SET Bloqueado = 0, Intentos = 0 WHERE DNI = @DNI";
+            SqlParameter[] p = { new SqlParameter("@DNI", dni) };
+            _acceso.escribir(query, p);
+        }
+
+        public void ActivarDesactivar(string dni, bool activo)
+        {
+            string query = "UPDATE Usuario SET Activo = @Activo WHERE DNI = @DNI";
+            SqlParameter[] p = {
+                new SqlParameter("@Activo", activo),
+                new SqlParameter("@DNI",    dni)
+            };
+            _acceso.escribir(query, p);
+        }
+
+        public void ModificarEmail(string dni, string email)
+        {
+            string query = "UPDATE Usuario SET Email = @Email WHERE DNI = @DNI";
+            SqlParameter[] p = {
+                new SqlParameter("@Email", email),
+                new SqlParameter("@DNI",   dni)
+            };
+            _acceso.escribir(query, p);
+        }
+
+        private List<Usuario> MapearLista(DataTable dt)
+        {
+            List<Usuario> lista = new List<Usuario>();
+            foreach (DataRow row in dt.Rows)
+            {
+                lista.Add(new Usuario
+                {
+                    DNI = row["DNI"].ToString(),
+                    Apellido = row["Apellido"].ToString(),
+                    Nombre = row["Nombre"].ToString(),
+                    Login = row["UserName"].ToString(),
+                    Contrasena = row["Contrasena"].ToString(),
+                    Rol = row["Rol"].ToString(),
+                    Email = row["Email"].ToString(),
+                    Bloqueo = Convert.ToBoolean(row["Bloqueo"]),
+                    Activo = Convert.ToBoolean(row["Activo"]),
+                    Intentos = Convert.ToInt32(row["Intentos"])
+                });
+            }
+            return lista;
         }
     }
 }

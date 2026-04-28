@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Servicios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Servicios;
 
 namespace BLL
 {
@@ -77,5 +78,53 @@ namespace BLL
             Bitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
             return ResultadoLogin.Exitoso;
         }
+
+        public List<Usuario> ListarActivos() => _gestorUsuario.ListarActivos();
+
+        public List<Usuario> ListarTodos() => _gestorUsuario.ListarTodos();
+
+        public void Desbloquear(string dni)
+        {
+            _gestorUsuario.Desbloquear(dni);
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Desbloqueado", "Media");
+        }
+        public void ActivarDesactivar(string dni, bool activo)
+        {
+            _gestorUsuario.ActivarDesactivar(dni, activo);
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
+        }
+        public void ModificarEmail(string dni, string email)
+        {
+            _gestorUsuario.ModificarEmail(dni, email);
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
+        }
+
+        public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
+        {
+
+            // Contraseña automática: nombre + últimos 3 dígitos del DNI
+            string ultimos3 = dni.Length >= 3 ? dni.Substring(dni.Length - 3) : dni;
+            string contrasenaPlana = nombre.ToLower() + ultimos3;
+            string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
+
+            // Login automático: primeras  nombre + ultimos3 
+            string login = nombre.ToLower() + ultimos3;
+
+            Usuario u = new Usuario
+            {
+                DNI = dni,
+                Apellido = apellido,
+                Nombre = nombre,
+                Login = login,
+                Contrasena = contrasenaCifrada,
+                Rol = rol,
+                Email = email
+            };
+
+            _gestorUsuario.AgregarUsuario(u);
+            Bitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
+        }
+
+        
     }
 }
