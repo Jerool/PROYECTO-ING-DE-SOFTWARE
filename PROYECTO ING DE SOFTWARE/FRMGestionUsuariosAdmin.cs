@@ -221,7 +221,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            SessionManager_GV42.Instancia.CerrarSesion();
             this.Close();
         }
 

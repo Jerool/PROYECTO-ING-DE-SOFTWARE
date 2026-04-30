@@ -111,7 +111,14 @@ namespace BLL
         public void ActivarDesactivar(string dni, bool activo)
         {
             _gestorUsuario.ActivarDesactivar(dni, activo);
-            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
+
+            string accion = activo ? "activado" : "desactivado"; // if (activo == true) accion = activado; else accion = desactivado
+
+            Auditoria_GV42.Instancia.RegistrarEvento(
+                SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
+                "Gestión Usuario",
+                $"Usuario {accion}",
+                "Media");
         }
         public void ModificarEmail(string dni, string email)
         {
