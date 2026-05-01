@@ -41,14 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditoria_GV42.cs" />
     <Compile Include="BLLBitacora_GV42.cs" />
     <Compile Include="BLLUsuario_GV42.cs" />
+    <Compile Include="GeneradorPdf_GV42.cs" />
+    <Compile Include="IntentosLogin_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_GV42.csproj">
       <Project>{0d838138-d123-4171-bca0-31731f79ccf0}</Project>
       <Name>BE_GV42</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL_GV42.csproj">
+      <Project>{74c66ea0-3ca0-4293-8f82-bb3b9af764c8}</Project>
+      <Name>DAL_GV42</Name>
     </ProjectReference>
     <ProjectReference Include="..\Servicios\Servicios_GV42.csproj">
       <Project>{662e6a38-a516-4610-ae55-4a12fc4f0fcb}</Project>

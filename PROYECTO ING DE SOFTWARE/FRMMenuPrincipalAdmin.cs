@@ -1,4 +1,4 @@
-﻿using BLL;
+using BLL;
 using Servicios;
 using System;
 using System.Collections.Generic;
@@ -12,68 +12,84 @@ using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
+
+
     public partial class FRMMenuPrincipalAdmin : Form
     {
-        public Form formularioactual = null;
+
+        private Form _formularioActual = null;
+
         public FRMMenuPrincipalAdmin()
         {
             InitializeComponent();
         }
 
+        private void FRMMenuPrincipalAdmin_Load(object sender, EventArgs e)
+        {
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            if (actual != null)
+                lblUsuarioActual.Text = $"Sesión: {actual.Nombre} {actual.Apellido} ({actual.Login}) — Rol: {actual.Rol}";
+        }
+
         public void AbrirFormularioHijo(Form f)
         {
-            if (formularioactual == null)
+            if (_formularioActual != null && _formularioActual.GetType() == f.GetType())
             {
-                f.MdiParent = this;
-                f.Show();
-                f.Enabled = true;
-                formularioactual = f;
-                f.Dock = DockStyle.Fill;
+                _formularioActual.Close();
+                _formularioActual = null;
+                return;
             }
-            else if (formularioactual.GetType() == f.GetType())
+
+            if (_formularioActual != null)
             {
-                formularioactual.Close();
-                formularioactual = null;
+                _formularioActual.Close();
+                _formularioActual = null;
             }
-            else
-            {
-                formularioactual.Close();
-                formularioactual = null;
-                AbrirFormularioHijo(f);
-            }
+
+            f.TopLevel = false;
+            f.FormBorderStyle = FormBorderStyle.None;
+            f.Dock = DockStyle.Fill;
+
+            pnlContenido.Controls.Clear();
+            pnlContenido.Controls.Add(f);
+            f.Show();
+            _formularioActual = f;
         }
 
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FRMGestionUsuariosAdmin frm = new FRMGestionUsuariosAdmin();
-            AbrirFormularioHijo(frm);
+            AbrirFormularioHijo(new FRMGestionUsuariosAdmin());
         }
 
         private void reLoginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FRMIniciarSesion frm = new FRMIniciarSesion();
-            //frm.Show();
-            //this.Close();
-            AbrirFormularioHijo(frm);
+            AbrirFormularioHijo(new FRMIniciarSesion());
         }
+
 
         private void logOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show(
+                "¿Está seguro que desea cerrar sesión?",
+                "Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (result == DialogResult.Yes)
             {
-                BLLUsuario_GV42.CerrarSesión();  
+                BLLUsuario_GV42.CerrarSesión();         
                 FRMIniciarSesion frm = new FRMIniciarSesion();
                 frm.Show();
                 this.Close();
             }
-            else { return;}
         }
 
         private void cambiarClaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FRMCambiarContrasenia frm = new FRMCambiarContrasenia();
-            AbrirFormularioHijo(frm);
+            AbrirFormularioHijo(new FRMCambiarContrasenia());
+        }
+
+        private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FRMBitacoraDeEventos());
         }
     }
 }

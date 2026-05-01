@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Servicios
 {
+
+    // Es un Singleton porque no necesitamos múltiples instancias y simplifica el acceso.
     public class Encriptador_GV42
     {
         private static Encriptador_GV42 _instancia;
@@ -22,17 +24,22 @@ namespace Servicios
                 return _instancia;
             }
         }
+
+        // Recibe una contraseña en texto plano y devuelve el hash en hexadecimal.
         public string EncriptarContrasena(string contrasenaPlana)
         {
             if (string.IsNullOrEmpty(contrasenaPlana))
                 throw new ArgumentException("La contraseña no puede estar vacía.");
 
+            // SHA256 se libera al final del using (es disposable).
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenaPlana));
+
+                // Pasamos los bytes a una representación hexadecimal (string de 64 chars).
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in bytes)
-                    sb.Append(b.ToString("x2"));
+                    sb.Append(b.ToString("x2"));   
                 return sb.ToString();
             }
         }

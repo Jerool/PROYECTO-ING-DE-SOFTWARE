@@ -1,4 +1,5 @@
-﻿using Servicios;
+using DAL;                              
+using Servicios;                        
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
+    
     public class BLLUsuario_GV42
     {
-        private readonly GestorUsuario_GV42 _gestorUsuario;
+        private readonly DALUsuario_GV42 _DALUsuario;
 
         public BLLUsuario_GV42()
         {
-            _gestorUsuario = new GestorUsuario_GV42();
+            _DALUsuario = new DALUsuario_GV42();
         }
 
         public enum ResultadoLogin
@@ -30,20 +32,22 @@ namespace BLL
 
         public ResultadoLogin IntentarLogin(string login, string contrasena)
         {
-           
+            
             if (SessionManager_GV42.Instancia.HaySesionActiva())
             {
                 Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Media");
                 return ResultadoLogin.SesionActiva;
             }
 
-            Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
+   
+            Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
             if (usuario == null)
             {
                 Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
                 return ResultadoLogin.UsuarioInexistente;
             }
 
+            
             if (usuario.Bloqueo)
             {
                 Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
@@ -59,23 +63,22 @@ namespace BLL
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasena);
             if (usuario.Contrasena != contrasenaCifrada)
             {
-                usuario.Intentos++;
-                if (usuario.Intentos >= 3)
+                int intentos = IntentosLogin_GV42.Instancia.RegistrarIntentoFallido(login);
+                if (intentos >= IntentosLogin_GV42.MAX_INTENTOS)
                 {
-                    _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: true);
+                    _DALUsuario.Bloquear(login);
+                    IntentosLogin_GV42.Instancia.Resetear(login);
                     Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
                     return ResultadoLogin.BloqueadoPorIntentos;
                 }
                 else
                 {
-                    _gestorUsuario.ActualizarIntentos(login, usuario.Intentos, bloqueo: false);
-                    Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {usuario.Intentos}/3", "Media");
+                    Auditoria_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {intentos}/{IntentosLogin_GV42.MAX_INTENTOS}", "Media");
                     return ResultadoLogin.ContrasenaIncorrecta;
                 }
             }
 
-            _gestorUsuario.ResetearIntentos(login);
-
+            IntentosLogin_GV42.Instancia.Resetear(login);
             bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
             if (!sesionIniciada)
             {
@@ -86,51 +89,58 @@ namespace BLL
             return ResultadoLogin.Exitoso;
         }
 
-        public List<Usuario> ListarActivos() => _gestorUsuario.ListarActivos();
 
-        public List<Usuario> ListarTodos() => _gestorUsuario.ListarTodos();
+        public List<Usuario_GV42> ListarActivos() => _DALUsuario.ListarActivos();
+        public List<Usuario_GV42> ListarTodos() => _DALUsuario.ListarTodos();
+        public List<string> ListarRoles() => _DALUsuario.Listar();
+        public Usuario_GV42 BuscarPorLogin(string login) => _DALUsuario.BuscarPorLogin(login);
+
+        public bool ExisteDNI(string dni) => _DALUsuario.ExisteDNI(dni);
 
         public void Desbloquear(string dni, string login)
         {
-            // Usar el login para buscar el usuario (ya está implementado)
-            Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
+            Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
 
-            // Regenerar la contraseña: nombre + últimos 3 del DNI
             string ultimos3 = dni.Length >= 3 ? dni.Substring(dni.Length - 3) : dni;
             string contrasenaPlana = usuario.Nombre.ToLower() + ultimos3;
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
-
-            // Desbloquear y resetear contraseña
-            _gestorUsuario.Desbloquear(dni, contrasenaCifrada);
-
+            _DALUsuario.Desbloquear(dni, contrasenaCifrada);
+            IntentosLogin_GV42.Instancia.Resetear(login);
             Auditoria_GV42.Instancia.RegistrarEvento(
-                SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
-                "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
+            SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,"Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
 
         public void ActivarDesactivar(string dni, bool activo)
         {
-            _gestorUsuario.ActivarDesactivar(dni, activo);
+            _DALUsuario.ActivarDesactivar(dni, activo);
             Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Usuario Activo", "Media");
         }
+
         public void ModificarEmail(string dni, string email)
         {
-            _gestorUsuario.ModificarEmail(dni, email);
+            _DALUsuario.ModificarEmail(dni, email);
             Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
         }
 
+        public void ModificarRol(string dni, string rol)
+        {
+            _DALUsuario.ModificarRol(dni, rol);
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Rol modificado a {rol}", "Media");
+        }
         public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
         {
-
-            // Contraseña automática: nombre + últimos 3 dígitos del DNI
+            if (_DALUsuario.ExisteDNI(dni))
+            throw new Exception($"Ya existe un usuario con el DNI '{dni}'.");
             string ultimos3 = dni.Length >= 3 ? dni.Substring(dni.Length - 3) : dni;
             string contrasenaPlana = nombre.ToLower() + ultimos3;
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
-
-            // Login automático: primeras  nombre + ultimos3 
             string login = nombre.ToLower() + ultimos3;
 
-            Usuario u = new Usuario
+            // Validación previa: usuario ya existe con ese login.
+            if (_DALUsuario.BuscarPorLogin(login) != null)
+            throw new Exception($"Ya existe un usuario con el login '{login}'.");
+
+            Usuario_GV42 u = new Usuario_GV42
             {
                 DNI = dni,
                 Apellido = apellido,
@@ -140,9 +150,12 @@ namespace BLL
                 Rol = rol,
                 Email = email
             };
+    
+            int filas = _DALUsuario.AgregarUsuario(u);
+            if (filas == 0)
+                throw new Exception("El INSERT no afectó ninguna fila. Verificá la base de datos.");
 
-            _gestorUsuario.AgregarUsuario(u);
-            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, " Gestion Usuario", $"Usuario creado: {login}", "Baja");
+            Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario creado: {login}", "Baja");
         }
 
         public enum ResultadoCambioContrasena
@@ -155,28 +168,26 @@ namespace BLL
 
         public ResultadoCambioContrasena CambiarContrasena(string login, string contrasenaActual, string nuevaContrasena, string confirmarContrasena)
         {
-            // 1. Verificar que las nuevas contraseñas coincidan
             if (nuevaContrasena != confirmarContrasena)
                 return ResultadoCambioContrasena.ContrasenasNoCoinciden;
 
-            // 2. Buscar el usuario
-            Usuario usuario = _gestorUsuario.BuscarPorLogin(login);
+            Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
             if (usuario == null)
                 return ResultadoCambioContrasena.UsuarioInexistente;
 
-            // 3. Verificar que la contraseña actual sea correcta
             string contrasenaActualCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaActual);
             if (usuario.Contrasena != contrasenaActualCifrada)
                 return ResultadoCambioContrasena.ContrasenaActualIncorrecta;
 
-            // 4. Cifrar y guardar la nueva contraseña
             string nuevaContrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(nuevaContrasena);
-            _gestorUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
+            _DALUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
 
             Auditoria_GV42.Instancia.RegistrarEvento(login, "Contraseña", "Contraseña cambiada exitosamente", "Baja");
             return ResultadoCambioContrasena.Exitoso;
         }
 
+        // Es estático porque no necesita instancia: solo registra el evento
+        // y limpia el SessionManager.
         public static void CerrarSesión()
         {
             Auditoria_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Usuario", "Logout realizado", "Alta");

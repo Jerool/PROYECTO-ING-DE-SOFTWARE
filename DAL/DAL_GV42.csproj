@@ -43,12 +43,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acceso.cs" />
+    <Compile Include="DALBitacora_GV42.cs" />
+    <Compile Include="DALUsuario_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE_GV42.csproj">
       <Project>{0d838138-d123-4171-bca0-31731f79ccf0}</Project>
       <Name>BE_GV42</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Servicios\Servicios_GV42.csproj">
+      <Project>{662e6a38-a516-4610-ae55-4a12fc4f0fcb}</Project>
+      <Name>Servicios_GV42</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

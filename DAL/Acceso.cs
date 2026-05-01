@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,11 +9,12 @@ using System.Configuration;
 
 namespace DAL
 {
+
     public class Acceso
     {
         private static Acceso _instancia;
+
         protected SqlConnection conexion = null;
-        
 
         private Acceso()
         {
@@ -38,7 +39,7 @@ namespace DAL
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=Desktop-L5HB13;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; /*(localdb)\MSSQLLocalDB JERE*/ /*Desktop - L5HB13 LAUTY*/
+                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; /*(localdb)\MSSQLLocalDB JERE*/ /*Desktop - L5HB13 LAUTY*/
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }
@@ -105,6 +106,7 @@ namespace DAL
             }
         }
 
+     
         public int escribir(string query, SqlParameter[] parametro)
         {
             SqlTransaction tx = null;
@@ -114,8 +116,8 @@ namespace DAL
             {
                 comando.Parameters.Clear();
                 tx = IniciarTransaccion();
-                comando.Connection = tx.Connection; // Asignar la conexión de la transacción al comando
-                comando.Transaction = tx; // Asignar la transacción al comando
+                comando.Connection = tx.Connection;   
+                comando.Transaction = tx;
                 comando.CommandText = query;
                 if (parametro != null)
                 {
@@ -128,11 +130,11 @@ namespace DAL
             catch (Exception ex)
             {
                 CancelarTransaccion(tx);
-                Console.WriteLine("error", ex.Message);
-                return 0;
+                throw new Exception("Error en Escribir: " + ex.Message, ex);
             }
         }
 
+       
         public DataTable leer(string query, SqlParameter[] parametro)
         {
             SqlCommand comando = new SqlCommand();
@@ -147,7 +149,7 @@ namespace DAL
                     comando.Parameters.AddRange(parametro);
 
                 adaptador.SelectCommand = comando;
-                adaptador.Fill(dt);
+                adaptador.Fill(dt);         
             }
             catch (SqlException ex)
             {
@@ -159,6 +161,7 @@ namespace DAL
             }
             return dt;
         }
+
 
         public object leerEscalar(string query, SqlParameter[] parametro)
         {
