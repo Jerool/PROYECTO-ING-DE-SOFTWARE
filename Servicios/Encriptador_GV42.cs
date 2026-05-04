@@ -20,7 +20,7 @@ namespace Servicios
             get
             {
                 if (_instancia == null)
-                    _instancia = new Encriptador_GV42();
+                _instancia = new Encriptador_GV42();
                 return _instancia;
             }
         }
@@ -39,7 +39,7 @@ namespace Servicios
                 // Pasamos los bytes a una representación hexadecimal (string de 64 chars).
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in bytes)
-                    sb.Append(b.ToString("x2"));   
+                sb.Append(b.ToString("x2"));   
                 return sb.ToString();
             }
         }

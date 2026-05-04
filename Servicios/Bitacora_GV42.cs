@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Servicios
 {
- 
+
     public class Bitacora_GV42
     {
-       
+
         private string _Login;
         public string Login
         {
@@ -17,7 +17,7 @@ namespace Servicios
             set { _Login = value; }
         }
 
- 
+
         private string _Modulo;
         public string Modulo
         {
@@ -57,7 +57,6 @@ namespace Servicios
             Criticidad = criticidad;
             FechaHora = fechaHora;
         }
-
 
         public Bitacora_GV42()
         {

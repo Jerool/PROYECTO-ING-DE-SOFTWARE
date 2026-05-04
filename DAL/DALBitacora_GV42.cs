@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace DAL
 {
     
-    public class DALBitacora_GV42
+    
+    public class DALBitacora_GV42 : IbitacoraDAL_GV42
     {
         private readonly Acceso _acceso;
 
@@ -42,6 +43,8 @@ namespace DAL
             return MapearLista(_acceso.leer(query, null));
         }
 
+
+        //Todos los filtros son opcionales y se combinan entre sí mediante el operador lógico AND, lo que significa que el sistema retornará únicamente los registros que cumplan simultáneamente con todos los criterios que hayan sido completados.
         public List<Bitacora_GV42> Filtrar(string login, string modulo, string evento,string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {
             StringBuilder sb = new StringBuilder(
@@ -54,7 +57,7 @@ namespace DAL
                 new SqlParameter("@FechaFin", fechaFin)
             };
 
-            // Login: si vino texto, filtramos por LIKE para permitir búsqueda parcial.
+            // Login: si vino texto, filtramos por LIKE para permitir búsqueda parcial.  
             if (!string.IsNullOrWhiteSpace(login))
             {
                 sb.Append(" AND UserName LIKE @Login");
@@ -129,7 +132,6 @@ namespace DAL
             }
             return modulos;
         }
-
 
     }
 }

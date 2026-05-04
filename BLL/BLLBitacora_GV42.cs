@@ -14,7 +14,6 @@ namespace BLL
         private static BLLBitacora_GV42 _Instancia;
         private readonly DALBitacora_GV42 _DALBitacora;
 
-
         private BLLBitacora_GV42()
         {
             _DALBitacora = new DALBitacora_GV42();
@@ -47,7 +46,6 @@ namespace BLL
         {
             return _DALBitacora.Listar();
         }
-
         public List<Bitacora_GV42> Filtrar(string login, string modulo, string evento,
                                           string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {

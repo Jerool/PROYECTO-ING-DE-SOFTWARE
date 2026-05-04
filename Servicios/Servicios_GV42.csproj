@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bitacora_GV42.cs" />
+    <Compile Include="BitacoraManager_GV42.cs" />
     <Compile Include="Encriptador_GV42.cs" />
+    <Compile Include="IbitacoraManager_GV42.cs" />
     <Compile Include="SessionManager_GV42.cs" />
     <Compile Include="Usuario_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

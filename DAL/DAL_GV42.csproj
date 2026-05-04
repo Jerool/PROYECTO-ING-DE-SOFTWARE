@@ -45,6 +45,7 @@
     <Compile Include="Acceso.cs" />
     <Compile Include="DALBitacora_GV42.cs" />
     <Compile Include="DALUsuario_GV42.cs" />
+    <Compile Include="IbitacoraDAL_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auditoria_GV42.cs" />
     <Compile Include="BLLBitacora_GV42.cs" />
     <Compile Include="BLLUsuario_GV42.cs" />
     <Compile Include="GeneradorPdf_GV42.cs" />
