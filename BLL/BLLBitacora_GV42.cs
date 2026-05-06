@@ -31,6 +31,15 @@ namespace BLL
 
         public void RegistrarEvento(string login, string modulo, string evento, string criticidad)
         {
+            if (string.IsNullOrWhiteSpace(login))
+                throw new Exception("Login inválido. No puede estar vacío.");
+            if (string.IsNullOrWhiteSpace(modulo))
+                throw new Exception("Módulo inválido. No puede estar vacío.");
+            if (string.IsNullOrWhiteSpace(evento))
+                throw new Exception("Evento inválido. No puede estar vacío.");
+            if (criticidad != "Alta" && criticidad != "Media" && criticidad != "Baja")
+                throw new Exception("Criticidad inválida. Debe ser 'Alta', 'Media' o 'Baja'.");
+
             var registro = new Bitacora_GV42
             {
                 Login = login,

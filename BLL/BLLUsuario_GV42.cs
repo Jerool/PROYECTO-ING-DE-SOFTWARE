@@ -13,14 +13,11 @@ namespace BLL
     public class BLLUsuario_GV42
     {
         private readonly DALUsuario_GV42 _DALUsuario;
-        private readonly IbitacoraManager_GV42 _IbitacoraManager;
-        private readonly DALBitacora_GV42 _DALBitacora;
 
         public BLLUsuario_GV42()
         {
             _DALUsuario = new DALUsuario_GV42();
-            _DALBitacora = new DALBitacora_GV42();
-            _IbitacoraManager = new BitacoraManager_GV42();
+
         }
 
         public enum ResultadoLogin
@@ -39,8 +36,7 @@ namespace BLL
             
             if (SessionManager_GV42.Instancia.HaySesionActiva())
             {
-                Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Intento de login con sesión ya activa", "Media", DateTime.Now));
-                _DALBitacora.Guardar(evento);
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
                 return ResultadoLogin.SesionActiva;
             }
 
@@ -48,23 +44,20 @@ namespace BLL
             Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
             if (usuario == null)
             {
-                Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Usuario inexistente", "Alta", DateTime.Now));
-                _DALBitacora.Guardar(evento);
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inexistente", "Alta");
                 return ResultadoLogin.UsuarioInexistente;
             }
 
             
             if (usuario.Bloqueo)
             {
-                Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Usuario bloqueado", "Alta", DateTime.Now));
-                _DALBitacora.Guardar(evento);
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado", "Alta");
                 return ResultadoLogin.UsuarioBloqueado;
             }
 
             if (!usuario.Activo)
             {
-                Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Usuario inactivo", "Alta", DateTime.Now));
-                _DALBitacora.Guardar(evento);
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario inactivo", "Alta");
                 return ResultadoLogin.UsuarioInactivo;
             }
 
@@ -76,14 +69,12 @@ namespace BLL
                 {
                     _DALUsuario.Bloquear(login);
                     IntentosLogin_GV42.Instancia.Resetear(login);
-                    Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta", DateTime.Now));
-                    _DALBitacora.Guardar(evento);
+                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Usuario bloqueado por 3 intentos fallidos", "Alta");
                     return ResultadoLogin.BloqueadoPorIntentos;
                 }
                 else
                 {
-                    Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", $"Contraseña incorrecta. Intento {intentos}/{IntentosLogin_GV42.MAX_INTENTOS}", "Media", DateTime.Now));
-                    _DALBitacora.Guardar(evento);
+                    BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", $"Contraseña incorrecta. Intento {intentos}/{IntentosLogin_GV42.MAX_INTENTOS}", "Media");
                     return ResultadoLogin.ContrasenaIncorrecta;
                 }
             }
@@ -92,12 +83,10 @@ namespace BLL
             bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
             if (!sesionIniciada)
             {
-                Bitacora_GV42 evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Intento de login con sesión ya activa", "Alta", DateTime.Now));
-                _DALBitacora.Guardar(evento);
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Intento de login con sesión ya activa", "Alta");
                 return ResultadoLogin.SesionActiva;
             }
-            Bitacora_GV42 eventoExitoso = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Login", "Login exitoso", "Baja", DateTime.Now));
-            _DALBitacora.Guardar(eventoExitoso);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Login", "Login exitoso", "Baja");
             return ResultadoLogin.Exitoso;
         }
 
@@ -117,30 +106,26 @@ namespace BLL
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
             _DALUsuario.Desbloquear(dni, contrasenaCifrada);
             IntentosLogin_GV42.Instancia.Resetear(login);
-            Bitacora_GV42 Evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media", DateTime.Now));
-            _DALBitacora.Guardar(Evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
 
         public void ActivarDesactivar(string dni, bool activo)
         {
             _DALUsuario.ActivarDesactivar(dni, activo);
             string accion = activo ? "activado" : "desactivado";
-           Bitacora_GV42 Evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario {accion}", "Media", DateTime.Now));
-           _DALBitacora.Guardar(Evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario {accion}", "Media");
         }
 
         public void ModificarEmail(string dni, string email)
         {
             _DALUsuario.ModificarEmail(dni, email);
-            Bitacora_GV42 Evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media", DateTime.Now));
-            _DALBitacora.Guardar(Evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", "Email de usuario modificado", "Media");
         }
 
         public void ModificarRol(string dni, string rol)
         {
             _DALUsuario.ModificarRol(dni, rol);
-             Bitacora_GV42 Evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Rol modificado a {rol}", "Media", DateTime.Now));
-            _DALBitacora.Guardar(Evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Rol modificado a {rol}", "Media");
         }
         public void CrearUsuario(string dni, string apellido, string nombre, string email, string rol)
         {
@@ -169,8 +154,7 @@ namespace BLL
             int filas = _DALUsuario.AgregarUsuario(u);
             if (filas == 0)
             throw new Exception("El INSERT no afectó ninguna fila. Verificá la base de datos.");
-          Bitacora_GV42 Evento = _IbitacoraManager.RegistrarEvento(new Bitacora_GV42(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario creado: {login}", "Baja", DateTime.Now));
-          _DALBitacora.Guardar(Evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario", $"Usuario creado: {login}", "Baja");
         }
 
         public enum ResultadoCambioContrasena
@@ -197,20 +181,14 @@ namespace BLL
             string nuevaContrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(nuevaContrasena);
             _DALUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
 
-         Bitacora_GV42 evento =_IbitacoraManager.RegistrarEvento(new Bitacora_GV42(login, "Contraseña", "Contraseña cambiada exitosamente", "Baja", DateTime.Now));
-         _DALBitacora.Guardar(evento);
+            BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Contraseña", "Contraseña cambiada exitosamente", "Baja");
             return ResultadoCambioContrasena.Exitoso;
         }
 
         public static void CerrarSesión()
         {
-            BLLUsuario_GV42 bll = new BLLUsuario_GV42();
-            Bitacora_GV42 evento = bll._IbitacoraManager.RegistrarEvento(
-            new Bitacora_GV42(
-            SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,
-            "Usuario", "Logout realizado", "Alta", DateTime.Now));
-            bll._DALBitacora.Guardar(evento);
-
+            string login = SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login;
+            BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Usuario", "Logout realizado", "Alta");
             SessionManager_GV42.Instancia.CerrarSesion();
         }
     }
