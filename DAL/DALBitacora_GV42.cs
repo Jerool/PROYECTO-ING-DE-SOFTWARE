@@ -1,4 +1,4 @@
-using Servicios;                        
+using Servicios;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,29 +9,51 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    
-    
+
     public class DALBitacora_GV42 : IbitacoraDAL_GV42
     {
         private readonly Acceso _acceso;
+        private readonly DALModulo_GV42 _DALModulo;
+        private readonly DALTipoEvento_GV42 _DALTipoEvento;
+
+        // SELECT base con JOINs a Modulo y TipoEvento. Lo definimos una sola vez
+        // porque lo usamos en Listar y en Filtrar.
+        private const string SELECT_BASE =
+            "SELECT E.UserName, " +
+            "       E.IdModulo,     M.Nombre AS ModuloNombre, " +
+            "       E.IdTipoEvento, T.Nombre AS TipoEventoNombre, " +
+            "       E.Detalle, E.Criticidad, E.FechaHora " +
+            "FROM EVENTOS E " +
+            "INNER JOIN Modulo M     ON M.Id = E.IdModulo " +
+            "INNER JOIN TipoEvento T ON T.Id = E.IdTipoEvento";
 
         public DALBitacora_GV42()
         {
             _acceso = Acceso.Instancia;
+            _DALModulo = new DALModulo_GV42();
+            _DALTipoEvento = new DALTipoEvento_GV42();
         }
 
-        
+        // Inserta una fila en EVENTOS. Si el registro vino con Modulo/TipoEvento
+        // como "shell" (solo Nombre, sin Id) — caso típico desde BLLUsuario donde
+        // se usan strings hardcodeados — los resolvemos contra las tablas catálogo.
         public void Guardar(Bitacora_GV42 registro)
         {
-            string query = "INSERT INTO EVENTOS (UserName, Modulo, Evento, Criticidad, FechaHora) " +
-                           "VALUES (@UserName, @Modulo, @Evento, @Criticidad, @FechaHora)";
+            int idModulo = ResolverIdModulo(registro.Modulo);
+            int idTipoEvento = ResolverIdTipoEvento(registro.TipoEvento);
+
+            string query =
+                "INSERT INTO EVENTOS (UserName, IdModulo, IdTipoEvento, Detalle, Criticidad, FechaHora) " +
+                "VALUES (@UserName, @IdModulo, @IdTipoEvento, @Detalle, @Criticidad, @FechaHora)";
 
             SqlParameter[] parametros = {
-                new SqlParameter("@UserName",   registro.Login),
-                new SqlParameter("@Modulo",     registro.Modulo),
-                new SqlParameter("@Evento",     registro.Evento),
-                new SqlParameter("@Criticidad", registro.Criticidad),
-                new SqlParameter("@FechaHora",  registro.FechaHora)
+                new SqlParameter("@UserName",     registro.Login),
+                new SqlParameter("@IdModulo",     idModulo),
+                new SqlParameter("@IdTipoEvento", idTipoEvento),
+                // Detalle puede ser null/"" — usamos DBNull.Value para no romper.
+                new SqlParameter("@Detalle",      (object)registro.Detalle ?? DBNull.Value),
+                new SqlParameter("@Criticidad",   registro.Criticidad),
+                new SqlParameter("@FechaHora",    registro.FechaHora)
             };
 
             _acceso.escribir(query, parametros);
@@ -39,17 +61,18 @@ namespace DAL
 
         public List<Bitacora_GV42> Listar()
         {
-            string query = "SELECT UserName, Modulo, Evento, Criticidad, FechaHora FROM EVENTOS ORDER BY FechaHora DESC";
+            string query = SELECT_BASE + " ORDER BY E.FechaHora DESC";
             return MapearLista(_acceso.leer(query, null));
         }
 
 
-        //Todos los filtros son opcionales y se combinan entre sí mediante el operador lógico AND, lo que significa que el sistema retornará únicamente los registros que cumplan simultáneamente con todos los criterios que hayan sido completados.
-        public List<Bitacora_GV42> Filtrar(string login, string modulo, string evento,string criticidad, DateTime fechaInicio, DateTime fechaFin)
+        // Todos los filtros son opcionales y se combinan con AND.
+        // Login: LIKE parcial. Modulo y Criticidad: exacto. Evento: LIKE prefijo
+        // sobre el nombre del TipoEvento (igual que antes, pero ahora viene del JOIN).
+        public List<Bitacora_GV42> Filtrar(string login, string modulo, string tipoEvento, string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {
-            StringBuilder sb = new StringBuilder(
-            "SELECT UserName, Modulo, Evento, Criticidad, FechaHora " +
-            "FROM EVENTOS WHERE FechaHora BETWEEN @FechaInicio AND @FechaFin");
+            StringBuilder sb = new StringBuilder(SELECT_BASE +
+                " WHERE E.FechaHora BETWEEN @FechaInicio AND @FechaFin");
 
             List<SqlParameter> parametros = new List<SqlParameter>
             {
@@ -57,35 +80,31 @@ namespace DAL
                 new SqlParameter("@FechaFin", fechaFin)
             };
 
-            // Login: si vino texto, filtramos por LIKE para permitir búsqueda parcial.  
             if (!string.IsNullOrWhiteSpace(login))
             {
-                sb.Append(" AND UserName LIKE @Login");
+                sb.Append(" AND E.UserName LIKE @Login");
                 parametros.Add(new SqlParameter("@Login", "%" + login + "%"));
             }
 
-            // Módulo: comparación exacta (los valores vienen del combo).
             if (!string.IsNullOrWhiteSpace(modulo))
             {
-                sb.Append(" AND Modulo = @Modulo");
+                sb.Append(" AND M.Nombre = @Modulo");
                 parametros.Add(new SqlParameter("@Modulo", modulo));
             }
 
-            // Evento: usamos LIKE con prefijo porque algunos eventos se guardan con
-            // detalle dinámico al final. 
-            if (!string.IsNullOrWhiteSpace(evento))
+            if (!string.IsNullOrWhiteSpace(tipoEvento))
             {
-                sb.Append(" AND Evento LIKE @Evento");
-                parametros.Add(new SqlParameter("@Evento", evento + "%"));
+                sb.Append(" AND T.Nombre LIKE @TipoEvento");
+                parametros.Add(new SqlParameter("@TipoEvento", tipoEvento + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(criticidad))
             {
-                sb.Append(" AND Criticidad = @Criticidad");
+                sb.Append(" AND E.Criticidad = @Criticidad");
                 parametros.Add(new SqlParameter("@Criticidad", criticidad));
             }
 
-            sb.Append(" ORDER BY FechaHora DESC");
+            sb.Append(" ORDER BY E.FechaHora DESC");
 
             return MapearLista(_acceso.leer(sb.ToString(), parametros.ToArray()));
         }
@@ -98,8 +117,17 @@ namespace DAL
                 lista.Add(new Bitacora_GV42
                 {
                     Login = row["UserName"].ToString(),
-                    Modulo = row["Modulo"].ToString(),
-                    Evento = row["Evento"].ToString(),
+                    Modulo = new Modulo_GV42
+                    {
+                        Id = Convert.ToInt32(row["IdModulo"]),
+                        Nombre = row["ModuloNombre"].ToString()
+                    },
+                    TipoEvento = new TipoEvento_GV42
+                    {
+                        Id = Convert.ToInt32(row["IdTipoEvento"]),
+                        Nombre = row["TipoEventoNombre"].ToString()
+                    },
+                    Detalle = row["Detalle"] == DBNull.Value ? "" : row["Detalle"].ToString(),
                     Criticidad = row["Criticidad"].ToString(),
                     FechaHora = Convert.ToDateTime(row["FechaHora"])
                 });
@@ -109,29 +137,51 @@ namespace DAL
 
         public List<string> ListarTiposEvento()
         {
-            string query = "SELECT Nombre FROM TipoEvento ORDER BY Nombre";
-            DataTable dt = _acceso.leer(query, null);
-
+            // Mantiene la firma anterior (lista de strings) para no romper la UI,
+            // pero por debajo lee de TipoEvento (catálogo con FK).
+            List<TipoEvento_GV42> entidades = _DALTipoEvento.ListarTodos();
             List<string> tipos = new List<string>();
-            foreach (DataRow row in dt.Rows)
-            {
-                tipos.Add(row["Nombre"].ToString());
-            }
+            foreach (TipoEvento_GV42 t in entidades) tipos.Add(t.Nombre);
             return tipos;
         }
 
         public List<string> ListarModulos()
         {
-            string query = "SELECT Nombre FROM Modulo ORDER BY Nombre";
-            DataTable dt = _acceso.leer(query, null);
-
+            List<Modulo_GV42> entidades = _DALModulo.ListarTodos();
             List<string> modulos = new List<string>();
-            foreach (DataRow row in dt.Rows)
-            {
-                modulos.Add(row["Nombre"].ToString());
-            }
+            foreach (Modulo_GV42 m in entidades) modulos.Add(m.Nombre);
             return modulos;
         }
 
+        // Resuelve el Id del módulo a partir de la entidad que llegó.
+        // Si la entidad ya tiene Id > 0, lo usamos. Si solo tiene Nombre,
+        // lo buscamos en la tabla Modulo. Si no existe, reventamos con mensaje claro.
+        private int ResolverIdModulo(Modulo_GV42 m)
+        {
+            if (m == null)
+                throw new Exception("La bitácora no tiene módulo asignado.");
+
+            if (m.Id > 0) return m.Id;
+
+            Modulo_GV42 enBase = _DALModulo.BuscarPorNombre(m.Nombre);
+            if (enBase == null)
+                throw new Exception($"El módulo '{m.Nombre}' no existe en la tabla Modulo. " +
+                                    "Agregalo al catálogo antes de registrar el evento.");
+            return enBase.Id;
+        }
+
+        private int ResolverIdTipoEvento(TipoEvento_GV42 t)
+        {
+            if (t == null)
+                throw new Exception("La bitácora no tiene tipo de evento asignado.");
+
+            if (t.Id > 0) return t.Id;
+
+            TipoEvento_GV42 enBase = _DALTipoEvento.BuscarPorNombre(t.Nombre);
+            if (enBase == null)
+                throw new Exception($"El tipo de evento '{t.Nombre}' no existe en la tabla TipoEvento. " +
+                                    "Agregalo al catálogo antes de registrar el evento.");
+            return enBase.Id;
+        }
     }
 }

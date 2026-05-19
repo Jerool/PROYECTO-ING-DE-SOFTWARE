@@ -15,12 +15,15 @@ namespace Servicios
                 evento.FechaHora = DateTime.Now;
             if (evento.Criticidad != "Alta" && evento.Criticidad != "Media" && evento.Criticidad != "Baja")
                 throw new Exception("Criticidad inválida. Debe ser 'Alta', 'Media' o 'Baja'.");
-            if (string.IsNullOrWhiteSpace(evento.Login)) 
+            if (string.IsNullOrWhiteSpace(evento.Login))
                 throw new Exception("Login inválido. No puede estar vacío.");
-            if (string.IsNullOrWhiteSpace(evento.Modulo)) 
+            // Validamos por ModuloNombre (helper) en vez de por Modulo (entidad)
+            // porque en muchos llamadores el módulo se arma desde un string.
+            if (string.IsNullOrWhiteSpace(evento.ModuloNombre))
                 throw new Exception("Módulo inválido. No puede estar vacío.");
-            if (string.IsNullOrWhiteSpace(evento.Evento))
-                throw new Exception("Evento inválido. No puede estar vacío."); 
+            // Mismo criterio con TipoEvento: validamos que tenga al menos el nombre.
+            if (string.IsNullOrWhiteSpace(evento.TipoEventoNombre))
+                throw new Exception("Tipo de evento inválido. No puede estar vacío.");
             return evento;
         }
     }

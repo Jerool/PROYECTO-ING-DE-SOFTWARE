@@ -28,8 +28,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2;
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvBitacora = new System.Windows.Forms.DataGridView();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnAplicar = new System.Windows.Forms.Button();
@@ -53,57 +54,53 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.lblApellido = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBitacora)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // dgvBitacora
-            //
-            dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(187, 222, 251);
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvBitacora.AlternatingRowsDefaultCellStyle = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dgvBitacora.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(227, 242, 253);
+            // 
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(242)))), ((int)(((byte)(253)))));
+            this.dgvBitacora.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvBitacora.BackgroundColor = System.Drawing.Color.White;
             this.dgvBitacora.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvBitacora.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgvBitacora.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dgvBitacora.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvBitacora.ColumnHeadersHeight = 32;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvBitacora.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvBitacora.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvBitacora.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvBitacora.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvBitacora.EnableHeadersVisualStyles = false;
-            this.dgvBitacora.GridColor = System.Drawing.Color.FromArgb(187, 222, 251);
+            this.dgvBitacora.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.dgvBitacora.Location = new System.Drawing.Point(48, 12);
+            this.dgvBitacora.MultiSelect = false;
             this.dgvBitacora.Name = "dgvBitacora";
+            this.dgvBitacora.ReadOnly = true;
             this.dgvBitacora.RowHeadersVisible = false;
             this.dgvBitacora.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvBitacora.MultiSelect = false;
-            this.dgvBitacora.ReadOnly = true;
             this.dgvBitacora.Size = new System.Drawing.Size(644, 213);
             this.dgvBitacora.TabIndex = 0;
             this.dgvBitacora.SelectionChanged += new System.EventHandler(this.dgvBitacora_SelectionChanged);
-            //
+            // 
             // btnLimpiar
-            //
-            this.btnLimpiar.BackColor = System.Drawing.Color.FromArgb(227, 242, 253);
+            // 
+            this.btnLimpiar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(242)))), ((int)(((byte)(253)))));
             this.btnLimpiar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLimpiar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            this.btnLimpiar.FlatAppearance.BorderSize = 1;
-            this.btnLimpiar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(187, 222, 251);
+            this.btnLimpiar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            this.btnLimpiar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLimpiar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnLimpiar.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.btnLimpiar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.btnLimpiar.Location = new System.Drawing.Point(32, 415);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(85, 30);
@@ -111,14 +108,14 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = false;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
-            //
+            // 
             // btnAplicar
-            //
-            this.btnAplicar.BackColor = System.Drawing.Color.FromArgb(25, 118, 210);
+            // 
+            this.btnAplicar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(118)))), ((int)(((byte)(210)))));
             this.btnAplicar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAplicar.FlatAppearance.BorderSize = 0;
-            this.btnAplicar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            this.btnAplicar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(33, 150, 243);
+            this.btnAplicar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            this.btnAplicar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
             this.btnAplicar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAplicar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.btnAplicar.ForeColor = System.Drawing.Color.White;
@@ -129,14 +126,14 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = false;
             this.btnAplicar.Click += new System.EventHandler(this.btnAplicar_Click);
-            //
+            // 
             // btnImprimir
-            //
-            this.btnImprimir.BackColor = System.Drawing.Color.FromArgb(25, 118, 210);
+            // 
+            this.btnImprimir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(118)))), ((int)(((byte)(210)))));
             this.btnImprimir.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnImprimir.FlatAppearance.BorderSize = 0;
-            this.btnImprimir.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            this.btnImprimir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(33, 150, 243);
+            this.btnImprimir.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            this.btnImprimir.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
             this.btnImprimir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImprimir.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.btnImprimir.ForeColor = System.Drawing.Color.White;
@@ -147,224 +144,222 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.btnImprimir.Text = "Imprimir";
             this.btnImprimir.UseVisualStyleBackColor = false;
             this.btnImprimir.Click += new System.EventHandler(this.btnImprimir_Click);
-            //
+            // 
             // lblLogin
-            //
+            // 
             this.lblLogin.AutoSize = true;
             this.lblLogin.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblLogin.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblLogin.Location = new System.Drawing.Point(94, 307);
             this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(33, 13);
+            this.lblLogin.Size = new System.Drawing.Size(41, 17);
             this.lblLogin.TabIndex = 4;
             this.lblLogin.Text = "Login";
-            //
+            // 
             // lblModulo
-            //
+            // 
             this.lblModulo.AutoSize = true;
             this.lblModulo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblModulo.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblModulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblModulo.Location = new System.Drawing.Point(94, 366);
             this.lblModulo.Name = "lblModulo";
-            this.lblModulo.Size = new System.Drawing.Size(42, 13);
+            this.lblModulo.Size = new System.Drawing.Size(55, 17);
             this.lblModulo.TabIndex = 5;
             this.lblModulo.Text = "Modulo";
-            //
+            // 
             // txtLogin
-            //
+            // 
             this.txtLogin.BackColor = System.Drawing.Color.White;
             this.txtLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtLogin.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtLogin.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.txtLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.txtLogin.Location = new System.Drawing.Point(135, 300);
             this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(100, 20);
+            this.txtLogin.Size = new System.Drawing.Size(100, 24);
             this.txtLogin.TabIndex = 6;
-            //
+            // 
             // cboModulo
-            //
+            // 
             this.cboModulo.BackColor = System.Drawing.Color.White;
             this.cboModulo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboModulo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboModulo.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.cboModulo.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.cboModulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboModulo.FormattingEnabled = true;
             this.cboModulo.Location = new System.Drawing.Point(135, 363);
             this.cboModulo.Name = "cboModulo";
-            this.cboModulo.Size = new System.Drawing.Size(100, 21);
+            this.cboModulo.Size = new System.Drawing.Size(100, 25);
             this.cboModulo.TabIndex = 7;
-            //
+            // 
             // cboEvento
-            //
+            // 
             this.cboEvento.BackColor = System.Drawing.Color.White;
             this.cboEvento.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboEvento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboEvento.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.cboEvento.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.cboEvento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboEvento.FormattingEnabled = true;
             this.cboEvento.Location = new System.Drawing.Point(581, 303);
             this.cboEvento.Name = "cboEvento";
-            this.cboEvento.Size = new System.Drawing.Size(120, 21);
+            this.cboEvento.Size = new System.Drawing.Size(120, 25);
             this.cboEvento.TabIndex = 11;
-            //
+            // 
             // lblEvento
-            //
+            // 
             this.lblEvento.AutoSize = true;
             this.lblEvento.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblEvento.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblEvento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblEvento.Location = new System.Drawing.Point(540, 306);
             this.lblEvento.Name = "lblEvento";
-            this.lblEvento.Size = new System.Drawing.Size(41, 13);
+            this.lblEvento.Size = new System.Drawing.Size(50, 17);
             this.lblEvento.TabIndex = 9;
             this.lblEvento.Text = "Evento";
-            //
+            // 
             // lblFechaInicio
-            //
+            // 
             this.lblFechaInicio.AutoSize = true;
             this.lblFechaInicio.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblFechaInicio.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblFechaInicio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblFechaInicio.Location = new System.Drawing.Point(259, 303);
             this.lblFechaInicio.Name = "lblFechaInicio";
-            this.lblFechaInicio.Size = new System.Drawing.Size(65, 13);
+            this.lblFechaInicio.Size = new System.Drawing.Size(79, 17);
             this.lblFechaInicio.TabIndex = 8;
             this.lblFechaInicio.Text = "Fecha Inicio";
-            //
+            // 
             // cboCriticidad
-            //
+            // 
             this.cboCriticidad.BackColor = System.Drawing.Color.White;
             this.cboCriticidad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboCriticidad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboCriticidad.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.cboCriticidad.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.cboCriticidad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboCriticidad.FormattingEnabled = true;
             this.cboCriticidad.Location = new System.Drawing.Point(592, 366);
             this.cboCriticidad.Name = "cboCriticidad";
-            this.cboCriticidad.Size = new System.Drawing.Size(100, 21);
+            this.cboCriticidad.Size = new System.Drawing.Size(100, 25);
             this.cboCriticidad.TabIndex = 14;
-            //
+            // 
             // lblFechaFin
-            //
+            // 
             this.lblFechaFin.AutoSize = true;
             this.lblFechaFin.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblFechaFin.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblFechaFin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblFechaFin.Location = new System.Drawing.Point(259, 370);
             this.lblFechaFin.Name = "lblFechaFin";
-            this.lblFechaFin.Size = new System.Drawing.Size(54, 13);
+            this.lblFechaFin.Size = new System.Drawing.Size(65, 17);
             this.lblFechaFin.TabIndex = 13;
             this.lblFechaFin.Text = "Fecha Fin";
-            //
+            // 
             // lblCriticidad
-            //
+            // 
             this.lblCriticidad.AutoSize = true;
             this.lblCriticidad.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblCriticidad.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblCriticidad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblCriticidad.Location = new System.Drawing.Point(536, 373);
             this.lblCriticidad.Name = "lblCriticidad";
-            this.lblCriticidad.Size = new System.Drawing.Size(50, 13);
+            this.lblCriticidad.Size = new System.Drawing.Size(64, 17);
             this.lblCriticidad.TabIndex = 12;
             this.lblCriticidad.Text = "Criticidad";
-            //
+            // 
             // btnCancelar
-            //
-            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(227, 242, 253);
+            // 
+            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(242)))), ((int)(((byte)(253)))));
             this.btnCancelar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancelar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(13, 71, 161);
-            this.btnCancelar.FlatAppearance.BorderSize = 1;
-            this.btnCancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(187, 222, 251);
+            this.btnCancelar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            this.btnCancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnCancelar.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.btnCancelar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.btnCancelar.Location = new System.Drawing.Point(702, 415);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(85, 30);
             this.btnCancelar.TabIndex = 16;
-            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.Text = "Salir";
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            //
+            // 
             // dtpFechaInicio
-            //
+            // 
             this.dtpFechaInicio.CalendarFont = new System.Drawing.Font("Segoe UI", 9F);
-            this.dtpFechaInicio.CalendarForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.dtpFechaInicio.CalendarForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.dtpFechaInicio.CalendarMonthBackground = System.Drawing.Color.White;
-            this.dtpFechaInicio.CalendarTitleBackColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.dtpFechaInicio.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.dtpFechaInicio.CalendarTitleForeColor = System.Drawing.Color.White;
-            this.dtpFechaInicio.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(187, 222, 251);
+            this.dtpFechaInicio.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.dtpFechaInicio.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.dtpFechaInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpFechaInicio.Location = new System.Drawing.Point(324, 301);
             this.dtpFechaInicio.Name = "dtpFechaInicio";
-            this.dtpFechaInicio.Size = new System.Drawing.Size(200, 22);
+            this.dtpFechaInicio.Size = new System.Drawing.Size(200, 24);
             this.dtpFechaInicio.TabIndex = 17;
-            //
+            // 
             // dtpFechaFin
-            //
+            // 
             this.dtpFechaFin.CalendarFont = new System.Drawing.Font("Segoe UI", 9F);
-            this.dtpFechaFin.CalendarForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.dtpFechaFin.CalendarForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.dtpFechaFin.CalendarMonthBackground = System.Drawing.Color.White;
-            this.dtpFechaFin.CalendarTitleBackColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.dtpFechaFin.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.dtpFechaFin.CalendarTitleForeColor = System.Drawing.Color.White;
-            this.dtpFechaFin.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(187, 222, 251);
+            this.dtpFechaFin.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.dtpFechaFin.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpFechaFin.Location = new System.Drawing.Point(324, 370);
             this.dtpFechaFin.Name = "dtpFechaFin";
-            this.dtpFechaFin.Size = new System.Drawing.Size(200, 22);
+            this.dtpFechaFin.Size = new System.Drawing.Size(200, 24);
             this.dtpFechaFin.TabIndex = 18;
-            //
+            // 
             // txtNombreUsuario
-            //
-            this.txtNombreUsuario.BackColor = System.Drawing.Color.FromArgb(227, 242, 253);
+            // 
+            this.txtNombreUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(242)))), ((int)(((byte)(253)))));
             this.txtNombreUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNombreUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtNombreUsuario.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.txtNombreUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.txtNombreUsuario.Location = new System.Drawing.Point(224, 250);
             this.txtNombreUsuario.Name = "txtNombreUsuario";
             this.txtNombreUsuario.ReadOnly = true;
-            this.txtNombreUsuario.Size = new System.Drawing.Size(150, 20);
+            this.txtNombreUsuario.Size = new System.Drawing.Size(150, 24);
             this.txtNombreUsuario.TabIndex = 20;
-            //
+            // 
             // lblNombre
-            //
+            // 
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblNombre.Location = new System.Drawing.Point(183, 253);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(44, 13);
+            this.lblNombre.Size = new System.Drawing.Size(58, 17);
             this.lblNombre.TabIndex = 19;
             this.lblNombre.Text = "Nombre";
-            //
+            // 
             // txtApellidoUsuario
-            //
-            this.txtApellidoUsuario.BackColor = System.Drawing.Color.FromArgb(227, 242, 253);
+            // 
+            this.txtApellidoUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(242)))), ((int)(((byte)(253)))));
             this.txtApellidoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtApellidoUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtApellidoUsuario.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.txtApellidoUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.txtApellidoUsuario.Location = new System.Drawing.Point(488, 250);
             this.txtApellidoUsuario.Name = "txtApellidoUsuario";
             this.txtApellidoUsuario.ReadOnly = true;
-            this.txtApellidoUsuario.Size = new System.Drawing.Size(150, 20);
+            this.txtApellidoUsuario.Size = new System.Drawing.Size(150, 24);
             this.txtApellidoUsuario.TabIndex = 22;
-            //
+            // 
             // lblApellido
-            //
+            // 
             this.lblApellido.AutoSize = true;
             this.lblApellido.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblApellido.ForeColor = System.Drawing.Color.FromArgb(13, 71, 161);
+            this.lblApellido.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.lblApellido.Location = new System.Drawing.Point(440, 253);
             this.lblApellido.Name = "lblApellido";
-            this.lblApellido.Size = new System.Drawing.Size(44, 13);
+            this.lblApellido.Size = new System.Drawing.Size(57, 17);
             this.lblApellido.TabIndex = 21;
             this.lblApellido.Text = "Apellido";
-            //
+            // 
             // FRMBitacoraDeEventos
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 470);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Controls.Add(this.txtApellidoUsuario);
             this.Controls.Add(this.lblApellido);
             this.Controls.Add(this.txtNombreUsuario);
@@ -386,6 +381,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.Controls.Add(this.btnAplicar);
             this.Controls.Add(this.btnLimpiar);
             this.Controls.Add(this.dgvBitacora);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "FRMBitacoraDeEventos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bitácora de Eventos";

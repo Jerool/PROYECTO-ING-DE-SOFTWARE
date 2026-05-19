@@ -1,5 +1,5 @@
-using BLL;                              // Capa de negocio (BLL): la usamos para traer/filtrar registros
-using Servicios;                        // Capa de Servicios: entidades Usuario_GV42 y Bitacora_GV42
+using BLL;
+using Servicios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,16 +23,35 @@ namespace PROYECTO_ING_DE_SOFTWARE
         public FRMBitacoraDeEventos()
         {
             InitializeComponent();
-            _bllBitacora = BLLBitacora_GV42.Instancia;    
-            _bllUsuario = new BLLUsuario_GV42();            
+            _bllBitacora = BLLBitacora_GV42.Instancia;
+            _bllUsuario = new BLLUsuario_GV42();
         }
 
-       
+
         private void FRMBitacoraDeEventos_Load(object sender, EventArgs e)
         {
-            CargarCombos();                  
-            EstablecerFechasPorDefecto();    
-            CargarGrillaPorDefecto();        
+            ConfigurarGrillaSoloLectura();
+            CargarCombos();
+            EstablecerFechasPorDefecto();
+            CargarGrillaPorDefecto();
+        }
+
+        // Deja la grilla en modo "consulta": no se puede editar ninguna celda,
+        // no se pueden agregar/borrar filas, no se puede redimensionar nada.
+        private void ConfigurarGrillaSoloLectura()
+        {
+            dgvBitacora.ReadOnly = true;
+            dgvBitacora.AllowUserToAddRows = false;
+            dgvBitacora.AllowUserToDeleteRows = false;
+            dgvBitacora.AllowUserToResizeRows = false;
+            dgvBitacora.AllowUserToResizeColumns = false;
+            dgvBitacora.AllowUserToOrderColumns = false;
+            dgvBitacora.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvBitacora.MultiSelect = false;
+            dgvBitacora.RowHeadersVisible = false;
+            dgvBitacora.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvBitacora.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvBitacora.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
         }
 
         private void EstablecerFechasPorDefecto()
@@ -61,7 +80,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             CargarGrilla(_bllBitacora.Filtrar(
                 login: null,
                 modulo: null,
-                evento: null,
+                tipoEvento: null,
                 criticidad: null,
                 fechaInicio: dtpFechaInicio.Value,
                 fechaFin: dtpFechaFin.Value));
@@ -69,7 +88,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void CargarGrilla(List<Bitacora_GV42> registros)
         {
-            dgvBitacora.DataSource = null;       
+            dgvBitacora.DataSource = null;
             dgvBitacora.DataSource = registros;
             ConfigurarColumnas();
             if (dgvBitacora.Rows.Count > 0)
@@ -88,9 +107,19 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             if (dgvBitacora.Columns.Count == 0) return;
 
+            // Como Modulo y TipoEvento son entidades, por defecto el DGV las
+            // mostraría como "Servicios.Modulo_GV42". Las ocultamos y mostramos
+            // los helpers de string (ModuloNombre, TipoEventoNombre, Evento).
+            string[] aOcultar = { "Modulo", "TipoEvento" };
+            foreach (string c in aOcultar)
+                if (dgvBitacora.Columns.Contains(c)) dgvBitacora.Columns[c].Visible = false;
+
             if (dgvBitacora.Columns.Contains("Login")) dgvBitacora.Columns["Login"].HeaderText = "Usuario";
-            if (dgvBitacora.Columns.Contains("Modulo")) dgvBitacora.Columns["Modulo"].HeaderText = "Módulo";
-            if (dgvBitacora.Columns.Contains("Evento")) dgvBitacora.Columns["Evento"].HeaderText = "Evento";
+            if (dgvBitacora.Columns.Contains("ModuloNombre")) dgvBitacora.Columns["ModuloNombre"].HeaderText = "Módulo";
+            if (dgvBitacora.Columns.Contains("TipoEventoNombre")) dgvBitacora.Columns["TipoEventoNombre"].HeaderText = "Tipo evento";
+            if (dgvBitacora.Columns.Contains("Detalle")) dgvBitacora.Columns["Detalle"].HeaderText = "Detalle";
+            // "Evento" es la combinación "Tipo - Detalle". La ocultamos para no duplicar.
+            if (dgvBitacora.Columns.Contains("Evento")) dgvBitacora.Columns["Evento"].Visible = false;
             if (dgvBitacora.Columns.Contains("Criticidad")) dgvBitacora.Columns["Criticidad"].HeaderText = "Criticidad";
             if (dgvBitacora.Columns.Contains("FechaHora"))
             {
@@ -123,7 +152,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtLogin.Text = "";
-            cboModulo.SelectedIndex = 0;     
+            cboModulo.SelectedIndex = 0;
             cboEvento.SelectedIndex = 0;
             cboCriticidad.SelectedIndex = 0;
             EstablecerFechasPorDefecto();
@@ -149,23 +178,24 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 sfd.Title = "Guardar bitácora como PDF";
                 sfd.FileName = $"Bitacora_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
 
-                if (sfd.ShowDialog() != DialogResult.OK) return;   
+                if (sfd.ShowDialog() != DialogResult.OK) return;
 
                 try
                 {
-                    string[] headers = { "Usuario", "Módulo", "Evento", "Criticidad", "Fecha y hora" };
+                    string[] headers = { "Usuario", "Módulo", "Tipo evento", "Detalle", "Criticidad", "Fecha y hora" };
 
-                    float[] proporciones = { 0.13f, 0.13f, 0.40f, 0.12f, 0.22f };
+                    float[] proporciones = { 0.12f, 0.12f, 0.22f, 0.22f, 0.10f, 0.22f };
 
                     List<string[]> filas = new List<string[]>();
                     foreach (DataGridViewRow row in dgvBitacora.Rows)
                     {
-                        if (row.IsNewRow) continue;      
+                        if (row.IsNewRow) continue;
                         filas.Add(new string[]
                         {
                             ValorCelda(row, "Login"),
-                            ValorCelda(row, "Modulo"),
-                            ValorCelda(row, "Evento"),
+                            ValorCelda(row, "ModuloNombre"),
+                            ValorCelda(row, "TipoEventoNombre"),
+                            ValorCelda(row, "Detalle"),
                             ValorCelda(row, "Criticidad"),
                             ValorCelda(row, "FechaHora")
                         });

@@ -5,12 +5,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Net.Mail;                  
+using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;   
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BLL;                              
+using BLL;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
@@ -33,24 +33,64 @@ namespace PROYECTO_ING_DE_SOFTWARE
         // Carga el combo de roles, pone el form en modo Consulta y trae la grilla.
         private void FRMPrincipalAdmin_Load(object sender, EventArgs e)
         {
+            ConfigurarGrillaSoloLectura();
             CargarRoles();
             ModoConsulta();
             CargarGrilla(soloActivos: true);
             rbActivos.Checked = true;
         }
 
-        // Llena el ComboBox de Rol con los nombres que hay en la tabla Roles de la base.
+        // Deja la grilla en modo "consulta": no se puede editar ninguna celda,
+        // no se pueden agregar/borrar filas, no se puede redimensionar nada.
+        // Toda configuración va acá, en código, para que sobreviva a cualquier
+        // regeneración del Designer.
+        private void ConfigurarGrillaSoloLectura()
+        {
+            dgvUsuarios.ReadOnly = true;                  // ninguna celda editable
+            dgvUsuarios.AllowUserToAddRows = false;       // sin fila vacía al final
+            dgvUsuarios.AllowUserToDeleteRows = false;    // no se borran filas
+            dgvUsuarios.AllowUserToResizeRows = false;    // alto fijo
+            dgvUsuarios.AllowUserToResizeColumns = false; // ancho fijo
+            dgvUsuarios.AllowUserToOrderColumns = false;  // sin drag de columnas
+            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUsuarios.MultiSelect = false;
+            dgvUsuarios.RowHeadersVisible = false;        // estética: ocultamos la columna de selección
+            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            // Headers tampoco se pueden estirar:
+            dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvUsuarios.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+        }
+
+        // Llena el ComboBox de Rol con las entidades Rol_GV42 que devuelve la BLL.
+        // Usamos DisplayMember = "Nombre" para que el combo muestre el texto,
+        // pero detrás cada item es un Rol_GV42 con su Id (la FK).
         private void CargarRoles()
         {
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox1.DataSource = _bll.ListarRoles();
+            comboBox1.DisplayMember = "Nombre";
+            comboBox1.ValueMember = "Id";
         }
 
         private void CargarGrilla(bool soloActivos)
         {
             List<Usuario_GV42> lista = soloActivos ? _bll.ListarActivos() : _bll.ListarTodos();
-            dgvUsuarios.DataSource = null;       
+            dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = lista;
+
+            // Ocultamos la columna Contrasena: al ser un hash SHA256 no aporta
+            // información útil al administrador y ensucia visualmente la grilla.
+            if (dgvUsuarios.Columns.Contains("Contrasena"))
+                dgvUsuarios.Columns["Contrasena"].Visible = false;
+
+            // Como Rol ahora es Rol_GV42 (entidad), por defecto el DataGridView
+            // mostraría "Servicios.Rol_GV42" en esa columna. La ocultamos y
+            // mostramos la propiedad RolNombre, que devuelve solo el texto.
+            if (dgvUsuarios.Columns.Contains("Rol"))
+                dgvUsuarios.Columns["Rol"].Visible = false;
+
+            if (dgvUsuarios.Columns.Contains("RolNombre"))
+                dgvUsuarios.Columns["RolNombre"].HeaderText = "Rol";
 
             foreach (DataGridViewRow row in dgvUsuarios.Rows)
             {
@@ -105,8 +145,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void LimpiarCampos()
         {
             txtDni.Text = txtApellido.Text = txtNombre.Text =
-            txtEmail.Text = comboBox1.Text = txtUser.Text =
+            txtEmail.Text = txtUser.Text =
             txtBloqueado.Text = txtActivo.Text = "";
+            if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
         }
 
         private void btnCrear_Click(object sender, EventArgs e)
@@ -159,14 +200,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void Modificar()
         {
             string email = txtEmail.Text.Trim();
-            string rol = comboBox1.SelectedItem?.ToString() ?? comboBox1.Text.Trim();
+            // El SelectedItem del combo es un Rol_GV42 (entidad), no un string.
+            Rol_GV42 rol = comboBox1.SelectedItem as Rol_GV42;
 
             if (string.IsNullOrEmpty(email))
             {
                 MessageBox.Show("El email no puede estar vacío.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (string.IsNullOrEmpty(rol))
+            if (rol == null)
             {
                 MessageBox.Show("Seleccioná un rol.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -175,7 +217,8 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (email != _usuarioSeleccionado.Email)
                 _bll.ModificarEmail(_usuarioSeleccionado.DNI, email);
 
-            if (rol != _usuarioSeleccionado.Rol)
+            // Comparamos por Id (la FK) en vez de por nombre.
+            if (_usuarioSeleccionado.Rol == null || rol.Id != _usuarioSeleccionado.Rol.Id)
                 _bll.ModificarRol(_usuarioSeleccionado.DNI, rol);
 
             MessageBox.Show("Usuario modificado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -189,11 +232,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             string apellido = txtApellido.Text.Trim();
             string nombre = txtNombre.Text.Trim();
             string email = txtEmail.Text.Trim();
-            string rol = comboBox1.Text.Trim();
+            Rol_GV42 rol = comboBox1.SelectedItem as Rol_GV42;
 
             if (string.IsNullOrEmpty(dni) || string.IsNullOrEmpty(apellido) ||
                 string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email) ||
-                string.IsNullOrEmpty(rol))
+                rol == null)
             {
                 MessageBox.Show("Completá todos los campos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -230,12 +273,8 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            if (rol != "Admin" && rol != "Usuario")
-            {
-                MessageBox.Show("El rol seleccionado no es válido.",
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // Ya no validamos el rol contra strings hardcodeados: si vino del
+            // combo, por construcción es uno de los roles que existen en la base.
 
             if (_bll.ExisteDNI(dni))
             {
@@ -284,10 +323,29 @@ namespace PROYECTO_ING_DE_SOFTWARE
             txtApellido.Text = _usuarioSeleccionado.Apellido;
             txtNombre.Text = _usuarioSeleccionado.Nombre;
             txtEmail.Text = _usuarioSeleccionado.Email;
-            comboBox1.Text = _usuarioSeleccionado.Rol;
+            // Posicionamos el combo en el rol del usuario buscando por Id.
+            SeleccionarRolEnCombo(_usuarioSeleccionado.Rol);
             txtUser.Text = _usuarioSeleccionado.Login;
             txtBloqueado.Text = _usuarioSeleccionado.Bloqueo ? "Sí" : "No";
             txtActivo.Text = _usuarioSeleccionado.Activo ? "Sí" : "No";
+        }
+
+        // Busca dentro del combo el Rol con el mismo Id que el del usuario y lo selecciona.
+        // Es más robusto que comparar por nombre porque la FK es el Id.
+        private void SeleccionarRolEnCombo(Rol_GV42 rol)
+        {
+            if (rol == null) { comboBox1.SelectedIndex = -1; return; }
+
+            for (int i = 0; i < comboBox1.Items.Count; i++)
+            {
+                Rol_GV42 r = comboBox1.Items[i] as Rol_GV42;
+                if (r != null && r.Id == rol.Id)
+                {
+                    comboBox1.SelectedIndex = i;
+                    return;
+                }
+            }
+            comboBox1.SelectedIndex = -1;
         }
 
         // Radio button "Solo Activos": refresca la grilla con el filtro Activo = 1.
@@ -331,7 +389,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 MessageBox.Show("Seleccioná un usuario de la grilla.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
- 
+
             HabilitarCampos(false);
             txtEmail.Enabled = true;
             comboBox1.Enabled = true;

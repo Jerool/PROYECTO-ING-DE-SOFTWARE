@@ -72,7 +72,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void AbrirFormularioSegunRol()
         {
-            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().Rol;
+            // Rol ahora es Rol_GV42 (entidad). Comparamos por Nombre para
+            // decidir qué menú abrir.
+            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre;
 
             Form formulario;
             if (rol == "Admin")

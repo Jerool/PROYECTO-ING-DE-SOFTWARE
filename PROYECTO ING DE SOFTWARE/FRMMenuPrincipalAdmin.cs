@@ -28,7 +28,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual != null)
-                lblUsuarioActual.Text = $"Sesión: {actual.Nombre} {actual.Apellido} ({actual.Login}) — Rol: {actual.Rol}";
+                lblUsuarioActual.Text = $"Sesión: {actual.Nombre} {actual.Apellido} ({actual.Login}) — Rol: {actual.RolNombre}";
         }
 
         public void AbrirFormularioHijo(Form f)

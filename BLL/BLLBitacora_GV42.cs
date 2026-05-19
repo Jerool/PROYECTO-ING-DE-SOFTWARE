@@ -29,16 +29,9 @@ namespace BLL
             }
         }
 
-        public void RegistrarEvento(string login, string modulo, string evento, string criticidad)
+        public void RegistrarEvento(string login, string modulo, string tipoEvento, string detalle, string criticidad)
         {
-            var registro = new Bitacora_GV42
-            {
-                Login = login,
-                Modulo = modulo,
-                Evento = evento,
-                Criticidad = criticidad,
-                FechaHora = DateTime.Now
-            };
+            var registro = new Bitacora_GV42(login, modulo, tipoEvento, detalle, criticidad, DateTime.Now);
             _DALBitacora.Guardar(registro);
         }
 
@@ -46,10 +39,10 @@ namespace BLL
         {
             return _DALBitacora.Listar();
         }
-        public List<Bitacora_GV42> Filtrar(string login, string modulo, string evento,
+        public List<Bitacora_GV42> Filtrar(string login, string modulo, string tipoEvento,
                                           string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {
-            return _DALBitacora.Filtrar(login, modulo, evento, criticidad, fechaInicio, fechaFin);
+            return _DALBitacora.Filtrar(login, modulo, tipoEvento, criticidad, fechaInicio, fechaFin);
         }
 
         public List<string> ListarModulos() => _DALBitacora.ListarModulos();
