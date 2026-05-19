@@ -170,6 +170,7 @@
             this.txtDni.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtDni.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.txtDni.Location = new System.Drawing.Point(132, 226);
+            this.txtDni.MaxLength = 8;
             this.txtDni.Name = "txtDni";
             this.txtDni.Size = new System.Drawing.Size(100, 24);
             this.txtDni.TabIndex = 9;

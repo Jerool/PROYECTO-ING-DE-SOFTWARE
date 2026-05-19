@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BLL;
@@ -203,9 +201,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // El SelectedItem del combo es un Rol_GV42 (entidad), no un string.
             Rol_GV42 rol = comboBox1.SelectedItem as Rol_GV42;
 
-            if (string.IsNullOrEmpty(email))
+            if (!Validaciones_GV42.EsEmailValido(email))
             {
-                MessageBox.Show("El email no puede estar vacío.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_EMAIL,
+                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
                 return;
             }
             if (rol == null)
@@ -242,32 +242,33 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            if (!Regex.IsMatch(dni, @"^\d{7,8}$"))
+            // Todas las validaciones de formato pasan por Validaciones_GV42 (regex centralizadas).
+            if (!Validaciones_GV42.EsDniValido(dni))
             {
-                MessageBox.Show("El DNI debe contener solo números y tener entre 7 y 8 dígitos.",
+                MessageBox.Show(Validaciones_GV42.MENSAJE_DNI,
                                 "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDni.Focus();
                 return;
             }
 
-            if (!Regex.IsMatch(apellido, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
+            if (!Validaciones_GV42.EsApellidoValido(apellido))
             {
-                MessageBox.Show("El apellido solo puede contener letras.",
+                MessageBox.Show(Validaciones_GV42.MENSAJE_APELLIDO,
                                 "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtApellido.Focus();
                 return;
             }
-            if (!Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
+            if (!Validaciones_GV42.EsNombreValido(nombre))
             {
-                MessageBox.Show("El nombre solo puede contener letras.",
+                MessageBox.Show(Validaciones_GV42.MENSAJE_NOMBRE,
                                 "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNombre.Focus();
                 return;
             }
 
-            if (!EsEmailValido(email))
+            if (!Validaciones_GV42.EsEmailValido(email))
             {
-                MessageBox.Show("El formato del email no es válido.",
+                MessageBox.Show(Validaciones_GV42.MENSAJE_EMAIL,
                                 "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEmail.Focus();
                 return;
@@ -296,19 +297,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             {
                 MessageBox.Show("No se pudo crear el usuario.\n\nDetalle: " + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private bool EsEmailValido(string email)
-        {
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
             }
         }
 

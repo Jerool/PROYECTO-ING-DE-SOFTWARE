@@ -12,7 +12,6 @@ namespace Servicios
 
         private static readonly byte[] CLAVE = Encoding.UTF8.GetBytes("GV42_K3y_S3cr3ta_ProyectoIngSft!");
 
-        // Vector de inicialización: necesita EXACTAMENTE 16 bytes (AES usa bloques de 128 bits).
         private static readonly byte[] IV = Encoding.UTF8.GetBytes("GV42_IV_ProyMng_");
 
         private EncriptadorReversible_GV42() { }

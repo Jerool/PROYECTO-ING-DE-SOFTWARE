@@ -25,7 +25,7 @@ namespace Servicios
             }
         }
 
-        // Recibe una contraseña en texto plano y devuelve el hash en hexadecimal.
+
         public string EncriptarContrasena(string contrasenaPlana)
         {
             if (string.IsNullOrEmpty(contrasenaPlana))
@@ -36,7 +36,7 @@ namespace Servicios
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenaPlana));
 
-                // Pasamos los bytes a una representación hexadecimal (string de 64 chars).
+
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in bytes)
                 sb.Append(b.ToString("x2"));   

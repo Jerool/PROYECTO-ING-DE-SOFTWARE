@@ -18,7 +18,6 @@ namespace Servicios
 
         private SessionManager_GV42() { }
 
-        //Punto de acceso global a la única instancia.
         public static SessionManager_GV42 Instancia
         {
             get

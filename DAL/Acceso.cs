@@ -39,7 +39,7 @@ namespace DAL
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=Desktop-L5HB13;Initial Catalog=""GestionUsuario"";Integrated Security=True"; /*(localdb)\MSSQLLocalDB JERE*/ /*Desktop - L5HB13 LAUTY*/
+                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; /*(localdb)\MSSQLLocalDB JERE*/ /*Desktop - L5HB13 LAUTY*/
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }

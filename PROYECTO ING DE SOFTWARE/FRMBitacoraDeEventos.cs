@@ -56,8 +56,25 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void EstablecerFechasPorDefecto()
         {
-            dtpFechaInicio.Value = DateTime.Now.Date.AddDays(-3);
-            dtpFechaFin.Value = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            // Política de auditoría: los eventos viejos de más de 3 días no se
+            // pueden consultar desde la UI. Esto evita que el usuario haga queries
+            // gigantes sobre toda la historia y mantiene los reportes acotados.
+            //
+            // Lo enforzamos limitando el rango permitido del DateTimePicker
+            // (MinDate / MaxDate) — el control no deja elegir nada fuera de eso,
+            // así que no hace falta validar a mano después.
+            DateTime hoy = DateTime.Now.Date;
+            DateTime hace3Dias = hoy.AddDays(-3);
+
+            dtpFechaInicio.MinDate = hace3Dias;
+            dtpFechaInicio.MaxDate = hoy;
+            dtpFechaInicio.Value = hace3Dias;
+
+            // Fecha fin: nunca posterior a hoy ni anterior a hace 3 días
+            // (sería un rango vacío).
+            dtpFechaFin.MinDate = hace3Dias;
+            dtpFechaFin.MaxDate = hoy;
+            dtpFechaFin.Value = hoy;
         }
 
         private void CargarCombos()
@@ -77,13 +94,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void CargarGrillaPorDefecto()
         {
+            // Fecha fin: extendemos al final del día (23:59:59) para que el filtro
+            // BETWEEN incluya eventos generados hoy.
+            DateTime fechaFinReal = dtpFechaFin.Value.Date.AddDays(1).AddSeconds(-1);
             CargarGrilla(_bllBitacora.Filtrar(
                 login: null,
                 modulo: null,
                 tipoEvento: null,
                 criticidad: null,
-                fechaInicio: dtpFechaInicio.Value,
-                fechaFin: dtpFechaFin.Value));
+                fechaInicio: dtpFechaInicio.Value.Date,
+                fechaFin: fechaFinReal));
         }
 
         private void CargarGrilla(List<Bitacora_GV42> registros)

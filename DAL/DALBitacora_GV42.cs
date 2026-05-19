@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 namespace DAL
 {
 
-    public class DALBitacora_GV42 : IbitacoraDAL_GV42
+    public class DALBitacora_GV42
     {
         private readonly Acceso _acceso;
-        private readonly DALModulo_GV42 _DALModulo;
-        private readonly DALTipoEvento_GV42 _DALTipoEvento;
 
         // SELECT base con JOINs a Modulo y TipoEvento. Lo definimos una sola vez
         // porque lo usamos en Listar y en Filtrar.
@@ -30,13 +28,8 @@ namespace DAL
         public DALBitacora_GV42()
         {
             _acceso = Acceso.Instancia;
-            _DALModulo = new DALModulo_GV42();
-            _DALTipoEvento = new DALTipoEvento_GV42();
         }
 
-        // Inserta una fila en EVENTOS. Si el registro vino con Modulo/TipoEvento
-        // como "shell" (solo Nombre, sin Id) — caso típico desde BLLUsuario donde
-        // se usan strings hardcodeados — los resolvemos contra las tablas catálogo.
         public void Guardar(Bitacora_GV42 registro)
         {
             int idModulo = ResolverIdModulo(registro.Modulo);
@@ -135,11 +128,11 @@ namespace DAL
             return lista;
         }
 
+        // Devuelve los nombres de los tipos de evento como strings (para los combos de la UI).
+        // Por dentro reutiliza ListarEventos (que devuelve las entidades).
         public List<string> ListarTiposEvento()
         {
-            // Mantiene la firma anterior (lista de strings) para no romper la UI,
-            // pero por debajo lee de TipoEvento (catálogo con FK).
-            List<TipoEvento_GV42> entidades = _DALTipoEvento.ListarTodos();
+            List<TipoEvento_GV42> entidades = ListarEventos();
             List<string> tipos = new List<string>();
             foreach (TipoEvento_GV42 t in entidades) tipos.Add(t.Nombre);
             return tipos;
@@ -147,7 +140,7 @@ namespace DAL
 
         public List<string> ListarModulos()
         {
-            List<Modulo_GV42> entidades = _DALModulo.ListarTodos();
+            List<Modulo_GV42> entidades = ListarModulo();
             List<string> modulos = new List<string>();
             foreach (Modulo_GV42 m in entidades) modulos.Add(m.Nombre);
             return modulos;
@@ -163,7 +156,7 @@ namespace DAL
 
             if (m.Id > 0) return m.Id;
 
-            Modulo_GV42 enBase = _DALModulo.BuscarPorNombre(m.Nombre);
+            Modulo_GV42 enBase = BuscarModulo(m.Nombre);
             if (enBase == null)
                 throw new Exception($"El módulo '{m.Nombre}' no existe en la tabla Modulo. " +
                                     "Agregalo al catálogo antes de registrar el evento.");
@@ -177,11 +170,76 @@ namespace DAL
 
             if (t.Id > 0) return t.Id;
 
-            TipoEvento_GV42 enBase = _DALTipoEvento.BuscarPorNombre(t.Nombre);
+            TipoEvento_GV42 enBase = BuscarEvento(t.Nombre);
             if (enBase == null)
                 throw new Exception($"El tipo de evento '{t.Nombre}' no existe en la tabla TipoEvento. " +
                                     "Agregalo al catálogo antes de registrar el evento.");
             return enBase.Id;
+        }
+
+        public List<TipoEvento_GV42> ListarEventos()
+        {
+            string query = "SELECT Id, Nombre FROM TipoEvento ORDER BY Nombre";
+            DataTable dt = _acceso.leer(query, null);
+
+            List<TipoEvento_GV42> lista = new List<TipoEvento_GV42>();
+            foreach (DataRow row in dt.Rows)
+            {
+                lista.Add(new TipoEvento_GV42
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Nombre = row["Nombre"].ToString()
+                });
+            }
+            return lista;
+        }
+
+        public TipoEvento_GV42 BuscarEvento(string nombre)
+        {
+            string query = "SELECT Id, Nombre FROM TipoEvento WHERE Nombre = @Nombre";
+            SqlParameter[] p = { new SqlParameter("@Nombre", nombre) };
+            DataTable dt = _acceso.leer(query, p);
+
+            if (dt.Rows.Count == 0) return null;
+
+            return new TipoEvento_GV42
+            {
+                Id = Convert.ToInt32(dt.Rows[0]["Id"]),
+                Nombre = dt.Rows[0]["Nombre"].ToString()
+            };
+        }
+
+        public List<Modulo_GV42> ListarModulo()
+        {
+            string query = "SELECT Id, Nombre FROM Modulo ORDER BY Nombre";
+            DataTable dt = _acceso.leer(query, null);
+
+            List<Modulo_GV42> lista = new List<Modulo_GV42>();
+            foreach (DataRow row in dt.Rows)
+            {
+                lista.Add(new Modulo_GV42
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Nombre = row["Nombre"].ToString()
+                });
+            }
+            return lista;
+        }
+
+
+        public Modulo_GV42 BuscarModulo(string nombre)
+        {
+            string query = "SELECT Id, Nombre FROM Modulo WHERE Nombre = @Nombre";
+            SqlParameter[] p = { new SqlParameter("@Nombre", nombre) };
+            DataTable dt = _acceso.leer(query, p);
+
+            if (dt.Rows.Count == 0) return null;
+
+            return new Modulo_GV42
+            {
+                Id = Convert.ToInt32(dt.Rows[0]["Id"]),
+                Nombre = dt.Rows[0]["Nombre"].ToString()
+            };
         }
     }
 }

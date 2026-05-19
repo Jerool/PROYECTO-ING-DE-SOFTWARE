@@ -44,9 +44,6 @@ namespace Servicios
             set { _Contrasena = value; }
         }
 
-        // Rol ahora es una entidad completa (Id + Nombre), no un string suelto.
-        // La tabla Usuario referencia a Roles por IdRol (FK), por eso acá guardamos
-        // el objeto Rol_GV42 entero.
         private Rol_GV42 _Rol;
         public Rol_GV42 Rol
         {
@@ -54,9 +51,6 @@ namespace Servicios
             set { _Rol = value; }
         }
 
-        // Helper de solo lectura: devuelve el nombre del rol (o cadena vacía si no hay).
-        // Útil para mostrar en la grilla sin tener que pegarle .Rol.Nombre en cada lado
-        // y por si alguna parte vieja del código todavía espera un string.
         public string RolNombre
         {
             get { return _Rol != null ? _Rol.Nombre : string.Empty; }
@@ -84,6 +78,8 @@ namespace Servicios
             set { _Activo = value; }
         }
 
+        public int IntentosFallidos { get; set; }
+        public DateTime? UltimoIntentoFallido { get; set; }
 
         public Usuario_GV42(string dni, string apellidos, string nombre, string login, string password, Rol_GV42 rol, string email)
         {

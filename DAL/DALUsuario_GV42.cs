@@ -1,4 +1,4 @@
-using Servicios;                        // Para usar la entidad Usuario_GV42
+using Servicios;                        
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,14 +14,11 @@ namespace DAL
     {
 
         private readonly Acceso _acceso;
-
-        // SELECT base con el JOIN a Roles. Lo definimos una sola vez porque lo
-        // usamos en todos los métodos de lectura. Trae Id y Nombre del rol así
-        // armamos el Rol_GV42 directo en MapearFila.
         private const string SELECT_BASE =
             "SELECT U.DNI, U.Apellido, U.Nombre, U.UserName, U.Contrasena, " +
             "       U.IdRol, R.Nombre AS RolNombre, " +
-            "       U.Email, U.Bloqueo, U.Activo " +
+            "       U.Email, U.Bloqueo, U.Activo, " +
+            "       U.IntentosFallidos, U.UltimoIntentoFallido " +
             "FROM Usuario U " +
             "INNER JOIN Roles R ON R.Id = U.IdRol";
 
@@ -72,9 +69,18 @@ namespace DAL
             _acceso.escribir(query, parametros);
         }
 
+        // Desbloquear pone Bloqueo = 0, resetea la contraseña y también limpia
+        // los contadores de intentos (porque si no, el usuario quedaría con
+        // 3 intentos ya hechos y sería bloqueado de nuevo enseguida).
         public void Desbloquear(string dni, string contrasenaCifrada)
         {
-            string query = "UPDATE Usuario SET Bloqueo = 0, Contrasena = @Contrasena WHERE DNI = @DNI";
+            string query =
+                "UPDATE Usuario " +
+                "SET Bloqueo = 0, " +
+                "    Contrasena = @Contrasena, " +
+                "    IntentosFallidos = 0, " +
+                "    UltimoIntentoFallido = NULL " +
+                "WHERE DNI = @DNI";
             SqlParameter[] p = {
                 new SqlParameter("@Contrasena", contrasenaCifrada),
                 new SqlParameter("@DNI", dni)
@@ -94,7 +100,7 @@ namespace DAL
 
         public void ModificarEmail(string dni, string email)
         {
-            // Email se guarda CIFRADO en la base. La desencriptación se hace en MapearFila.
+
             string emailCifrado = EncriptadorReversible_GV42.Instancia.Encriptar(email);
             string query = "UPDATE Usuario SET Email = @Email WHERE DNI = @DNI";
             SqlParameter[] p = {
@@ -104,7 +110,7 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
-        // Ahora se modifica el rol por Id (FK), no por nombre.
+
         public void ModificarRol(string dni, int idRol)
         {
             string query = "UPDATE Usuario SET IdRol = @IdRol WHERE DNI = @DNI";
@@ -125,15 +131,49 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
+
+        // Persiste el nuevo contador de intentos + el momento del intento.
+        // El BLL le pasa el número ya calculado (1, 2, 3...) según corresponda
+        // (resetea / suma) en función de la ventana de tiempo.
+        public void ActualizarIntentosFallidos(string login, int nuevosIntentos, DateTime momentoIntento)
+        {
+            string query =
+                "UPDATE Usuario " +
+                "SET IntentosFallidos = @Intentos, " +
+                "    UltimoIntentoFallido = @Momento " +
+                "WHERE UserName = @Login";
+            SqlParameter[] p = {
+                new SqlParameter("@Intentos", nuevosIntentos),
+                new SqlParameter("@Momento",  momentoIntento),
+                new SqlParameter("@Login",    login)
+            };
+            _acceso.escribir(query, p);
+        }
+
+        // Limpia el contador (después de un login exitoso, o cuando expira la ventana).
+        public void ResetearIntentosFallidos(string login)
+        {
+            string query =
+                "UPDATE Usuario " +
+                "SET IntentosFallidos = 0, " +
+                "    UltimoIntentoFallido = NULL " +
+                "WHERE UserName = @Login";
+            SqlParameter[] p = { new SqlParameter("@Login", login) };
+            _acceso.escribir(query, p);
+        }
+
         public int AgregarUsuario(Usuario_GV42 usuario)
         {
-            // Defensivo: si llegó sin rol, reventamos acá con un mensaje claro
-            // antes de mandar un NULL a una columna NOT NULL.
+
             if (usuario.Rol == null)
                 throw new Exception("El usuario no tiene rol asignado.");
 
-            string query = "INSERT INTO Usuario (DNI, Apellido, Nombre, UserName, Contrasena, IdRol, Email, Bloqueo, Activo) " +
-                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @IdRol, @Email, 0, 1)";
+            // IntentosFallidos arranca en 0 (lo cubre el DEFAULT de la columna,
+            // pero lo mandamos explícito para que quede claro). UltimoIntentoFallido
+            // queda NULL hasta que falle por primera vez.
+            string query = "INSERT INTO Usuario " +
+                  "(DNI, Apellido, Nombre, UserName, Contrasena, IdRol, Email, Bloqueo, Activo, IntentosFallidos, UltimoIntentoFallido) " +
+                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @IdRol, @Email, 0, 1, 0, NULL)";
             SqlParameter[] p = {
                 new SqlParameter("@DNI",   usuario.DNI),
                 new SqlParameter("@Ape",   usuario.Apellido),
@@ -141,7 +181,6 @@ namespace DAL
                 new SqlParameter("@Login", usuario.Login),
                 new SqlParameter("@Clave", usuario.Contrasena),
                 new SqlParameter("@IdRol", usuario.Rol.Id),
-                // Email se guarda cifrado con AES (encriptación reversible).
                 new SqlParameter("@Email", EncriptadorReversible_GV42.Instancia.Encriptar(usuario.Email))
             };
             return _acceso.escribir(query, p);
@@ -166,19 +205,53 @@ namespace DAL
                 Nombre = row["Nombre"].ToString(),
                 Login = row["UserName"].ToString(),
                 Contrasena = row["Contrasena"].ToString(),
-                // Reconstruimos la entidad Rol con el Id (FK) y el Nombre que
-                // trajimos del JOIN. De acá en más, toda la app trabaja con
-                // Rol_GV42 en lugar de un string suelto.
+ 
                 Rol = new Rol_GV42
                 {
                     Id = Convert.ToInt32(row["IdRol"]),
                     Nombre = row["RolNombre"].ToString()
                 },
-                // Email viene cifrado de la base — lo desencriptamos acá para que
-                // todo el resto del sistema (BLL, UI) trabaje con el valor en claro.
+
                 Email = EncriptadorReversible_GV42.Instancia.Desencriptar(row["Email"].ToString()),
                 Bloqueo = Convert.ToBoolean(row["Bloqueo"]),
-                Activo = Convert.ToBoolean(row["Activo"])
+                Activo = Convert.ToBoolean(row["Activo"]),
+                IntentosFallidos = Convert.ToInt32(row["IntentosFallidos"]),
+                UltimoIntentoFallido = row["UltimoIntentoFallido"] == DBNull.Value
+                    ? (DateTime?)null
+                    : Convert.ToDateTime(row["UltimoIntentoFallido"])
+            };
+        }
+
+        public List<Rol_GV42> ListarRoles()
+        {
+            string query = "SELECT Id, Nombre FROM Roles ORDER BY Nombre";
+            DataTable dt = _acceso.leer(query, null);
+
+            List<Rol_GV42> lista = new List<Rol_GV42>();
+            foreach (DataRow row in dt.Rows)
+            {
+                lista.Add(new Rol_GV42
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Nombre = row["Nombre"].ToString()
+                });
+            }
+            return lista;
+        }
+
+
+        public Rol_GV42 BuscarPorNombre(string nombre)
+        {
+            string query = "SELECT Id, Nombre FROM Roles WHERE Nombre = @Nombre";
+            SqlParameter[] p = { new SqlParameter("@Nombre", nombre) };
+            DataTable dt = _acceso.leer(query, p);
+
+            if (dt.Rows.Count == 0) return null;
+
+            return new Rol_GV42
+            {
+                Id = Convert.ToInt32(dt.Rows[0]["Id"]),
+                Nombre = dt.Rows[0]["Nombre"].ToString()
             };
         }
     }

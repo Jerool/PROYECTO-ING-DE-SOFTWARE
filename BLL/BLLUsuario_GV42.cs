@@ -13,16 +13,19 @@ namespace BLL
     public class BLLUsuario_GV42
     {
         private readonly DALUsuario_GV42 _DALUsuario;
-        private readonly DALRol_GV42 _DALRol;
-        private readonly IbitacoraManager_GV42 _IbitacoraManager;
-        private readonly DALBitacora_GV42 _DALBitacora;
+
+        public const int MAX_INTENTOS = 3;
+
+        // Ventana de tiempo: si pasó MÁS de esto desde el último intento fallido
+        // sin login exitoso, el contador se "olvida" y arranca de nuevo desde 1.
+        private static readonly TimeSpan VENTANA_INTENTOS = TimeSpan.FromHours(1);
 
         public BLLUsuario_GV42()
         {
             _DALUsuario = new DALUsuario_GV42();
-            _DALRol = new DALRol_GV42();
-            _DALBitacora = new DALBitacora_GV42();
-            _IbitacoraManager = new BitacoraManager_GV42();
+            // No instanciamos DALBitacora directo — la auditoría va por
+            // BLLBitacora_GV42.Instancia (singleton). Así evitamos crear DAOs
+            // que no usamos directamente acá.
         }
 
         public enum ResultadoLogin
@@ -36,14 +39,10 @@ namespace BLL
             BloqueadoPorIntentos
         }
 
-        // Helper interno: arma una Bitacora y la guarda. Se encarga de separar
-        // el "tipo de evento" (catálogo, FK) del "detalle" (texto libre).
-        // Así no repetimos new Bitacora_GV42(...) + _DALBitacora.Guardar(...) en cada llamada.
+
         private void Auditar(string login, string modulo, string tipoEvento, string detalle, string criticidad)
         {
-            Bitacora_GV42 b = _IbitacoraManager.RegistrarEvento(
-                new Bitacora_GV42(login, modulo, tipoEvento, detalle, criticidad, DateTime.Now));
-            _DALBitacora.Guardar(b);
+         BLLBitacora_GV42.Instancia.RegistrarEvento(login, modulo, tipoEvento, detalle, criticidad);
         }
 
         public ResultadoLogin IntentarLogin(string login, string contrasena)
@@ -54,7 +53,6 @@ namespace BLL
                 Auditar(login, "Login", "Intento de login con sesión ya activa", null, "Media");
                 return ResultadoLogin.SesionActiva;
             }
-
 
             Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
             if (usuario == null)
@@ -79,24 +77,31 @@ namespace BLL
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasena);
             if (usuario.Contrasena != contrasenaCifrada)
             {
-                int intentos = IntentosLogin_GV42.Instancia.RegistrarIntentoFallido(login);
-                if (intentos >= IntentosLogin_GV42.MAX_INTENTOS)
+
+                int nuevosIntentos = CalcularNuevosIntentos(usuario);
+                DateTime ahora = DateTime.Now;
+
+                if (nuevosIntentos >= MAX_INTENTOS)
                 {
+
+                    _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
                     _DALUsuario.Bloquear(login);
-                    IntentosLogin_GV42.Instancia.Resetear(login);
                     Auditar(login, "Login", "Usuario bloqueado por intentos fallidos",
-                        $"{IntentosLogin_GV42.MAX_INTENTOS} intentos fallidos consecutivos", "Alta");
+                        $"{MAX_INTENTOS} intentos fallidos consecutivos dentro de {VENTANA_INTENTOS.TotalMinutes:0} min", "Alta");
                     return ResultadoLogin.BloqueadoPorIntentos;
                 }
                 else
                 {
+                    _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
                     Auditar(login, "Login", "Contraseña incorrecta",
-                        $"Intento {intentos}/{IntentosLogin_GV42.MAX_INTENTOS}", "Media");
+                    $"Intento {nuevosIntentos}/{MAX_INTENTOS}", "Media");
                     return ResultadoLogin.ContrasenaIncorrecta;
                 }
             }
 
-            IntentosLogin_GV42.Instancia.Resetear(login);
+
+            _DALUsuario.ResetearIntentosFallidos(login);
+
             bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
             if (!sesionIniciada)
             {
@@ -107,12 +112,25 @@ namespace BLL
             return ResultadoLogin.Exitoso;
         }
 
+        private int CalcularNuevosIntentos(Usuario_GV42 usuario)
+        {
+            if (usuario.UltimoIntentoFallido == null)
+                return 1;
+
+            DateTime ultimo = usuario.UltimoIntentoFallido.Value;
+            bool dentroDeLaVentana = (DateTime.Now - ultimo) <= VENTANA_INTENTOS;
+
+            if (dentroDeLaVentana)
+                return usuario.IntentosFallidos + 1;
+            else
+                return 1;
+        }
+
         public List<Usuario_GV42> ListarActivos() => _DALUsuario.ListarActivos();
         public List<Usuario_GV42> ListarTodos() => _DALUsuario.ListarTodos();
 
-        // Devuelve la lista completa de roles como entidades (Id + Nombre).
-        // La UI la usa para llenar el combo y luego pasar la entidad seleccionada.
-        public List<Rol_GV42> ListarRoles() => _DALRol.ListarTodos();
+
+        public List<Rol_GV42> ListarRoles() => _DALUsuario.ListarRoles();
 
         public Usuario_GV42 BuscarPorLogin(string login) => _DALUsuario.BuscarPorLogin(login);
 
@@ -126,7 +144,6 @@ namespace BLL
             string contrasenaPlana = usuario.Nombre.ToLower() + ultimos3;
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
             _DALUsuario.Desbloquear(dni, contrasenaCifrada);
-            IntentosLogin_GV42.Instancia.Resetear(login);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Gestión Usuario",
                 "Usuario desbloqueado", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
         }
@@ -146,8 +163,7 @@ namespace BLL
                 "Email modificado", $"DNI: {dni}", "Media");
         }
 
-        // Recibe el Rol_GV42 ya resuelto (con Id + Nombre) — la UI lo manda
-        // directo desde el ComboBox.
+
         public void ModificarRol(string dni, Rol_GV42 rol)
         {
             if (rol == null) throw new Exception("Debe seleccionar un rol válido.");
@@ -167,7 +183,6 @@ namespace BLL
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
             string login = nombre.ToLower() + ultimos3;
 
-            // Validación previa: usuario ya existe con ese login.
             if (_DALUsuario.BuscarPorLogin(login) != null)
             throw new Exception($"Ya existe un usuario con el login '{login}'.");
 

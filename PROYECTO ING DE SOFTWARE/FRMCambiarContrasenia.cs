@@ -42,6 +42,17 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
+            // Validamos que la NUEVA contraseña cumpla los requisitos mínimos de seguridad
+            // (al menos 6 caracteres, una letra y un número). La actual no la validamos
+            // porque podría haber sido seteada bajo reglas viejas.
+            if (!Validaciones_GV42.EsContrasenaValida(nuevaContrasena))
+            {
+                MessageBox.Show(Validaciones_GV42.MENSAJE_CONTRASENA,
+                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNuevaconstrasenia.Focus();
+                return;
+            }
+
             ResultadoCambioContrasena resultado =
                 _bll.CambiarContrasena(login, contrasenaActual, nuevaContrasena, confirmar);
 

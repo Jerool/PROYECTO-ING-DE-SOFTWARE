@@ -186,7 +186,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.cboModulo.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.cboModulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboModulo.FormattingEnabled = true;
-            this.cboModulo.Location = new System.Drawing.Point(135, 363);
+            this.cboModulo.Location = new System.Drawing.Point(153, 363);
             this.cboModulo.Name = "cboModulo";
             this.cboModulo.Size = new System.Drawing.Size(100, 25);
             this.cboModulo.TabIndex = 7;
@@ -199,7 +199,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.cboEvento.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.cboEvento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboEvento.FormattingEnabled = true;
-            this.cboEvento.Location = new System.Drawing.Point(581, 303);
+            this.cboEvento.Location = new System.Drawing.Point(592, 303);
             this.cboEvento.Name = "cboEvento";
             this.cboEvento.Size = new System.Drawing.Size(120, 25);
             this.cboEvento.TabIndex = 11;
@@ -234,7 +234,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.cboCriticidad.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.cboCriticidad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
             this.cboCriticidad.FormattingEnabled = true;
-            this.cboCriticidad.Location = new System.Drawing.Point(592, 366);
+            this.cboCriticidad.Location = new System.Drawing.Point(606, 367);
             this.cboCriticidad.Name = "cboCriticidad";
             this.cboCriticidad.Size = new System.Drawing.Size(100, 25);
             this.cboCriticidad.TabIndex = 14;
@@ -288,7 +288,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.dtpFechaInicio.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.dtpFechaInicio.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.dtpFechaInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFechaInicio.Location = new System.Drawing.Point(324, 301);
+            this.dtpFechaInicio.Location = new System.Drawing.Point(334, 301);
             this.dtpFechaInicio.Name = "dtpFechaInicio";
             this.dtpFechaInicio.Size = new System.Drawing.Size(200, 24);
             this.dtpFechaInicio.TabIndex = 17;
@@ -303,7 +303,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.dtpFechaFin.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(187)))), ((int)(((byte)(222)))), ((int)(((byte)(251)))));
             this.dtpFechaFin.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFechaFin.Location = new System.Drawing.Point(324, 370);
+            this.dtpFechaFin.Location = new System.Drawing.Point(330, 368);
             this.dtpFechaFin.Name = "dtpFechaFin";
             this.dtpFechaFin.Size = new System.Drawing.Size(200, 24);
             this.dtpFechaFin.TabIndex = 18;
@@ -314,7 +314,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.txtNombreUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNombreUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtNombreUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.txtNombreUsuario.Location = new System.Drawing.Point(224, 250);
+            this.txtNombreUsuario.Location = new System.Drawing.Point(247, 250);
             this.txtNombreUsuario.Name = "txtNombreUsuario";
             this.txtNombreUsuario.ReadOnly = true;
             this.txtNombreUsuario.Size = new System.Drawing.Size(150, 24);
@@ -337,7 +337,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.txtApellidoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtApellidoUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.txtApellidoUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.txtApellidoUsuario.Location = new System.Drawing.Point(488, 250);
+            this.txtApellidoUsuario.Location = new System.Drawing.Point(503, 250);
             this.txtApellidoUsuario.Name = "txtApellidoUsuario";
             this.txtApellidoUsuario.ReadOnly = true;
             this.txtApellidoUsuario.Size = new System.Drawing.Size(150, 24);

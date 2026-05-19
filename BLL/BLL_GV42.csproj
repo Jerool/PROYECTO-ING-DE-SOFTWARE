@@ -44,7 +44,6 @@
     <Compile Include="BLLBitacora_GV42.cs" />
     <Compile Include="BLLUsuario_GV42.cs" />
     <Compile Include="GeneradorPdf_GV42.cs" />
-    <Compile Include="IntentosLogin_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

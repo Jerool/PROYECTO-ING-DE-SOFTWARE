@@ -37,6 +37,17 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
+            // Validamos el formato del login antes de pegarle a la base.
+            // Esto corta intentos con caracteres raros (sql injection, etc.) sin
+            // necesidad de hacer un query.
+            if (!Validaciones_GV42.EsLoginValido(login))
+            {
+                MessageBox.Show(Validaciones_GV42.MENSAJE_LOGIN, "Advertencia",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtLogIn.Focus();
+                return;
+            }
+
             ResultadoLogin resultado = _bllUsuario.IntentarLogin(login, contrasena);
 
   
