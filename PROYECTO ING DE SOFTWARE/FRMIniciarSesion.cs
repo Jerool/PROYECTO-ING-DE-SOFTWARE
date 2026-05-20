@@ -29,21 +29,19 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             string login = txtLogIn.Text.Trim();
             string contrasena = txtContrasena.Text.Trim();
+            _bllUsuario.BuscarPorLogin(login);
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(contrasena))
             {
-                MessageBox.Show("Completá todos los campos.", "Advertencia",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Completá todos los campos.", "Advertencia",MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Validamos el formato del login antes de pegarle a la base.
-            // Esto corta intentos con caracteres raros (sql injection, etc.) sin
-            // necesidad de hacer un query.
+          
+
             if (!Validaciones_GV42.EsLoginValido(login))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_LOGIN, "Advertencia",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_LOGIN, "Advertencia",MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtLogIn.Focus();
                 return;
             }
@@ -83,10 +81,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void AbrirFormularioSegunRol()
         {
-            // Rol ahora es Rol_GV42 (entidad). Comparamos por Nombre para
-            // decidir qué menú abrir.
-            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre;
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
 
+            if (actual != null && actual.DebeCambiarContrasena)
+            {
+                MessageBox.Show(
+                    "Es tu primer ingreso (o tu contraseña fue reseteada por el administrador). " +
+                    "Por seguridad, antes de continuar tenés que cambiar tu contraseña.",
+                    "Cambio de contraseña requerido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                FRMCambiarContrasenia cambio = new FRMCambiarContrasenia(primerLogin: true);
+                cambio.Show();
+                this.Hide();
+                return;
+            }
+
+            string rol = actual.RolNombre;
             Form formulario;
             if (rol == "Admin")
                 formulario = new FRMMenuPrincipalAdmin();

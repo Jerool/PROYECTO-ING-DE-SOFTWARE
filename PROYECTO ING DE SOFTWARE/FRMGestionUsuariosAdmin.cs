@@ -17,7 +17,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
     {
         private readonly BLLUsuario_GV42 _bll;
 
-        // Modo actual del form: define qué hacen los botones y qué campos están habilitados.
         private string _modo = "Consulta";
 
         private Usuario_GV42 _usuarioSeleccionado = null;
@@ -28,7 +27,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             _bll = new BLLUsuario_GV42();
         }
 
-        // Carga el combo de roles, pone el form en modo Consulta y trae la grilla.
         private void FRMPrincipalAdmin_Load(object sender, EventArgs e)
         {
             ConfigurarGrillaSoloLectura();
@@ -38,30 +36,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
             rbActivos.Checked = true;
         }
 
-        // Deja la grilla en modo "consulta": no se puede editar ninguna celda,
-        // no se pueden agregar/borrar filas, no se puede redimensionar nada.
-        // Toda configuración va acá, en código, para que sobreviva a cualquier
-        // regeneración del Designer.
         private void ConfigurarGrillaSoloLectura()
         {
-            dgvUsuarios.ReadOnly = true;                  // ninguna celda editable
-            dgvUsuarios.AllowUserToAddRows = false;       // sin fila vacía al final
-            dgvUsuarios.AllowUserToDeleteRows = false;    // no se borran filas
-            dgvUsuarios.AllowUserToResizeRows = false;    // alto fijo
-            dgvUsuarios.AllowUserToResizeColumns = false; // ancho fijo
-            dgvUsuarios.AllowUserToOrderColumns = false;  // sin drag de columnas
+            dgvUsuarios.ReadOnly = true;                  
+            dgvUsuarios.AllowUserToAddRows = false;       
+            dgvUsuarios.AllowUserToDeleteRows = false;    
+            dgvUsuarios.AllowUserToResizeRows = false;    
+            dgvUsuarios.AllowUserToResizeColumns = false; 
+            dgvUsuarios.AllowUserToOrderColumns = false;  
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.MultiSelect = false;
-            dgvUsuarios.RowHeadersVisible = false;        // estética: ocultamos la columna de selección
+            dgvUsuarios.RowHeadersVisible = false;      
             dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Headers tampoco se pueden estirar:
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvUsuarios.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
         }
 
-        // Llena el ComboBox de Rol con las entidades Rol_GV42 que devuelve la BLL.
-        // Usamos DisplayMember = "Nombre" para que el combo muestre el texto,
-        // pero detrás cada item es un Rol_GV42 con su Id (la FK).
         private void CargarRoles()
         {
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -76,14 +66,17 @@ namespace PROYECTO_ING_DE_SOFTWARE
             dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = lista;
 
-            // Ocultamos la columna Contrasena: al ser un hash SHA256 no aporta
-            // información útil al administrador y ensucia visualmente la grilla.
+   
             if (dgvUsuarios.Columns.Contains("Contrasena"))
                 dgvUsuarios.Columns["Contrasena"].Visible = false;
 
-            // Como Rol ahora es Rol_GV42 (entidad), por defecto el DataGridView
-            // mostraría "Servicios.Rol_GV42" en esa columna. La ocultamos y
-            // mostramos la propiedad RolNombre, que devuelve solo el texto.
+            if (dgvUsuarios.Columns.Contains("IntentosFallidos"))
+                dgvUsuarios.Columns["IntentosFallidos"].Visible = false;
+
+            if (dgvUsuarios.Columns.Contains("UltimoIntentoFallido"))
+                dgvUsuarios.Columns["UltimoIntentoFallido"].Visible = false;
+
+  
             if (dgvUsuarios.Columns.Contains("Rol"))
                 dgvUsuarios.Columns["Rol"].Visible = false;
 
@@ -178,6 +171,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void ActivarDesactivar()
         {
             bool nuevoEstado = !_usuarioSeleccionado.Activo;
+
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            if (actual != null && _usuarioSeleccionado.Login == actual.Login)
+            {
+                MessageBox.Show("No podés activar/desactivar tu propio usuario. Pedile a otro administrador que lo haga.","Acción no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModoConsulta();
+                CargarGrilla(rbActivos.Checked);
+                return;
+            }
+
             string accion = nuevoEstado ? "activado" : "desactivado";
             _bll.ActivarDesactivar(_usuarioSeleccionado.DNI, nuevoEstado);
             MessageBox.Show($"Usuario {_usuarioSeleccionado.Login} {accion}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -185,7 +188,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             CargarGrilla(rbActivos.Checked);
         }
 
-        // Desbloquea el usuario seleccionado y le resetea la contraseña al patrón por defecto.
         private void Desbloquear()
         {
             _bll.Desbloquear(_usuarioSeleccionado.DNI, _usuarioSeleccionado.Login);
@@ -194,7 +196,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             CargarGrilla(rbActivos.Checked);
         }
 
-        // Modifica el email y/o el rol del usuario seleccionado.
         private void Modificar()
         {
             string email = txtEmail.Text.Trim();
@@ -242,45 +243,37 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            // Todas las validaciones de formato pasan por Validaciones_GV42 (regex centralizadas).
             if (!Validaciones_GV42.EsDniValido(dni))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_DNI,
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_DNI,"Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDni.Focus();
                 return;
             }
 
             if (!Validaciones_GV42.EsApellidoValido(apellido))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_APELLIDO,
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_APELLIDO,"Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtApellido.Focus();
                 return;
             }
             if (!Validaciones_GV42.EsNombreValido(nombre))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_NOMBRE,
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_NOMBRE,"Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNombre.Focus();
                 return;
             }
 
             if (!Validaciones_GV42.EsEmailValido(email))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_EMAIL,
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_EMAIL,"Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEmail.Focus();
                 return;
             }
 
-            // Ya no validamos el rol contra strings hardcodeados: si vino del
-            // combo, por construcción es uno de los roles que existen en la base.
 
             if (_bll.ExisteDNI(dni))
             {
-                MessageBox.Show($"Ya existe un usuario con el DNI '{dni}'.",
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Ya existe un usuario con el DNI '{dni}'.","Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDni.Focus();
                 return;
             }
@@ -295,8 +288,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No se pudo crear el usuario.\n\nDetalle: " + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo crear el usuario.\n\nDetalle: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -311,15 +303,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             txtApellido.Text = _usuarioSeleccionado.Apellido;
             txtNombre.Text = _usuarioSeleccionado.Nombre;
             txtEmail.Text = _usuarioSeleccionado.Email;
-            // Posicionamos el combo en el rol del usuario buscando por Id.
             SeleccionarRolEnCombo(_usuarioSeleccionado.Rol);
             txtUser.Text = _usuarioSeleccionado.Login;
             txtBloqueado.Text = _usuarioSeleccionado.Bloqueo ? "Sí" : "No";
             txtActivo.Text = _usuarioSeleccionado.Activo ? "Sí" : "No";
         }
 
-        // Busca dentro del combo el Rol con el mismo Id que el del usuario y lo selecciona.
-        // Es más robusto que comparar por nombre porque la FK es el Id.
         private void SeleccionarRolEnCombo(Rol_GV42 rol)
         {
             if (rol == null) { comboBox1.SelectedIndex = -1; return; }
@@ -336,7 +325,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             comboBox1.SelectedIndex = -1;
         }
 
-        // Radio button "Solo Activos": refresca la grilla con el filtro Activo = 1.
         private void rbActivos_CheckedChanged(object sender, EventArgs e)
         {
             if (rbActivos.Checked) CargarGrilla(soloActivos: true);

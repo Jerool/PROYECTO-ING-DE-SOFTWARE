@@ -36,8 +36,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             CargarGrillaPorDefecto();
         }
 
-        // Deja la grilla en modo "consulta": no se puede editar ninguna celda,
-        // no se pueden agregar/borrar filas, no se puede redimensionar nada.
         private void ConfigurarGrillaSoloLectura()
         {
             dgvBitacora.ReadOnly = true;
@@ -56,22 +54,13 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void EstablecerFechasPorDefecto()
         {
-            // Política de auditoría: los eventos viejos de más de 3 días no se
-            // pueden consultar desde la UI. Esto evita que el usuario haga queries
-            // gigantes sobre toda la historia y mantiene los reportes acotados.
-            //
-            // Lo enforzamos limitando el rango permitido del DateTimePicker
-            // (MinDate / MaxDate) — el control no deja elegir nada fuera de eso,
-            // así que no hace falta validar a mano después.
+
             DateTime hoy = DateTime.Now.Date;
             DateTime hace3Dias = hoy.AddDays(-3);
 
             dtpFechaInicio.MinDate = hace3Dias;
             dtpFechaInicio.MaxDate = hoy;
             dtpFechaInicio.Value = hace3Dias;
-
-            // Fecha fin: nunca posterior a hoy ni anterior a hace 3 días
-            // (sería un rango vacío).
             dtpFechaFin.MinDate = hace3Dias;
             dtpFechaFin.MaxDate = hoy;
             dtpFechaFin.Value = hoy;
@@ -94,8 +83,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void CargarGrillaPorDefecto()
         {
-            // Fecha fin: extendemos al final del día (23:59:59) para que el filtro
-            // BETWEEN incluya eventos generados hoy.
             DateTime fechaFinReal = dtpFechaFin.Value.Date.AddDays(1).AddSeconds(-1);
             CargarGrilla(_bllBitacora.Filtrar(
                 login: null,
@@ -126,19 +113,14 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void ConfigurarColumnas()
         {
             if (dgvBitacora.Columns.Count == 0) return;
-
-            // Como Modulo y TipoEvento son entidades, por defecto el DGV las
-            // mostraría como "Servicios.Modulo_GV42". Las ocultamos y mostramos
-            // los helpers de string (ModuloNombre, TipoEventoNombre, Evento).
             string[] aOcultar = { "Modulo", "TipoEvento" };
             foreach (string c in aOcultar)
-                if (dgvBitacora.Columns.Contains(c)) dgvBitacora.Columns[c].Visible = false;
+            if (dgvBitacora.Columns.Contains(c)) dgvBitacora.Columns[c].Visible = false;
 
             if (dgvBitacora.Columns.Contains("Login")) dgvBitacora.Columns["Login"].HeaderText = "Usuario";
             if (dgvBitacora.Columns.Contains("ModuloNombre")) dgvBitacora.Columns["ModuloNombre"].HeaderText = "Módulo";
             if (dgvBitacora.Columns.Contains("TipoEventoNombre")) dgvBitacora.Columns["TipoEventoNombre"].HeaderText = "Tipo evento";
             if (dgvBitacora.Columns.Contains("Detalle")) dgvBitacora.Columns["Detalle"].HeaderText = "Detalle";
-            // "Evento" es la combinación "Tipo - Detalle". La ocultamos para no duplicar.
             if (dgvBitacora.Columns.Contains("Evento")) dgvBitacora.Columns["Evento"].Visible = false;
             if (dgvBitacora.Columns.Contains("Criticidad")) dgvBitacora.Columns["Criticidad"].HeaderText = "Criticidad";
             if (dgvBitacora.Columns.Contains("FechaHora"))

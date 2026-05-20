@@ -39,8 +39,7 @@ namespace BLL
         {
             return _DALBitacora.Listar();
         }
-        public List<Bitacora_GV42> Filtrar(string login, string modulo, string tipoEvento,
-                                          string criticidad, DateTime fechaInicio, DateTime fechaFin)
+        public List<Bitacora_GV42> Filtrar(string login, string modulo, string tipoEvento, string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {
             return _DALBitacora.Filtrar(login, modulo, tipoEvento, criticidad, fechaInicio, fechaFin);
         }

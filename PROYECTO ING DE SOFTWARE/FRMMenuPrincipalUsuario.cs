@@ -15,7 +15,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
     public partial class FRMMenuPrincipalUsuario : Form
     {
         private Form _formularioActual = null;
-
         public FRMMenuPrincipalUsuario()
         {
             InitializeComponent();

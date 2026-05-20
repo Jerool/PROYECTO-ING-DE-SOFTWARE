@@ -21,7 +21,7 @@ namespace Servicios
             get
             {
                 if (_instancia == null)
-                    _instancia = new EncriptadorReversible_GV42();
+                _instancia = new EncriptadorReversible_GV42();
                 return _instancia;
             }
         }

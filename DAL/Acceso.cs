@@ -134,7 +134,6 @@ namespace DAL
             }
         }
 
-       
         public DataTable leer(string query, SqlParameter[] parametro)
         {
             SqlCommand comando = new SqlCommand();

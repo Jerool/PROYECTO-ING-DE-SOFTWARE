@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Servicios
 {
 
-    // Es un Singleton porque no necesitamos múltiples instancias y simplifica el acceso.
     public class Encriptador_GV42
     {
         private static Encriptador_GV42 _instancia;

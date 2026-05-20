@@ -13,9 +13,6 @@ namespace DAL
     public class DALBitacora_GV42
     {
         private readonly Acceso _acceso;
-
-        // SELECT base con JOINs a Modulo y TipoEvento. Lo definimos una sola vez
-        // porque lo usamos en Listar y en Filtrar.
         private const string SELECT_BASE =
             "SELECT E.UserName, " +
             "       E.IdModulo,     M.Nombre AS ModuloNombre, " +
@@ -43,7 +40,6 @@ namespace DAL
                 new SqlParameter("@UserName",     registro.Login),
                 new SqlParameter("@IdModulo",     idModulo),
                 new SqlParameter("@IdTipoEvento", idTipoEvento),
-                // Detalle puede ser null/"" — usamos DBNull.Value para no romper.
                 new SqlParameter("@Detalle",      (object)registro.Detalle ?? DBNull.Value),
                 new SqlParameter("@Criticidad",   registro.Criticidad),
                 new SqlParameter("@FechaHora",    registro.FechaHora)
@@ -128,8 +124,7 @@ namespace DAL
             return lista;
         }
 
-        // Devuelve los nombres de los tipos de evento como strings (para los combos de la UI).
-        // Por dentro reutiliza ListarEventos (que devuelve las entidades).
+
         public List<string> ListarTiposEvento()
         {
             List<TipoEvento_GV42> entidades = ListarEventos();
@@ -146,9 +141,6 @@ namespace DAL
             return modulos;
         }
 
-        // Resuelve el Id del módulo a partir de la entidad que llegó.
-        // Si la entidad ya tiene Id > 0, lo usamos. Si solo tiene Nombre,
-        // lo buscamos en la tabla Modulo. Si no existe, reventamos con mensaje claro.
         private int ResolverIdModulo(Modulo_GV42 m)
         {
             if (m == null)

@@ -6,23 +6,10 @@ using System.Text;
 
 namespace BLL
 {
-    // GeneradorPdf_GV42
-    // -----------------
-    // Generador de PDFs en formato Letter apaisado, pensado para imprimir tablas
-    // (típicamente la bitácora).
-    //
-    // El diseño es deliberadamente sobrio:
-    //  - Sin colores de fondo, ni zebra, ni cajas azules.
-    //  - Una sola tipografía (Helvetica, regular y bold).
-    //  - Encabezado con texto en negro, separado del cuerpo por una línea.
-    //  - Cuerpo con filas sin fondo, separadas por líneas horizontales finas.
-    //  - Subtítulo gris para datos accesorios (fecha de generación, total de registros).
-    //
-    // El objetivo es que el PDF se vea como un reporte "humano" y no como un dashboard.
+
     public class GeneradorPdf_GV42
     {
-        // ── Layout ──
-        private const int ANCHO_PAGINA = 792;      // Letter apaisado (792 x 612 puntos)
+        private const int ANCHO_PAGINA = 792;      
         private const int ALTO_PAGINA = 612;
         private const int MARGEN = 50;
         private const int ALTO_FILA = 18;
@@ -40,10 +27,6 @@ namespace BLL
 
             int totalPaginas = Math.Max(1, (int)Math.Ceiling((double)filas.Count / FILAS_POR_PAGINA));
 
-            // Asignación de IDs:
-            //  1 = Catalog, 2 = Pages, 3..2+P = páginas,
-            //  3+P = Helvetica, 4+P = Helvetica-Bold,
-            //  5+P..4+2P = content streams.
             int idCatalog = 1;
             int idPages = 2;
             int primerIdPagina = 3;
@@ -181,8 +164,6 @@ namespace BLL
             File.WriteAllBytes(ruta, _buffer.ToArray());
         }
 
-        // ── Helpers internos: header, xref, trailer, escapado ──
-        // Esta parte es plumbing del formato PDF y no necesita tocarse.
 
         private void EscribirHeader()
         {
