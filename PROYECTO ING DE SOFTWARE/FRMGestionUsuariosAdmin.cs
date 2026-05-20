@@ -83,6 +83,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (dgvUsuarios.Columns.Contains("RolNombre"))
                 dgvUsuarios.Columns["RolNombre"].HeaderText = "Rol";
 
+            if (dgvUsuarios.Columns.Contains("DebeCambiarContrasena"))
+                dgvUsuarios.Columns["DebeCambiarContrasena"].Visible = false;
+
             foreach (DataGridViewRow row in dgvUsuarios.Rows)
             {
                 if (!(bool)row.Cells["Activo"].Value)
@@ -190,6 +193,13 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void Desbloquear()
         {
+            if (_usuarioSeleccionado.Bloqueo == false)
+            {
+                MessageBox.Show($"Usuario ya desbloqueado", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            
             _bll.Desbloquear(_usuarioSeleccionado.DNI, _usuarioSeleccionado.Login);
             MessageBox.Show($"Usuario {_usuarioSeleccionado.Login} desbloqueado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ModoConsulta();

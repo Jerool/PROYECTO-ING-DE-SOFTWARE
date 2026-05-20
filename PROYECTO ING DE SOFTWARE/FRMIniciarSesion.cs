@@ -75,6 +75,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     MessageBox.Show("Ya hay una sesión activa.", "Advertencia",
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
+                case ResultadoLogin.Error:
+                    MessageBox.Show("Error de usuario. Verificá.",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
             }
         }
 

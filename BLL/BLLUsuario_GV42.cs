@@ -29,7 +29,8 @@ namespace BLL
             UsuarioBloqueado,
             UsuarioInactivo,
             ContrasenaIncorrecta,
-            BloqueadoPorIntentos
+            BloqueadoPorIntentos,
+            Error
         }
 
 
@@ -42,73 +43,81 @@ namespace BLL
 
         public ResultadoLogin IntentarLogin(string login, string contrasena)
         {
-
-            if (SessionManager_GV42.Instancia.HaySesionActiva())
+            try
             {
-                Auditar(login, "Login", "Intento de login con sesión ya activa", null, "Media");
-                return ResultadoLogin.SesionActiva;
-            }
-
-            Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
-            if (usuario == null)
-            {
-                try
+                if (SessionManager_GV42.Instancia.HaySesionActiva())
                 {
-                 Auditar(login, "Login", "Usuario inexistente", "el usuario no existe", "Alta");
+                    Auditar(login, "Login", "Intento de login con sesión ya activa", null, "Media");
+                    return ResultadoLogin.SesionActiva;
                 }
-                catch 
+
+                Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
+
+                if (usuario == null)
                 {
-                    return ResultadoLogin.UsuarioInexistente;
+                    try
+                    {
+                        Auditar(login, "Login", "Usuario inexistente", "el usuario no existe", "Alta");
+                    }
+                    catch
+                    {
+                        return ResultadoLogin.UsuarioInexistente;
+                    }
                 }
-            }
 
 
-            if (usuario.Bloqueo)
-            {
-                Auditar(login, "Login", "Usuario bloqueado", "Usuario bloqueado correctamente" , "Alta");
-                return ResultadoLogin.UsuarioBloqueado;
-            }
+                if (usuario.Bloqueo)
+                {
+                    Auditar(login, "Login", "Usuario bloqueado", "Usuario bloqueado correctamente", "Alta");
+                    return ResultadoLogin.UsuarioBloqueado;
+                }
 
-            if (!usuario.Activo)
-            {
-                Auditar(login, "Login", "Usuario inactivo", "el usuario esta inactivo", "Alta");
-                return ResultadoLogin.UsuarioInactivo;
-            }
+                if (!usuario.Activo)
+                {
+                    Auditar(login, "Login", "Usuario inactivo", "el usuario esta inactivo", "Alta");
+                    return ResultadoLogin.UsuarioInactivo;
+                }
 
-            string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasena);
-            if (usuario.Contrasena != contrasenaCifrada)
-            {
-
-                int nuevosIntentos = CalcularNuevosIntentos(usuario);
-                DateTime ahora = DateTime.Now;
-
-                if (nuevosIntentos >= MAX_INTENTOS)
+                string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasena);
+                if (usuario.Contrasena != contrasenaCifrada)
                 {
 
-                    _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
-                    _DALUsuario.Bloquear(login);
-                    Auditar(login, "Login", "Usuario bloqueado por intentos fallidos",$"{MAX_INTENTOS} intentos fallidos consecutivos dentro de {VENTANA_INTENTOS.TotalMinutes:0} min", "Alta");
-                    return ResultadoLogin.BloqueadoPorIntentos;
+                    int nuevosIntentos = CalcularNuevosIntentos(usuario);
+                    DateTime ahora = DateTime.Now;
+
+                    if (nuevosIntentos >= MAX_INTENTOS)
+                    {
+
+                        _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
+                        _DALUsuario.Bloquear(login);
+                        Auditar(login, "Login", "Usuario bloqueado por intentos fallidos", $"{MAX_INTENTOS} intentos fallidos consecutivos dentro de {VENTANA_INTENTOS.TotalMinutes:0} min", "Alta");
+                        return ResultadoLogin.BloqueadoPorIntentos;
+                    }
+                    else
+                    {
+                        _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
+                        Auditar(login, "Login", "Contraseña incorrecta", $"Intento {nuevosIntentos}/{MAX_INTENTOS}", "Media");
+                        return ResultadoLogin.ContrasenaIncorrecta;
+                    }
                 }
-                else
+
+
+                _DALUsuario.ResetearIntentosFallidos(login);
+
+                bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
+                if (!sesionIniciada)
                 {
-                    _DALUsuario.ActualizarIntentosFallidos(login, nuevosIntentos, ahora);
-                    Auditar(login, "Login", "Contraseña incorrecta", $"Intento {nuevosIntentos}/{MAX_INTENTOS}", "Media");
-                    return ResultadoLogin.ContrasenaIncorrecta;
+                    Auditar(login, "Login", "Intento de login con sesión ya activa", "Intento de login con sesión ya activa", "Alta");
+                    return ResultadoLogin.SesionActiva;
                 }
-            }
-
-
-            _DALUsuario.ResetearIntentosFallidos(login);
-
-            bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
-            if (!sesionIniciada)
+                Auditar(login, "Login", "Login exitoso", "Login correcto", "Baja");
+                return ResultadoLogin.Exitoso;
+            }catch
             {
-                Auditar(login, "Login", "Intento de login con sesión ya activa", "Intento de login con sesión ya activa", "Alta");
-                return ResultadoLogin.SesionActiva;
+                return ResultadoLogin.Error;
             }
-            Auditar(login, "Login", "Login exitoso", "Login correcto", "Baja");
-            return ResultadoLogin.Exitoso;
+
+            
         }
 
         private int CalcularNuevosIntentos(Usuario_GV42 usuario)

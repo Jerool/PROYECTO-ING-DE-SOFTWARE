@@ -121,7 +121,10 @@ namespace DAL
                 comando.CommandText = query;
                 if (parametro != null)
                 {
-                    comando.Parameters.AddRange(parametro);
+                    foreach(SqlParameter param in parametro)
+                    {
+                        comando.Parameters.AddWithValue(param.ParameterName, param.Value);
+                    }
                 }
                 filasAfectadas = comando.ExecuteNonQuery();
                 ConfirmarTransaccion(tx);
@@ -145,7 +148,12 @@ namespace DAL
                 comando.Connection = conexion;
                 comando.CommandText = query;
                 if (parametro != null)
-                    comando.Parameters.AddRange(parametro);
+                {
+                    foreach (SqlParameter param in parametro)
+                    {
+                        comando.Parameters.AddWithValue(param.ParameterName, param.Value);
+                    }
+                }
 
                 adaptador.SelectCommand = comando;
                 adaptador.Fill(dt);         
