@@ -122,16 +122,21 @@ namespace BLL
 
         private int CalcularNuevosIntentos(Usuario_GV42 usuario)
         {
-            if (usuario.UltimoIntentoFallido == null)
-                return 1;
+            try
+            {
+                if (usuario.UltimoIntentoFallido == null)
+                    return 1;
 
-            DateTime ultimo = usuario.UltimoIntentoFallido.Value;
-            bool dentroDeLaVentana = (DateTime.Now - ultimo) <= VENTANA_INTENTOS;
+                DateTime ultimo = usuario.UltimoIntentoFallido.Value;
+                bool dentroDeLaVentana = (DateTime.Now - ultimo) <= VENTANA_INTENTOS;
 
-            if (dentroDeLaVentana)
-                return usuario.IntentosFallidos + 1;
-            else
-                return 1;
+                if (dentroDeLaVentana)
+                    return usuario.IntentosFallidos + 1;
+                else
+                    return 1;
+            }
+            catch { throw new Exception("Error"); }
+            
         }
 
         public List<Usuario_GV42> ListarActivos() => _DALUsuario.ListarActivos();
@@ -218,27 +223,34 @@ namespace BLL
 
         public ResultadoCambioContrasena CambiarContrasena(string login, string contrasenaActual, string nuevaContrasena, string confirmarContrasena)
         {
-            if (nuevaContrasena != confirmarContrasena)
-            return ResultadoCambioContrasena.ContrasenasNoCoinciden;
-            if (nuevaContrasena == contrasenaActual)
-            return ResultadoCambioContrasena.NuevaIgualActual;
+            try
+            {
+                if (nuevaContrasena != confirmarContrasena)
+                    return ResultadoCambioContrasena.ContrasenasNoCoinciden;
+                if (nuevaContrasena == contrasenaActual)
+                    return ResultadoCambioContrasena.NuevaIgualActual;
 
-            Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
-            if (usuario == null)
-            return ResultadoCambioContrasena.UsuarioInexistente;
+                Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
+                if (usuario == null)
+                    return ResultadoCambioContrasena.UsuarioInexistente;
 
-            string contrasenaActualCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaActual);
-            if (usuario.Contrasena != contrasenaActualCifrada)
-            return ResultadoCambioContrasena.ContrasenaActualIncorrecta;
+                string contrasenaActualCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaActual);
+                if (usuario.Contrasena != contrasenaActualCifrada)
+                    return ResultadoCambioContrasena.ContrasenaActualIncorrecta;
 
-            string nuevaContrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(nuevaContrasena);
-            if (usuario.Contrasena == nuevaContrasenaCifrada)
-            return ResultadoCambioContrasena.NuevaIgualActual;
+                string nuevaContrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(nuevaContrasena);
+                if (usuario.Contrasena == nuevaContrasenaCifrada)
+                    return ResultadoCambioContrasena.NuevaIgualActual;
 
-            _DALUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
+                _DALUsuario.CambiarContrasena(login, nuevaContrasenaCifrada);
 
-            Auditar(login, "Contraseña", "Contraseña cambiada exitosamente", "Combio contrasenia", "Baja");
-            return ResultadoCambioContrasena.Exitoso;
+                Auditar(login, "Contraseña", "Contraseña cambiada exitosamente", "Combio contrasenia", "Baja");
+                return ResultadoCambioContrasena.Exitoso;
+            }
+            catch 
+            {
+                throw new Exception("Error");
+            }
         }
 
         public static void CerrarSesión()

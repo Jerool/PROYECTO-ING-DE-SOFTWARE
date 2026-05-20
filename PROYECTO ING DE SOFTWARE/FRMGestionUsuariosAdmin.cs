@@ -47,7 +47,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.MultiSelect = false;
             dgvUsuarios.RowHeadersVisible = false;      
-            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvUsuarios.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
         }
@@ -209,7 +209,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void Modificar()
         {
             string email = txtEmail.Text.Trim();
-            // El SelectedItem del combo es un Rol_GV42 (entidad), no un string.
             Rol_GV42 rol = comboBox1.SelectedItem as Rol_GV42;
 
             if (!Validaciones_GV42.EsEmailValido(email))
@@ -228,7 +227,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (email != _usuarioSeleccionado.Email)
                 _bll.ModificarEmail(_usuarioSeleccionado.DNI, email);
 
-            // Comparamos por Id (la FK) en vez de por nombre.
+        
             if (_usuarioSeleccionado.Rol == null || rol.Id != _usuarioSeleccionado.Rol.Id)
                 _bll.ModificarRol(_usuarioSeleccionado.DNI, rol);
 

@@ -30,7 +30,6 @@ namespace Servicios
             if (string.IsNullOrEmpty(contrasenaPlana))
                 throw new ArgumentException("La contraseña no puede estar vacía.");
 
-            // SHA256 se libera al final del using (es disposable).
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenaPlana));
