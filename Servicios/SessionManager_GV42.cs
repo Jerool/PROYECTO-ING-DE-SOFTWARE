@@ -10,7 +10,6 @@ namespace Servicios
 
     public class SessionManager_GV42
     {
-
         private static SessionManager_GV42 _instancia;
 
 

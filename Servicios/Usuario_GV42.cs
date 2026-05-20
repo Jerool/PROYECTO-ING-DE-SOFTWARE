@@ -81,6 +81,8 @@ namespace Servicios
         public int IntentosFallidos { get; set; }
         public DateTime? UltimoIntentoFallido { get; set; }
 
+        public bool DebeCambiarContrasena { get; set; }
+
         public Usuario_GV42(string dni, string apellidos, string nombre, string login, string password, Rol_GV42 rol, string email)
         {
             DNI = dni;

@@ -69,9 +69,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void logOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "¿Está seguro que desea cerrar sesión?",
-                "Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?","Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {

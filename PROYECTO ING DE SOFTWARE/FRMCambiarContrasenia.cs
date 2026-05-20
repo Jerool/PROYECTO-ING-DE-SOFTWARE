@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static BLL.BLLUsuario_GV42;        // Para acceder al enum ResultadoCambioContrasena
+using static BLL.BLLUsuario_GV42;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
@@ -18,13 +18,14 @@ namespace PROYECTO_ING_DE_SOFTWARE
     {
         private readonly BLLUsuario_GV42 _bll;
 
-        public FRMCambiarContrasenia()
+        private readonly bool _primerLogin;
+
+        public FRMCambiarContrasenia(bool primerLogin = false)
         {
             InitializeComponent();
-
- 
             txtUsuario.Text = SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login;
             _bll = new BLLUsuario_GV42();
+            _primerLogin = primerLogin;
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
@@ -42,13 +43,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            // Validamos que la NUEVA contraseña cumpla los requisitos mínimos de seguridad
-            // (al menos 6 caracteres, una letra y un número). La actual no la validamos
-            // porque podría haber sido seteada bajo reglas viejas.
             if (!Validaciones_GV42.EsContrasenaValida(nuevaContrasena))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_CONTRASENA,
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_CONTRASENA, "Advertencia",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNuevaconstrasenia.Focus();
                 return;
             }
@@ -61,8 +59,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 case ResultadoCambioContrasena.Exitoso:
                     MessageBox.Show("Contraseña cambiada correctamente.", "Éxito",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (_primerLogin)
+                    {
+
+                        AbrirMenuPrincipalSegunRol();
+                    }
                     this.Close();
                     break;
+
                 case ResultadoCambioContrasena.ContrasenaActualIncorrecta:
                     MessageBox.Show("La contraseña actual es incorrecta.", "Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -71,11 +76,26 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     MessageBox.Show("La nueva contraseña y la confirmación no coinciden.", "Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
+                case ResultadoCambioContrasena.NuevaIgualActual:
+                    MessageBox.Show("La nueva contraseña no puede ser igual a la actual. Elegí una distinta.",
+                                    "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNuevaconstrasenia.Focus();
+                    break;
                 case ResultadoCambioContrasena.UsuarioInexistente:
                     MessageBox.Show("El usuario no existe.", "Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
+        }
+
+
+        private void AbrirMenuPrincipalSegunRol()
+        {
+            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre;
+            Form menu;
+            if (rol == "Admin") menu = new FRMMenuPrincipalAdmin();
+            else menu = new FRMMenuPrincipalUsuario();
+            menu.Show();
         }
     }
 }

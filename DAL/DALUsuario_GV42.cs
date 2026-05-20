@@ -18,7 +18,8 @@ namespace DAL
             "SELECT U.DNI, U.Apellido, U.Nombre, U.UserName, U.Contrasena, " +
             "       U.IdRol, R.Nombre AS RolNombre, " +
             "       U.Email, U.Bloqueo, U.Activo, " +
-            "       U.IntentosFallidos, U.UltimoIntentoFallido " +
+            "       U.IntentosFallidos, U.UltimoIntentoFallido, " +
+            "       U.DebeCambiarContrasena " +
             "FROM Usuario U " +
             "INNER JOIN Roles R ON R.Id = U.IdRol";
 
@@ -69,9 +70,6 @@ namespace DAL
             _acceso.escribir(query, parametros);
         }
 
-        // Desbloquear pone Bloqueo = 0, resetea la contraseña y también limpia
-        // los contadores de intentos (porque si no, el usuario quedaría con
-        // 3 intentos ya hechos y sería bloqueado de nuevo enseguida).
         public void Desbloquear(string dni, string contrasenaCifrada)
         {
             string query =
@@ -79,7 +77,8 @@ namespace DAL
                 "SET Bloqueo = 0, " +
                 "    Contrasena = @Contrasena, " +
                 "    IntentosFallidos = 0, " +
-                "    UltimoIntentoFallido = NULL " +
+                "    UltimoIntentoFallido = NULL, " +
+                "    DebeCambiarContrasena = 1 " +
                 "WHERE DNI = @DNI";
             SqlParameter[] p = {
                 new SqlParameter("@Contrasena", contrasenaCifrada),
@@ -123,7 +122,11 @@ namespace DAL
 
         public void CambiarContrasena(string login, string contrasenaCifrada)
         {
-            string query = "UPDATE Usuario SET Contrasena = @Contrasena WHERE UserName = @Login";
+            string query =
+                "UPDATE Usuario " +
+                "SET Contrasena = @Contrasena, " +
+                "    DebeCambiarContrasena = 0 " +
+                "WHERE UserName = @Login";
             SqlParameter[] p = {
                 new SqlParameter("@Contrasena", contrasenaCifrada),
                 new SqlParameter("@Login", login)
@@ -131,10 +134,6 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
-
-        // Persiste el nuevo contador de intentos + el momento del intento.
-        // El BLL le pasa el número ya calculado (1, 2, 3...) según corresponda
-        // (resetea / suma) en función de la ventana de tiempo.
         public void ActualizarIntentosFallidos(string login, int nuevosIntentos, DateTime momentoIntento)
         {
             string query =
@@ -150,7 +149,6 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
-        // Limpia el contador (después de un login exitoso, o cuando expira la ventana).
         public void ResetearIntentosFallidos(string login)
         {
             string query =
@@ -167,13 +165,9 @@ namespace DAL
 
             if (usuario.Rol == null)
                 throw new Exception("El usuario no tiene rol asignado.");
-
-            // IntentosFallidos arranca en 0 (lo cubre el DEFAULT de la columna,
-            // pero lo mandamos explícito para que quede claro). UltimoIntentoFallido
-            // queda NULL hasta que falle por primera vez.
             string query = "INSERT INTO Usuario " +
-                  "(DNI, Apellido, Nombre, UserName, Contrasena, IdRol, Email, Bloqueo, Activo, IntentosFallidos, UltimoIntentoFallido) " +
-                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @IdRol, @Email, 0, 1, 0, NULL)";
+                  "(DNI, Apellido, Nombre, UserName, Contrasena, IdRol, Email, Bloqueo, Activo, IntentosFallidos, UltimoIntentoFallido, DebeCambiarContrasena) " +
+                  "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @IdRol, @Email, 0, 1, 0, NULL, 1)";
             SqlParameter[] p = {
                 new SqlParameter("@DNI",   usuario.DNI),
                 new SqlParameter("@Ape",   usuario.Apellido),
@@ -218,7 +212,8 @@ namespace DAL
                 IntentosFallidos = Convert.ToInt32(row["IntentosFallidos"]),
                 UltimoIntentoFallido = row["UltimoIntentoFallido"] == DBNull.Value
                     ? (DateTime?)null
-                    : Convert.ToDateTime(row["UltimoIntentoFallido"])
+                    : Convert.ToDateTime(row["UltimoIntentoFallido"]),
+                DebeCambiarContrasena = Convert.ToBoolean(row["DebeCambiarContrasena"])
             };
         }
 
