@@ -13,7 +13,7 @@ using BLL;
 namespace PROYECTO_ING_DE_SOFTWARE
 {
 
-    public partial class FRMGestionUsuariosAdmin : Form
+    public partial class FRMGestionUsuariosAdmin : Form, IObservadorIdioma_GV42
     {
         private readonly BLLUsuario_GV42 _bll;
 
@@ -25,6 +25,51 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             InitializeComponent();
             _bll = new BLLUsuario_GV42();
+
+            IdiomaManager_GV42.Instancia.Suscribir(this);
+            this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            ActualizarIdioma();
+        }
+
+        // Refresca TODOS los textos del form cuando cambia el idioma.
+        public void ActualizarIdioma()
+        {
+            this.Text = IdiomaManager_GV42.T("usuarios.titulo");
+
+            if (label1 != null) label1.Text = IdiomaManager_GV42.T("usuarios.dni");
+            if (label2 != null) label2.Text = IdiomaManager_GV42.T("usuarios.apellido");
+            if (label3 != null) label3.Text = IdiomaManager_GV42.T("usuarios.nombre");
+            if (label4 != null) label4.Text = IdiomaManager_GV42.T("usuarios.email");
+            if (label5 != null) label5.Text = IdiomaManager_GV42.T("usuarios.rol");
+            if (label6 != null) label6.Text = IdiomaManager_GV42.T("usuarios.userName");
+            if (label7 != null) label7.Text = IdiomaManager_GV42.T("usuarios.bloqueado");
+            if (label8 != null) label8.Text = IdiomaManager_GV42.T("usuarios.activo");
+
+            if (btnCrear != null) btnCrear.Text = IdiomaManager_GV42.T("usuarios.crear");
+            if (btnModificar != null) btnModificar.Text = IdiomaManager_GV42.T("usuarios.modificar");
+            if (btnDesbloquear != null) btnDesbloquear.Text = IdiomaManager_GV42.T("usuarios.desbloquear");
+            if (btnActivarDesactivar != null) btnActivarDesactivar.Text = IdiomaManager_GV42.T("usuarios.activarDesactivar");
+            if (btnAplicar != null) btnAplicar.Text = IdiomaManager_GV42.T("usuarios.aplicar");
+            if (btnCancelar != null) btnCancelar.Text = IdiomaManager_GV42.T("usuarios.cancelar");
+            if (btnSalir != null) btnSalir.Text = IdiomaManager_GV42.T("usuarios.salir");
+
+            if (rbActivos != null) rbActivos.Text = IdiomaManager_GV42.T("usuarios.activos");
+            if (rbTodos != null) rbTodos.Text = IdiomaManager_GV42.T("usuarios.todos");
+
+            // El label de modo se setea según el modo actual.
+            if (lblMensaje != null) lblMensaje.Text = TraducirModo(_modo);
+
+            // Refrescamos también los headers de la grilla, si ya está cargada.
+            if (dgvUsuarios != null && dgvUsuarios.Columns.Contains("RolNombre"))
+                dgvUsuarios.Columns["RolNombre"].HeaderText = IdiomaManager_GV42.T("usuarios.rol");
+        }
+
+        // Helper para traducir el modo actual a texto amigable en el idioma activo.
+        private string TraducirModo(string modo)
+        {
+            string etiquetaModo = IdiomaManager_GV42.T("usuarios.modo");
+            return etiquetaModo + " " + modo;
         }
 
         private void FRMPrincipalAdmin_Load(object sender, EventArgs e)
@@ -96,7 +141,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void ModoConsulta()
         {
             _modo = "Consulta";
-            lblMensaje.Text = "Modo Consulta";
+            lblMensaje.Text = TraducirModo(_modo);
             LimpiarCampos();
             HabilitarCampos(false);
             btnCrear.Enabled = true;
@@ -113,7 +158,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void ModoOperacion(string modo)
         {
             _modo = modo;
-            lblMensaje.Text = $"Modo {modo}";
+            lblMensaje.Text = TraducirModo(modo);
             btnCrear.Enabled = false;
             btnModificar.Enabled = false;
             btnDesbloquear.Enabled = false;

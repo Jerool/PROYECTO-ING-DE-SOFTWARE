@@ -20,6 +20,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Cargamos el idioma por defecto ANTES de abrir el primer form,
+            // así cuando los formularios se construyen ya tienen las traducciones
+            // disponibles en el IdiomaManager.
+            IdiomaManager_GV42.Instancia.CambiarIdioma(IdiomaManager_GV42.IDIOMA_POR_DEFECTO);
+
             Application.Run(new FRMIniciarSesion());
         }
     }

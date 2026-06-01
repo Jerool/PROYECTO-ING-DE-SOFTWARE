@@ -9,12 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static BLL.BLLUsuario_GV42;        
+using static BLL.BLLUsuario_GV42;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
 
-    public partial class FRMIniciarSesion : Form
+    // Implementa IObservadorIdioma_GV42: el form se suscribe al manager y refresca
+    // sus textos cuando se notifica un cambio de idioma.
+    public partial class FRMIniciarSesion : Form, IObservadorIdioma_GV42
     {
         private readonly BLLUsuario_GV42 _bllUsuario;
 
@@ -22,33 +24,48 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             InitializeComponent();
             _bllUsuario = new BLLUsuario_GV42();
+
+            IdiomaManager_GV42.Instancia.Suscribir(this);
+            this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            ActualizarIdioma();
         }
 
+        // Refresca TODOS los textos visibles del formulario en el idioma actual.
+        public void ActualizarIdioma()
+        {
+            this.Text = IdiomaManager_GV42.T("login.titulo");
+            if (lblTitulo != null) lblTitulo.Text = IdiomaManager_GV42.T("login.titulo");
+            if (lblSubtitulo != null) lblSubtitulo.Text = IdiomaManager_GV42.T("login.subtitulo");
+            if (label1 != null) label1.Text = IdiomaManager_GV42.T("login.login");
+            if (label2 != null) label2.Text = IdiomaManager_GV42.T("login.contrasena");
+            if (btnIngresar != null) btnIngresar.Text = IdiomaManager_GV42.T("login.btnIngresar");
+        }
 
         private void btnIngresar_Click(object sender, EventArgs e)
         {
             string login = txtLogIn.Text.Trim();
             string contrasena = txtContrasena.Text.Trim();
-            _bllUsuario.BuscarPorLogin(login);
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(contrasena))
             {
-                MessageBox.Show("Completá todos los campos.", "Advertencia",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(IdiomaManager_GV42.T("general.completarCampos"),
+                                IdiomaManager_GV42.T("general.advertencia"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-          
-
             if (!Validaciones_GV42.EsLoginValido(login))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_LOGIN, "Advertencia",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_LOGIN,
+                                IdiomaManager_GV42.T("general.advertencia"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtLogIn.Focus();
                 return;
             }
 
             ResultadoLogin resultado = _bllUsuario.IntentarLogin(login, contrasena);
 
-  
             switch (resultado)
             {
                 case ResultadoLogin.Exitoso:
@@ -56,28 +73,34 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     break;
                 case ResultadoLogin.UsuarioBloqueado:
                 case ResultadoLogin.BloqueadoPorIntentos:
-                    MessageBox.Show("Tu usuario está bloqueado. Contactá al administrador.",
-                                    "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(IdiomaManager_GV42.T("login.bloqueado"),
+                                    IdiomaManager_GV42.T("general.accesoDenegado"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
                 case ResultadoLogin.UsuarioInactivo:
-                    MessageBox.Show("Tu usuario está inactivo. Contactá al administrador.",
-                                    "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(IdiomaManager_GV42.T("login.inactivo"),
+                                    IdiomaManager_GV42.T("general.accesoDenegado"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
                 case ResultadoLogin.ContrasenaIncorrecta:
-                    MessageBox.Show("Contraseña incorrecta. Verificá tus credenciales.",
-                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(IdiomaManager_GV42.T("login.contrasenaIncorrecta"),
+                                    IdiomaManager_GV42.T("general.error"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ResultadoLogin.UsuarioInexistente:
-                    MessageBox.Show("El usuario no existe.", "Error",
+                    MessageBox.Show(IdiomaManager_GV42.T("login.usuarioInexistente"),
+                                    IdiomaManager_GV42.T("general.error"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ResultadoLogin.SesionActiva:
-                    MessageBox.Show("Ya hay una sesión activa.", "Advertencia",
+                    MessageBox.Show(IdiomaManager_GV42.T("login.sesionActiva"),
+                                    IdiomaManager_GV42.T("general.advertencia"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
                 case ResultadoLogin.Error:
-                    MessageBox.Show("Error de usuario. Verificá.",
-                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(IdiomaManager_GV42.T("login.errorUsuario"),
+                                    IdiomaManager_GV42.T("general.error"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
@@ -89,10 +112,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             if (actual != null && actual.DebeCambiarContrasena)
             {
-                MessageBox.Show(
-                    "Es tu primer ingreso (o tu contraseña fue reseteada por el administrador). " +
-                    "Por seguridad, antes de continuar tenés que cambiar tu contraseña.",
-                    "Cambio de contraseña requerido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(IdiomaManager_GV42.T("login.cambioRequeridoMensaje"),
+                                IdiomaManager_GV42.T("login.cambioRequeridoTitulo"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 FRMCambiarContrasenia cambio = new FRMCambiarContrasenia(primerLogin: true);
                 cambio.Show();

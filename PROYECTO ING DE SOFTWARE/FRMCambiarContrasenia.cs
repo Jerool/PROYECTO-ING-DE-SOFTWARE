@@ -14,10 +14,9 @@ using static BLL.BLLUsuario_GV42;
 namespace PROYECTO_ING_DE_SOFTWARE
 {
 
-    public partial class FRMCambiarContrasenia : Form
+    public partial class FRMCambiarContrasenia : Form, IObservadorIdioma_GV42
     {
         private readonly BLLUsuario_GV42 _bll;
-
         private readonly bool _primerLogin;
 
         public FRMCambiarContrasenia(bool primerLogin = false)
@@ -26,6 +25,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
             txtUsuario.Text = SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login;
             _bll = new BLLUsuario_GV42();
             _primerLogin = primerLogin;
+
+            IdiomaManager_GV42.Instancia.Suscribir(this);
+            this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            ActualizarIdioma();
+        }
+
+        public void ActualizarIdioma()
+        {
+            this.Text = IdiomaManager_GV42.T("cambiarClave.titulo");
+            if (lblTitulo != null) lblTitulo.Text = IdiomaManager_GV42.T("cambiarClave.titulo");
+            if (label1 != null) label1.Text = IdiomaManager_GV42.T("cambiarClave.usuario");
+            if (label2 != null) label2.Text = IdiomaManager_GV42.T("cambiarClave.actual");
+            if (label3 != null) label3.Text = IdiomaManager_GV42.T("cambiarClave.nueva");
+            if (label4 != null) label4.Text = IdiomaManager_GV42.T("cambiarClave.confirmar");
+            if (btnAceptar != null) btnAceptar.Text = IdiomaManager_GV42.T("cambiarClave.btnAceptar");
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
@@ -38,14 +53,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(contrasenaActual) ||
                 string.IsNullOrEmpty(nuevaContrasena) || string.IsNullOrEmpty(confirmar))
             {
-                MessageBox.Show("Completá todos los campos.", "Advertencia",
+                MessageBox.Show(IdiomaManager_GV42.T("general.completarCampos"),
+                                IdiomaManager_GV42.T("general.advertencia"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!Validaciones_GV42.EsContrasenaValida(nuevaContrasena))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_CONTRASENA, "Advertencia",
+                MessageBox.Show(Validaciones_GV42.MENSAJE_CONTRASENA,
+                                IdiomaManager_GV42.T("general.advertencia"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNuevaconstrasenia.Focus();
                 return;
@@ -57,32 +74,31 @@ namespace PROYECTO_ING_DE_SOFTWARE
             switch (resultado)
             {
                 case ResultadoCambioContrasena.Exitoso:
-                    MessageBox.Show("Contraseña cambiada correctamente.", "Éxito",
+                    MessageBox.Show(IdiomaManager_GV42.T("cambiarClave.exito"),
+                                    IdiomaManager_GV42.T("general.exito"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    if (_primerLogin)
-                    {
-
-                        AbrirMenuPrincipalSegunRol();
-                    }
+                    if (_primerLogin) AbrirMenuPrincipalSegunRol();
                     this.Close();
                     break;
-
                 case ResultadoCambioContrasena.ContrasenaActualIncorrecta:
-                    MessageBox.Show("La contraseña actual es incorrecta.", "Error",
+                    MessageBox.Show(IdiomaManager_GV42.T("cambiarClave.actualIncorrecta"),
+                                    IdiomaManager_GV42.T("general.error"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ResultadoCambioContrasena.ContrasenasNoCoinciden:
-                    MessageBox.Show("La nueva contraseña y la confirmación no coinciden.", "Error",
+                    MessageBox.Show(IdiomaManager_GV42.T("cambiarClave.noCoinciden"),
+                                    IdiomaManager_GV42.T("general.error"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ResultadoCambioContrasena.NuevaIgualActual:
-                    MessageBox.Show("La nueva contraseña no puede ser igual a la actual. Elegí una distinta.",
-                                    "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(IdiomaManager_GV42.T("cambiarClave.iguales"),
+                                    IdiomaManager_GV42.T("general.advertencia"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtNuevaconstrasenia.Focus();
                     break;
                 case ResultadoCambioContrasena.UsuarioInexistente:
-                    MessageBox.Show("El usuario no existe.", "Error",
+                    MessageBox.Show(IdiomaManager_GV42.T("cambiarClave.usuarioInexistente"),
+                                    IdiomaManager_GV42.T("general.error"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }

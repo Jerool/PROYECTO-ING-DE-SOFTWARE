@@ -47,6 +47,8 @@
     <Compile Include="Modulo_GV42.cs" />
     <Compile Include="Rol_GV42.cs" />
     <Compile Include="TipoEvento_GV42.cs" />
+    <Compile Include="IObservadorIdioma_GV42.cs" />
+    <Compile Include="IdiomaManager_GV42.cs" />
     <Compile Include="SessionManager_GV42.cs" />
     <Compile Include="Usuario_GV42.cs" />
     <Compile Include="Validaciones_GV42.cs" />

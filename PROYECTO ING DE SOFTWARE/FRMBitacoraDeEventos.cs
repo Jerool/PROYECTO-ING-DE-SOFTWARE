@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
-    public partial class FRMBitacoraDeEventos : Form
+    public partial class FRMBitacoraDeEventos : Form, IObservadorIdioma_GV42
     {
         private readonly BLLBitacora_GV42 _bllBitacora;
 
@@ -25,6 +25,48 @@ namespace PROYECTO_ING_DE_SOFTWARE
             InitializeComponent();
             _bllBitacora = BLLBitacora_GV42.Instancia;
             _bllUsuario = new BLLUsuario_GV42();
+
+            IdiomaManager_GV42.Instancia.Suscribir(this);
+            this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            ActualizarIdioma();
+        }
+
+        // Refresca TODOS los textos del form cuando cambia el idioma.
+        public void ActualizarIdioma()
+        {
+            this.Text = IdiomaManager_GV42.T("bitacora.titulo");
+
+            if (lblLogin != null) lblLogin.Text = IdiomaManager_GV42.T("bitacora.usuario");
+            if (lblModulo != null) lblModulo.Text = IdiomaManager_GV42.T("bitacora.modulo");
+            if (lblEvento != null) lblEvento.Text = IdiomaManager_GV42.T("bitacora.evento");
+            if (lblFechaInicio != null) lblFechaInicio.Text = IdiomaManager_GV42.T("bitacora.fechaInicio");
+            if (lblFechaFin != null) lblFechaFin.Text = IdiomaManager_GV42.T("bitacora.fechaFin");
+            if (lblCriticidad != null) lblCriticidad.Text = IdiomaManager_GV42.T("bitacora.criticidad");
+            if (lblNombre != null) lblNombre.Text = IdiomaManager_GV42.T("bitacora.nombre");
+            if (lblApellido != null) lblApellido.Text = IdiomaManager_GV42.T("bitacora.apellido");
+
+            if (btnAplicar != null) btnAplicar.Text = IdiomaManager_GV42.T("bitacora.aplicar");
+            if (btnLimpiar != null) btnLimpiar.Text = IdiomaManager_GV42.T("bitacora.limpiar");
+            if (btnImprimir != null) btnImprimir.Text = IdiomaManager_GV42.T("bitacora.imprimir");
+            if (btnCancelar != null) btnCancelar.Text = IdiomaManager_GV42.T("bitacora.salir");
+
+            // Refrescamos headers de la grilla si ya está cargada.
+            if (dgvBitacora != null && dgvBitacora.Columns.Count > 0)
+            {
+                if (dgvBitacora.Columns.Contains("Login"))
+                    dgvBitacora.Columns["Login"].HeaderText = IdiomaManager_GV42.T("bitacora.usuario");
+                if (dgvBitacora.Columns.Contains("ModuloNombre"))
+                    dgvBitacora.Columns["ModuloNombre"].HeaderText = IdiomaManager_GV42.T("bitacora.modulo");
+                if (dgvBitacora.Columns.Contains("TipoEventoNombre"))
+                    dgvBitacora.Columns["TipoEventoNombre"].HeaderText = IdiomaManager_GV42.T("bitacora.tipoEvento");
+                if (dgvBitacora.Columns.Contains("Detalle"))
+                    dgvBitacora.Columns["Detalle"].HeaderText = IdiomaManager_GV42.T("bitacora.detalle");
+                if (dgvBitacora.Columns.Contains("Criticidad"))
+                    dgvBitacora.Columns["Criticidad"].HeaderText = IdiomaManager_GV42.T("bitacora.criticidad");
+                if (dgvBitacora.Columns.Contains("FechaHora"))
+                    dgvBitacora.Columns["FechaHora"].HeaderText = IdiomaManager_GV42.T("bitacora.fechaHora");
+            }
         }
 
 

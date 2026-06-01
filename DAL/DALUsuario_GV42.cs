@@ -19,7 +19,7 @@ namespace DAL
             "       U.IdRol, R.Nombre AS RolNombre, " +
             "       U.Email, U.Bloqueo, U.Activo, " +
             "       U.IntentosFallidos, U.UltimoIntentoFallido, " +
-            "       U.DebeCambiarContrasena " +
+            "       U.DebeCambiarContrasena, U.Idioma " +
             "FROM Usuario U " +
             "INNER JOIN Roles R ON R.Id = U.IdRol";
 
@@ -149,6 +149,18 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
+        // Persiste el idioma elegido. Se llama cuando el usuario cambia idioma
+        // desde el menú. La próxima vez que loguee, la app arranca en ese idioma.
+        public void GuardarIdioma(string login, string idioma)
+        {
+            string query = "UPDATE Usuario SET Idioma = @Idioma WHERE UserName = @Login";
+            SqlParameter[] p = {
+                new SqlParameter("@Idioma", idioma),
+                new SqlParameter("@Login",  login)
+            };
+            _acceso.escribir(query, p);
+        }
+
         public void ResetearIntentosFallidos(string login)
         {
             string query =
@@ -213,7 +225,8 @@ namespace DAL
                 UltimoIntentoFallido = row["UltimoIntentoFallido"] == DBNull.Value
                     ? (DateTime?)null
                     : Convert.ToDateTime(row["UltimoIntentoFallido"]),
-                DebeCambiarContrasena = Convert.ToBoolean(row["DebeCambiarContrasena"])
+                DebeCambiarContrasena = Convert.ToBoolean(row["DebeCambiarContrasena"]),
+                Idioma = row["Idioma"] == DBNull.Value ? "es" : row["Idioma"].ToString()
             };
         }
 

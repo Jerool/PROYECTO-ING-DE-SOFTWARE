@@ -12,16 +12,62 @@ using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
-
-
-    public partial class FRMMenuPrincipalAdmin : Form
+    public partial class FRMMenuPrincipalAdmin : Form, IObservadorIdioma_GV42
     {
 
         private Form _formularioActual = null;
+        private readonly BLLUsuario_GV42 _bllUsuario;
+
+        // Items del menú "Idioma" agregados dinámicamente.
+        private ToolStripMenuItem _menuIdioma;
+        private ToolStripMenuItem _itemEspanol;
+        private ToolStripMenuItem _itemIngles;
 
         public FRMMenuPrincipalAdmin()
         {
             InitializeComponent();
+            _bllUsuario = new BLLUsuario_GV42();
+
+            IdiomaManager_GV42.Instancia.Suscribir(this);
+            this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            ConstruirMenuIdioma();
+            ActualizarIdioma();
+        }
+
+        // Agrega el ToolStripMenuItem "Idioma" con Español / English.
+        private void ConstruirMenuIdioma()
+        {
+            MenuStrip menu = this.Controls.OfType<MenuStrip>().FirstOrDefault();
+            if (menu == null) return;
+
+            _itemEspanol = new ToolStripMenuItem("Español");
+            _itemEspanol.Click += (s, e) => _bllUsuario.CambiarIdioma(IdiomaManager_GV42.ES);
+
+            _itemIngles = new ToolStripMenuItem("English");
+            _itemIngles.Click += (s, e) => _bllUsuario.CambiarIdioma(IdiomaManager_GV42.EN);
+
+            _menuIdioma = new ToolStripMenuItem("Idioma");
+            _menuIdioma.DropDownItems.Add(_itemEspanol);
+            _menuIdioma.DropDownItems.Add(_itemIngles);
+
+            menu.Items.Add(_menuIdioma);
+        }
+
+        // Traduce TODOS los textos del menú principal admin.
+        public void ActualizarIdioma()
+        {
+            if (adminToolStripMenuItem != null) adminToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.admin");
+            if (usuariosToolStripMenuItem != null) usuariosToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuarios");
+            if (bitacoraToolStripMenuItem != null) bitacoraToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.bitacora");
+            if (usuarioToolStripMenuItem != null) usuarioToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuario");
+            if (reLoginToolStripMenuItem != null) reLoginToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.relogin");
+            if (cambiarClaveToolStripMenuItem != null) cambiarClaveToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.cambiarClave");
+            if (logOutToolStripMenuItem != null) logOutToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.logout");
+
+            if (_menuIdioma != null) _menuIdioma.Text = IdiomaManager_GV42.T("menu.idioma");
+            if (_itemEspanol != null) _itemEspanol.Text = IdiomaManager_GV42.T("general.espanol");
+            if (_itemIngles != null) _itemIngles.Text = IdiomaManager_GV42.T("general.ingles");
         }
 
         private void FRMMenuPrincipalAdmin_Load(object sender, EventArgs e)
@@ -66,14 +112,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
             AbrirFormularioHijo(new FRMIniciarSesion());
         }
 
-
         private void logOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?","Cerrar sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show(
+                IdiomaManager_GV42.T("menu.confirmarLogout"),
+                IdiomaManager_GV42.T("menu.tituloLogout"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                BLLUsuario_GV42.CerrarSesión();         
+                BLLUsuario_GV42.CerrarSesión();
                 FRMIniciarSesion frm = new FRMIniciarSesion();
                 frm.Show();
                 this.Close();
