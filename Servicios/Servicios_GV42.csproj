@@ -41,21 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bitacora_GV42.cs" />
-    <Compile Include="Encriptador_GV42.cs" />
-    <Compile Include="EncriptadorReversible_GV42.cs" />
-    <Compile Include="Familia_GV42.cs" />
-    <Compile Include="IComponentePermiso_GV42.cs" />
-    <Compile Include="Modulo_GV42.cs" />
-    <Compile Include="Patente_GV42.cs" />
-    <Compile Include="Rol_GV42.cs" />
-    <Compile Include="TipoEvento_GV42.cs" />
-    <Compile Include="IObservadorIdioma_GV42.cs" />
-    <Compile Include="IdiomaManager_GV42.cs" />
-    <Compile Include="SessionManager_GV42.cs" />
+    <Compile Include="Bitacora\Bitacora_GV42.cs" />
+    <Compile Include="Encriptacion\Encriptador_GV42.cs" />
+    <Compile Include="Encriptacion\EncriptadorReversible_GV42.cs" />
+    <Compile Include="Composite\Familia_GV42.cs" />
+    <Compile Include="Composite\IComponentePermiso_GV42.cs" />
+    <Compile Include="Bitacora\Modulo_GV42.cs" />
+    <Compile Include="Composite\Patente_GV42.cs" />
+    <Compile Include="Composite\Rol_GV42.cs" />
+    <Compile Include="Bitacora\TipoEvento_GV42.cs" />
+    <Compile Include="Observer\IObservadorIdioma_GV42.cs" />
+    <Compile Include="Observer\IdiomaManager_GV42.cs" />
+    <Compile Include="Singlenton\SessionManager_GV42.cs" />
     <Compile Include="Usuario_GV42.cs" />
     <Compile Include="Validaciones_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

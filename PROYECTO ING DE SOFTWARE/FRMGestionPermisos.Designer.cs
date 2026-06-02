@@ -53,15 +53,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPatentes = new System.Windows.Forms.TabPage();
-            this.tabFamilias = new System.Windows.Forms.TabPage();
-            this.tabRoles = new System.Windows.Forms.TabPage();
-
-            this.lblTitPatentes = new System.Windows.Forms.Label();
             this.dgvPatentes = new System.Windows.Forms.DataGridView();
-
-            this.lblTitFamilias = new System.Windows.Forms.Label();
-            this.dgvFamilias = new System.Windows.Forms.DataGridView();
-            this.btnEliminarFamilia = new System.Windows.Forms.Button();
+            this.lblTitPatentes = new System.Windows.Forms.Label();
+            this.tabFamilias = new System.Windows.Forms.TabPage();
             this.gbCrearFamilia = new System.Windows.Forms.GroupBox();
             this.lblNombreFamilia = new System.Windows.Forms.Label();
             this.txtNombreFamilia = new System.Windows.Forms.TextBox();
@@ -71,10 +65,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.clbSubfamilias = new System.Windows.Forms.CheckedListBox();
             this.btnGuardarFamilia = new System.Windows.Forms.Button();
             this.btnLimpiarFamilia = new System.Windows.Forms.Button();
-
-            this.lblTitRoles = new System.Windows.Forms.Label();
-            this.dgvRoles = new System.Windows.Forms.DataGridView();
-            this.btnEliminarRol = new System.Windows.Forms.Button();
+            this.btnEliminarFamilia = new System.Windows.Forms.Button();
+            this.dgvFamilias = new System.Windows.Forms.DataGridView();
+            this.lblTitFamilias = new System.Windows.Forms.Label();
+            this.tabRoles = new System.Windows.Forms.TabPage();
             this.gbCrearRol = new System.Windows.Forms.GroupBox();
             this.lblNombreRol = new System.Windows.Forms.Label();
             this.txtNombreRol = new System.Windows.Forms.TextBox();
@@ -84,202 +78,368 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.clbFamiliasRol = new System.Windows.Forms.CheckedListBox();
             this.btnGuardarRol = new System.Windows.Forms.Button();
             this.btnLimpiarRol = new System.Windows.Forms.Button();
-
-            // ── Form ──
+            this.btnEliminarRol = new System.Windows.Forms.Button();
+            this.dgvRoles = new System.Windows.Forms.DataGridView();
+            this.lblTitRoles = new System.Windows.Forms.Label();
+            this.tabControl.SuspendLayout();
+            this.tabPatentes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPatentes)).BeginInit();
+            this.tabFamilias.SuspendLayout();
+            this.gbCrearFamilia.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFamilias)).BeginInit();
+            this.tabRoles.SuspendLayout();
+            this.gbCrearRol.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRoles)).BeginInit();
             this.SuspendLayout();
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 620);
-            this.Text = "Gestión de Permisos";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-
-            // ── tabControl ──
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // tabControl
+            // 
             this.tabControl.Controls.Add(this.tabPatentes);
             this.tabControl.Controls.Add(this.tabFamilias);
             this.tabControl.Controls.Add(this.tabRoles);
-
-            // ── tabPatentes ──
-            this.tabPatentes.Text = "Patentes";
-            this.tabPatentes.Padding = new System.Windows.Forms.Padding(10);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(823, 537);
+            this.tabControl.TabIndex = 0;
+            // 
+            // tabPatentes
+            // 
             this.tabPatentes.Controls.Add(this.dgvPatentes);
             this.tabPatentes.Controls.Add(this.lblTitPatentes);
-
-            this.lblTitPatentes.Text = "Catálogo de patentes del sistema (solo lectura)";
-            this.lblTitPatentes.Location = new System.Drawing.Point(15, 12);
-            this.lblTitPatentes.AutoSize = true;
-            this.lblTitPatentes.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-
-            this.dgvPatentes.Location = new System.Drawing.Point(15, 45);
-            this.dgvPatentes.Size = new System.Drawing.Size(905, 520);
-            this.dgvPatentes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-            this.dgvPatentes.ReadOnly = true;
+            this.tabPatentes.Location = new System.Drawing.Point(4, 22);
+            this.tabPatentes.Name = "tabPatentes";
+            this.tabPatentes.Padding = new System.Windows.Forms.Padding(9, 9, 9, 9);
+            this.tabPatentes.Size = new System.Drawing.Size(815, 511);
+            this.tabPatentes.TabIndex = 0;
+            this.tabPatentes.Text = "Patentes";
+            // 
+            // dgvPatentes
+            // 
             this.dgvPatentes.AllowUserToAddRows = false;
             this.dgvPatentes.AllowUserToDeleteRows = false;
             this.dgvPatentes.AllowUserToResizeRows = false;
-            this.dgvPatentes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPatentes.MultiSelect = false;
-            this.dgvPatentes.RowHeadersVisible = false;
+            this.dgvPatentes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPatentes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            // ── tabFamilias ──
-            this.tabFamilias.Text = "Familias";
-            this.tabFamilias.Padding = new System.Windows.Forms.Padding(10);
+            this.dgvPatentes.Location = new System.Drawing.Point(13, 39);
+            this.dgvPatentes.MultiSelect = false;
+            this.dgvPatentes.Name = "dgvPatentes";
+            this.dgvPatentes.ReadOnly = true;
+            this.dgvPatentes.RowHeadersVisible = false;
+            this.dgvPatentes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvPatentes.Size = new System.Drawing.Size(1428, 901);
+            this.dgvPatentes.TabIndex = 0;
+            // 
+            // lblTitPatentes
+            // 
+            this.lblTitPatentes.AutoSize = true;
+            this.lblTitPatentes.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblTitPatentes.Location = new System.Drawing.Point(13, 10);
+            this.lblTitPatentes.Name = "lblTitPatentes";
+            this.lblTitPatentes.Size = new System.Drawing.Size(240, 20);
+            this.lblTitPatentes.TabIndex = 1;
+            this.lblTitPatentes.Text = "Catálogo de patentes del sistema";
+            this.lblTitPatentes.Click += new System.EventHandler(this.lblTitPatentes_Click);
+            // 
+            // tabFamilias
+            // 
             this.tabFamilias.Controls.Add(this.gbCrearFamilia);
             this.tabFamilias.Controls.Add(this.btnEliminarFamilia);
             this.tabFamilias.Controls.Add(this.dgvFamilias);
             this.tabFamilias.Controls.Add(this.lblTitFamilias);
-
-            this.lblTitFamilias.Text = "Familias existentes";
-            this.lblTitFamilias.Location = new System.Drawing.Point(15, 12);
-            this.lblTitFamilias.AutoSize = true;
-            this.lblTitFamilias.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-
-            this.dgvFamilias.Location = new System.Drawing.Point(15, 45);
-            this.dgvFamilias.Size = new System.Drawing.Size(400, 240);
-            this.dgvFamilias.ReadOnly = true;
+            this.tabFamilias.Location = new System.Drawing.Point(4, 22);
+            this.tabFamilias.Name = "tabFamilias";
+            this.tabFamilias.Padding = new System.Windows.Forms.Padding(9, 9, 9, 9);
+            this.tabFamilias.Size = new System.Drawing.Size(163, 61);
+            this.tabFamilias.TabIndex = 1;
+            this.tabFamilias.Text = "Familias";
+            // 
+            // gbCrearFamilia
+            // 
+            this.gbCrearFamilia.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbCrearFamilia.Controls.Add(this.lblNombreFamilia);
+            this.gbCrearFamilia.Controls.Add(this.txtNombreFamilia);
+            this.gbCrearFamilia.Controls.Add(this.lblPatentesFamilia);
+            this.gbCrearFamilia.Controls.Add(this.clbPatentesFamilia);
+            this.gbCrearFamilia.Controls.Add(this.lblSubfamilias);
+            this.gbCrearFamilia.Controls.Add(this.clbSubfamilias);
+            this.gbCrearFamilia.Controls.Add(this.btnGuardarFamilia);
+            this.gbCrearFamilia.Controls.Add(this.btnLimpiarFamilia);
+            this.gbCrearFamilia.Location = new System.Drawing.Point(373, 39);
+            this.gbCrearFamilia.Name = "gbCrearFamilia";
+            this.gbCrearFamilia.Size = new System.Drawing.Size(416, 451);
+            this.gbCrearFamilia.TabIndex = 0;
+            this.gbCrearFamilia.TabStop = false;
+            this.gbCrearFamilia.Text = "Crear nueva familia";
+            // 
+            // lblNombreFamilia
+            // 
+            this.lblNombreFamilia.AutoSize = true;
+            this.lblNombreFamilia.Location = new System.Drawing.Point(13, 26);
+            this.lblNombreFamilia.Name = "lblNombreFamilia";
+            this.lblNombreFamilia.Size = new System.Drawing.Size(47, 13);
+            this.lblNombreFamilia.TabIndex = 0;
+            this.lblNombreFamilia.Text = "Nombre:";
+            // 
+            // txtNombreFamilia
+            // 
+            this.txtNombreFamilia.Location = new System.Drawing.Point(69, 23);
+            this.txtNombreFamilia.Name = "txtNombreFamilia";
+            this.txtNombreFamilia.Size = new System.Drawing.Size(326, 20);
+            this.txtNombreFamilia.TabIndex = 1;
+            // 
+            // lblPatentesFamilia
+            // 
+            this.lblPatentesFamilia.AutoSize = true;
+            this.lblPatentesFamilia.Location = new System.Drawing.Point(13, 56);
+            this.lblPatentesFamilia.Name = "lblPatentesFamilia";
+            this.lblPatentesFamilia.Size = new System.Drawing.Size(91, 13);
+            this.lblPatentesFamilia.TabIndex = 2;
+            this.lblPatentesFamilia.Text = "Patentes a incluir:";
+            // 
+            // clbPatentesFamilia
+            // 
+            this.clbPatentesFamilia.CheckOnClick = true;
+            this.clbPatentesFamilia.Location = new System.Drawing.Point(13, 74);
+            this.clbPatentesFamilia.Name = "clbPatentesFamilia";
+            this.clbPatentesFamilia.Size = new System.Drawing.Size(382, 139);
+            this.clbPatentesFamilia.TabIndex = 3;
+            // 
+            // lblSubfamilias
+            // 
+            this.lblSubfamilias.AutoSize = true;
+            this.lblSubfamilias.Location = new System.Drawing.Point(13, 230);
+            this.lblSubfamilias.Name = "lblSubfamilias";
+            this.lblSubfamilias.Size = new System.Drawing.Size(129, 13);
+            this.lblSubfamilias.TabIndex = 4;
+            this.lblSubfamilias.Text = "Subfamilias (anidamiento):";
+            // 
+            // clbSubfamilias
+            // 
+            this.clbSubfamilias.CheckOnClick = true;
+            this.clbSubfamilias.Location = new System.Drawing.Point(13, 247);
+            this.clbSubfamilias.Name = "clbSubfamilias";
+            this.clbSubfamilias.Size = new System.Drawing.Size(382, 139);
+            this.clbSubfamilias.TabIndex = 5;
+            // 
+            // btnGuardarFamilia
+            // 
+            this.btnGuardarFamilia.Location = new System.Drawing.Point(13, 412);
+            this.btnGuardarFamilia.Name = "btnGuardarFamilia";
+            this.btnGuardarFamilia.Size = new System.Drawing.Size(103, 26);
+            this.btnGuardarFamilia.TabIndex = 6;
+            this.btnGuardarFamilia.Text = "Guardar";
+            this.btnGuardarFamilia.Click += new System.EventHandler(this.btnGuardarFamilia_Click);
+            // 
+            // btnLimpiarFamilia
+            // 
+            this.btnLimpiarFamilia.Location = new System.Drawing.Point(124, 412);
+            this.btnLimpiarFamilia.Name = "btnLimpiarFamilia";
+            this.btnLimpiarFamilia.Size = new System.Drawing.Size(103, 26);
+            this.btnLimpiarFamilia.TabIndex = 7;
+            this.btnLimpiarFamilia.Text = "Limpiar";
+            this.btnLimpiarFamilia.Click += new System.EventHandler(this.btnLimpiarFamilia_Click);
+            // 
+            // btnEliminarFamilia
+            // 
+            this.btnEliminarFamilia.Location = new System.Drawing.Point(13, 256);
+            this.btnEliminarFamilia.Name = "btnEliminarFamilia";
+            this.btnEliminarFamilia.Size = new System.Drawing.Size(343, 26);
+            this.btnEliminarFamilia.TabIndex = 1;
+            this.btnEliminarFamilia.Text = "Eliminar familia seleccionada";
+            this.btnEliminarFamilia.Click += new System.EventHandler(this.btnEliminarFamilia_Click);
+            // 
+            // dgvFamilias
+            // 
             this.dgvFamilias.AllowUserToAddRows = false;
             this.dgvFamilias.AllowUserToDeleteRows = false;
             this.dgvFamilias.AllowUserToResizeRows = false;
-            this.dgvFamilias.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvFamilias.MultiSelect = false;
-            this.dgvFamilias.RowHeadersVisible = false;
             this.dgvFamilias.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            this.btnEliminarFamilia.Text = "Eliminar familia seleccionada";
-            this.btnEliminarFamilia.Location = new System.Drawing.Point(15, 295);
-            this.btnEliminarFamilia.Size = new System.Drawing.Size(400, 30);
-            this.btnEliminarFamilia.Click += new System.EventHandler(this.btnEliminarFamilia_Click);
-
-            this.gbCrearFamilia.Text = "Crear nueva familia";
-            this.gbCrearFamilia.Location = new System.Drawing.Point(435, 45);
-            this.gbCrearFamilia.Size = new System.Drawing.Size(485, 520);
-            this.gbCrearFamilia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-
-            this.lblNombreFamilia.Text = "Nombre:";
-            this.lblNombreFamilia.Location = new System.Drawing.Point(15, 30);
-            this.lblNombreFamilia.AutoSize = true;
-            this.gbCrearFamilia.Controls.Add(this.lblNombreFamilia);
-
-            this.txtNombreFamilia.Location = new System.Drawing.Point(80, 27);
-            this.txtNombreFamilia.Size = new System.Drawing.Size(380, 23);
-            this.gbCrearFamilia.Controls.Add(this.txtNombreFamilia);
-
-            this.lblPatentesFamilia.Text = "Patentes a incluir:";
-            this.lblPatentesFamilia.Location = new System.Drawing.Point(15, 65);
-            this.lblPatentesFamilia.AutoSize = true;
-            this.gbCrearFamilia.Controls.Add(this.lblPatentesFamilia);
-
-            this.clbPatentesFamilia.Location = new System.Drawing.Point(15, 85);
-            this.clbPatentesFamilia.Size = new System.Drawing.Size(445, 170);
-            this.clbPatentesFamilia.CheckOnClick = true;
-            this.gbCrearFamilia.Controls.Add(this.clbPatentesFamilia);
-
-            this.lblSubfamilias.Text = "Subfamilias (anidamiento):";
-            this.lblSubfamilias.Location = new System.Drawing.Point(15, 265);
-            this.lblSubfamilias.AutoSize = true;
-            this.gbCrearFamilia.Controls.Add(this.lblSubfamilias);
-
-            this.clbSubfamilias.Location = new System.Drawing.Point(15, 285);
-            this.clbSubfamilias.Size = new System.Drawing.Size(445, 170);
-            this.clbSubfamilias.CheckOnClick = true;
-            this.gbCrearFamilia.Controls.Add(this.clbSubfamilias);
-
-            this.btnGuardarFamilia.Text = "Guardar";
-            this.btnGuardarFamilia.Location = new System.Drawing.Point(15, 475);
-            this.btnGuardarFamilia.Size = new System.Drawing.Size(120, 30);
-            this.btnGuardarFamilia.Click += new System.EventHandler(this.btnGuardarFamilia_Click);
-            this.gbCrearFamilia.Controls.Add(this.btnGuardarFamilia);
-
-            this.btnLimpiarFamilia.Text = "Limpiar";
-            this.btnLimpiarFamilia.Location = new System.Drawing.Point(145, 475);
-            this.btnLimpiarFamilia.Size = new System.Drawing.Size(120, 30);
-            this.btnLimpiarFamilia.Click += new System.EventHandler(this.btnLimpiarFamilia_Click);
-            this.gbCrearFamilia.Controls.Add(this.btnLimpiarFamilia);
-
-            // ── tabRoles ──
-            this.tabRoles.Text = "Roles";
-            this.tabRoles.Padding = new System.Windows.Forms.Padding(10);
+            this.dgvFamilias.Location = new System.Drawing.Point(13, 39);
+            this.dgvFamilias.MultiSelect = false;
+            this.dgvFamilias.Name = "dgvFamilias";
+            this.dgvFamilias.ReadOnly = true;
+            this.dgvFamilias.RowHeadersVisible = false;
+            this.dgvFamilias.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvFamilias.Size = new System.Drawing.Size(343, 208);
+            this.dgvFamilias.TabIndex = 2;
+            // 
+            // lblTitFamilias
+            // 
+            this.lblTitFamilias.AutoSize = true;
+            this.lblTitFamilias.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblTitFamilias.Location = new System.Drawing.Point(13, 10);
+            this.lblTitFamilias.Name = "lblTitFamilias";
+            this.lblTitFamilias.Size = new System.Drawing.Size(141, 20);
+            this.lblTitFamilias.TabIndex = 3;
+            this.lblTitFamilias.Text = "Familias existentes";
+            // 
+            // tabRoles
+            // 
             this.tabRoles.Controls.Add(this.gbCrearRol);
             this.tabRoles.Controls.Add(this.btnEliminarRol);
             this.tabRoles.Controls.Add(this.dgvRoles);
             this.tabRoles.Controls.Add(this.lblTitRoles);
-
-            this.lblTitRoles.Text = "Roles existentes";
-            this.lblTitRoles.Location = new System.Drawing.Point(15, 12);
-            this.lblTitRoles.AutoSize = true;
-            this.lblTitRoles.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-
-            this.dgvRoles.Location = new System.Drawing.Point(15, 45);
-            this.dgvRoles.Size = new System.Drawing.Size(400, 240);
-            this.dgvRoles.ReadOnly = true;
+            this.tabRoles.Location = new System.Drawing.Point(4, 22);
+            this.tabRoles.Name = "tabRoles";
+            this.tabRoles.Padding = new System.Windows.Forms.Padding(9, 9, 9, 9);
+            this.tabRoles.Size = new System.Drawing.Size(163, 61);
+            this.tabRoles.TabIndex = 2;
+            this.tabRoles.Text = "Roles";
+            // 
+            // gbCrearRol
+            // 
+            this.gbCrearRol.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbCrearRol.Controls.Add(this.lblNombreRol);
+            this.gbCrearRol.Controls.Add(this.txtNombreRol);
+            this.gbCrearRol.Controls.Add(this.lblPatentesRol);
+            this.gbCrearRol.Controls.Add(this.clbPatentesRol);
+            this.gbCrearRol.Controls.Add(this.lblFamiliasRol);
+            this.gbCrearRol.Controls.Add(this.clbFamiliasRol);
+            this.gbCrearRol.Controls.Add(this.btnGuardarRol);
+            this.gbCrearRol.Controls.Add(this.btnLimpiarRol);
+            this.gbCrearRol.Location = new System.Drawing.Point(373, 39);
+            this.gbCrearRol.Name = "gbCrearRol";
+            this.gbCrearRol.Size = new System.Drawing.Size(416, 451);
+            this.gbCrearRol.TabIndex = 0;
+            this.gbCrearRol.TabStop = false;
+            this.gbCrearRol.Text = "Crear nuevo rol";
+            // 
+            // lblNombreRol
+            // 
+            this.lblNombreRol.AutoSize = true;
+            this.lblNombreRol.Location = new System.Drawing.Point(13, 26);
+            this.lblNombreRol.Name = "lblNombreRol";
+            this.lblNombreRol.Size = new System.Drawing.Size(47, 13);
+            this.lblNombreRol.TabIndex = 0;
+            this.lblNombreRol.Text = "Nombre:";
+            // 
+            // txtNombreRol
+            // 
+            this.txtNombreRol.Location = new System.Drawing.Point(69, 23);
+            this.txtNombreRol.Name = "txtNombreRol";
+            this.txtNombreRol.Size = new System.Drawing.Size(326, 20);
+            this.txtNombreRol.TabIndex = 1;
+            // 
+            // lblPatentesRol
+            // 
+            this.lblPatentesRol.AutoSize = true;
+            this.lblPatentesRol.Location = new System.Drawing.Point(13, 56);
+            this.lblPatentesRol.Name = "lblPatentesRol";
+            this.lblPatentesRol.Size = new System.Drawing.Size(110, 13);
+            this.lblPatentesRol.TabIndex = 2;
+            this.lblPatentesRol.Text = "Patentes individuales:";
+            // 
+            // clbPatentesRol
+            // 
+            this.clbPatentesRol.CheckOnClick = true;
+            this.clbPatentesRol.Location = new System.Drawing.Point(13, 74);
+            this.clbPatentesRol.Name = "clbPatentesRol";
+            this.clbPatentesRol.Size = new System.Drawing.Size(382, 139);
+            this.clbPatentesRol.TabIndex = 3;
+            // 
+            // lblFamiliasRol
+            // 
+            this.lblFamiliasRol.AutoSize = true;
+            this.lblFamiliasRol.Location = new System.Drawing.Point(13, 230);
+            this.lblFamiliasRol.Name = "lblFamiliasRol";
+            this.lblFamiliasRol.Size = new System.Drawing.Size(47, 13);
+            this.lblFamiliasRol.TabIndex = 4;
+            this.lblFamiliasRol.Text = "Familias:";
+            // 
+            // clbFamiliasRol
+            // 
+            this.clbFamiliasRol.CheckOnClick = true;
+            this.clbFamiliasRol.Location = new System.Drawing.Point(13, 247);
+            this.clbFamiliasRol.Name = "clbFamiliasRol";
+            this.clbFamiliasRol.Size = new System.Drawing.Size(382, 139);
+            this.clbFamiliasRol.TabIndex = 5;
+            // 
+            // btnGuardarRol
+            // 
+            this.btnGuardarRol.Location = new System.Drawing.Point(13, 412);
+            this.btnGuardarRol.Name = "btnGuardarRol";
+            this.btnGuardarRol.Size = new System.Drawing.Size(103, 26);
+            this.btnGuardarRol.TabIndex = 6;
+            this.btnGuardarRol.Text = "Guardar";
+            this.btnGuardarRol.Click += new System.EventHandler(this.btnGuardarRol_Click);
+            // 
+            // btnLimpiarRol
+            // 
+            this.btnLimpiarRol.Location = new System.Drawing.Point(124, 412);
+            this.btnLimpiarRol.Name = "btnLimpiarRol";
+            this.btnLimpiarRol.Size = new System.Drawing.Size(103, 26);
+            this.btnLimpiarRol.TabIndex = 7;
+            this.btnLimpiarRol.Text = "Limpiar";
+            this.btnLimpiarRol.Click += new System.EventHandler(this.btnLimpiarRol_Click);
+            // 
+            // btnEliminarRol
+            // 
+            this.btnEliminarRol.Location = new System.Drawing.Point(13, 256);
+            this.btnEliminarRol.Name = "btnEliminarRol";
+            this.btnEliminarRol.Size = new System.Drawing.Size(343, 26);
+            this.btnEliminarRol.TabIndex = 1;
+            this.btnEliminarRol.Text = "Eliminar rol seleccionado";
+            this.btnEliminarRol.Click += new System.EventHandler(this.btnEliminarRol_Click);
+            // 
+            // dgvRoles
+            // 
             this.dgvRoles.AllowUserToAddRows = false;
             this.dgvRoles.AllowUserToDeleteRows = false;
             this.dgvRoles.AllowUserToResizeRows = false;
-            this.dgvRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRoles.MultiSelect = false;
-            this.dgvRoles.RowHeadersVisible = false;
             this.dgvRoles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            this.btnEliminarRol.Text = "Eliminar rol seleccionado";
-            this.btnEliminarRol.Location = new System.Drawing.Point(15, 295);
-            this.btnEliminarRol.Size = new System.Drawing.Size(400, 30);
-            this.btnEliminarRol.Click += new System.EventHandler(this.btnEliminarRol_Click);
-
-            this.gbCrearRol.Text = "Crear nuevo rol";
-            this.gbCrearRol.Location = new System.Drawing.Point(435, 45);
-            this.gbCrearRol.Size = new System.Drawing.Size(485, 520);
-            this.gbCrearRol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-
-            this.lblNombreRol.Text = "Nombre:";
-            this.lblNombreRol.Location = new System.Drawing.Point(15, 30);
-            this.lblNombreRol.AutoSize = true;
-            this.gbCrearRol.Controls.Add(this.lblNombreRol);
-
-            this.txtNombreRol.Location = new System.Drawing.Point(80, 27);
-            this.txtNombreRol.Size = new System.Drawing.Size(380, 23);
-            this.gbCrearRol.Controls.Add(this.txtNombreRol);
-
-            this.lblPatentesRol.Text = "Patentes individuales:";
-            this.lblPatentesRol.Location = new System.Drawing.Point(15, 65);
-            this.lblPatentesRol.AutoSize = true;
-            this.gbCrearRol.Controls.Add(this.lblPatentesRol);
-
-            this.clbPatentesRol.Location = new System.Drawing.Point(15, 85);
-            this.clbPatentesRol.Size = new System.Drawing.Size(445, 170);
-            this.clbPatentesRol.CheckOnClick = true;
-            this.gbCrearRol.Controls.Add(this.clbPatentesRol);
-
-            this.lblFamiliasRol.Text = "Familias:";
-            this.lblFamiliasRol.Location = new System.Drawing.Point(15, 265);
-            this.lblFamiliasRol.AutoSize = true;
-            this.gbCrearRol.Controls.Add(this.lblFamiliasRol);
-
-            this.clbFamiliasRol.Location = new System.Drawing.Point(15, 285);
-            this.clbFamiliasRol.Size = new System.Drawing.Size(445, 170);
-            this.clbFamiliasRol.CheckOnClick = true;
-            this.gbCrearRol.Controls.Add(this.clbFamiliasRol);
-
-            this.btnGuardarRol.Text = "Guardar";
-            this.btnGuardarRol.Location = new System.Drawing.Point(15, 475);
-            this.btnGuardarRol.Size = new System.Drawing.Size(120, 30);
-            this.btnGuardarRol.Click += new System.EventHandler(this.btnGuardarRol_Click);
-            this.gbCrearRol.Controls.Add(this.btnGuardarRol);
-
-            this.btnLimpiarRol.Text = "Limpiar";
-            this.btnLimpiarRol.Location = new System.Drawing.Point(145, 475);
-            this.btnLimpiarRol.Size = new System.Drawing.Size(120, 30);
-            this.btnLimpiarRol.Click += new System.EventHandler(this.btnLimpiarRol_Click);
-            this.gbCrearRol.Controls.Add(this.btnLimpiarRol);
-
-            // ── Agregamos el tabControl al form ──
+            this.dgvRoles.Location = new System.Drawing.Point(13, 39);
+            this.dgvRoles.MultiSelect = false;
+            this.dgvRoles.Name = "dgvRoles";
+            this.dgvRoles.ReadOnly = true;
+            this.dgvRoles.RowHeadersVisible = false;
+            this.dgvRoles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRoles.Size = new System.Drawing.Size(343, 208);
+            this.dgvRoles.TabIndex = 2;
+            // 
+            // lblTitRoles
+            // 
+            this.lblTitRoles.AutoSize = true;
+            this.lblTitRoles.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblTitRoles.Location = new System.Drawing.Point(13, 10);
+            this.lblTitRoles.Name = "lblTitRoles";
+            this.lblTitRoles.Size = new System.Drawing.Size(122, 20);
+            this.lblTitRoles.TabIndex = 3;
+            this.lblTitRoles.Text = "Roles existentes";
+            // 
+            // FRMGestionPermisos
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(823, 537);
             this.Controls.Add(this.tabControl);
+            this.Name = "FRMGestionPermisos";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Gestión de Permisos";
             this.Load += new System.EventHandler(this.FRMGestionPermisos_Load);
-
+            this.tabControl.ResumeLayout(false);
+            this.tabPatentes.ResumeLayout(false);
+            this.tabPatentes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPatentes)).EndInit();
+            this.tabFamilias.ResumeLayout(false);
+            this.tabFamilias.PerformLayout();
+            this.gbCrearFamilia.ResumeLayout(false);
+            this.gbCrearFamilia.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFamilias)).EndInit();
+            this.tabRoles.ResumeLayout(false);
+            this.tabRoles.PerformLayout();
+            this.gbCrearRol.ResumeLayout(false);
+            this.gbCrearRol.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRoles)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion

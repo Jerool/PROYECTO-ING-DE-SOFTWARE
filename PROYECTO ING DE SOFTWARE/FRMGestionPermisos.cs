@@ -54,6 +54,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             dgvPatentes.DataSource = patentes;
             if (dgvPatentes.Columns.Contains("Id"))
                 dgvPatentes.Columns["Id"].Visible = false;
+            // El DataKey es un código técnico (ej. "Bitacora.ExportarPDF") usado
+            // internamente para identificar patentes. No se muestra: el admin
+            // identifica cada patente por su Nombre traducido.
+            if (dgvPatentes.Columns.Contains("DataKey"))
+                dgvPatentes.Columns["DataKey"].Visible = false;
             AplicarHeadersPatentes();
 
             clbPatentesFamilia.Items.Clear();
@@ -352,6 +357,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // todo en el idioma actual.
             if (dgvPatentes != null && dgvPatentes.Columns.Count > 0)
                 RecargarTodo();
+        }
+
+        private void lblTitPatentes_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

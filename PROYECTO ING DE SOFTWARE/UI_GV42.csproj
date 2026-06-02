@@ -96,6 +96,9 @@
     <EmbeddedResource Include="FRMCambiarContrasenia.resx">
       <DependentUpon>FRMCambiarContrasenia.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FRMGestionPermisos.resx">
+      <DependentUpon>FRMGestionPermisos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FRMGestionUsuariosAdmin.resx">
       <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>
     </EmbeddedResource>
