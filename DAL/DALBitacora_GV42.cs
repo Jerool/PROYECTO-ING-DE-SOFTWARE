@@ -54,10 +54,6 @@ namespace DAL
             return MapearLista(_acceso.leer(query, null));
         }
 
-
-        // Todos los filtros son opcionales y se combinan con AND.
-        // Login: LIKE parcial. Modulo y Criticidad: exacto. Evento: LIKE prefijo
-        // sobre el nombre del TipoEvento (igual que antes, pero ahora viene del JOIN).
         public List<Bitacora_GV42> Filtrar(string login, string modulo, string tipoEvento, string criticidad, DateTime fechaInicio, DateTime fechaFin)
         {
             StringBuilder sb = new StringBuilder(SELECT_BASE +

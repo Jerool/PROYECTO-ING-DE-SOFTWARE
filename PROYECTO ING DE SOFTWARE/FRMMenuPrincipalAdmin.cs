@@ -1,24 +1,17 @@
 using BLL;
 using Servicios;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PROYECTO_ING_DE_SOFTWARE
 {
     public partial class FRMMenuPrincipalAdmin : Form, IObservadorIdioma_GV42
     {
-
         private Form _formularioActual = null;
         private readonly BLLUsuario_GV42 _bllUsuario;
 
-        // Items del menú "Idioma" agregados dinámicamente.
+        // Items del menú "Idioma" agregados dinámicamente (no están en el Designer).
         private ToolStripMenuItem _menuIdioma;
         private ToolStripMenuItem _itemEspanol;
         private ToolStripMenuItem _itemIngles;
@@ -35,11 +28,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
             ActualizarIdioma();
         }
 
-        // Agrega el ToolStripMenuItem "Idioma" con Español / English.
+        // Agrega el ToolStripMenuItem "Idioma" con Español / English al MenuStrip.
         private void ConstruirMenuIdioma()
         {
-            MenuStrip menu = this.Controls.OfType<MenuStrip>().FirstOrDefault();
-            if (menu == null) return;
+            if (menuStrip1 == null) return;
 
             _itemEspanol = new ToolStripMenuItem("Español");
             _itemEspanol.Click += (s, e) => _bllUsuario.CambiarIdioma(IdiomaManager_GV42.ES);
@@ -51,7 +43,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             _menuIdioma.DropDownItems.Add(_itemEspanol);
             _menuIdioma.DropDownItems.Add(_itemIngles);
 
-            menu.Items.Add(_menuIdioma);
+            menuStrip1.Items.Add(_menuIdioma);
         }
 
         // Traduce TODOS los textos del menú principal admin.
@@ -60,6 +52,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (adminToolStripMenuItem != null) adminToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.admin");
             if (usuariosToolStripMenuItem != null) usuariosToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuarios");
             if (bitacoraToolStripMenuItem != null) bitacoraToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.bitacora");
+            if (gestionDePermisosToolStripMenuItem != null) gestionDePermisosToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.gestionPermisos");
             if (usuarioToolStripMenuItem != null) usuarioToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuario");
             if (reLoginToolStripMenuItem != null) reLoginToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.relogin");
             if (cambiarClaveToolStripMenuItem != null) cambiarClaveToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.cambiarClave");
@@ -75,6 +68,43 @@ namespace PROYECTO_ING_DE_SOFTWARE
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual != null)
                 lblUsuarioActual.Text = $"Sesión: {actual.Nombre} {actual.Apellido} ({actual.Login}) — Rol: {actual.RolNombre}";
+
+            AplicarPermisosMenu();
+        }
+
+        // Oculta los items del menú admin para los que el usuario no tiene patente.
+        // Criterio: el item aparece si el rol tiene AL MENOS UNA patente del módulo
+        // correspondiente. Adentro de cada form se filtran los botones específicos
+        // por patente individual.
+        //
+        // Caso especial: si el rol es el super-rol "Admin", dejamos TODO visible.
+        // El menú "Usuario" (cambiar clave, logout) queda siempre disponible.
+        private void AplicarPermisosMenu()
+        {
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            if (actual == null || actual.Rol == null) return;
+
+            if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
+                              StringComparison.OrdinalIgnoreCase))
+                return;
+
+            // Cargamos el árbol completo del rol (patentes directas + familias expandidas).
+            var bllPermisos = new BLLPermisos_GV42();
+            Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
+            if (rolCompleto == null) return;
+
+            var dataKeys = rolCompleto.ObtenerPatentes()
+                .Select(p => p.DataKey ?? string.Empty)
+                .ToList();
+
+            if (usuariosToolStripMenuItem != null)
+                usuariosToolStripMenuItem.Visible = dataKeys.Any(k => k.StartsWith("Usuarios."));
+
+            if (bitacoraToolStripMenuItem != null)
+                bitacoraToolStripMenuItem.Visible = dataKeys.Any(k => k.StartsWith("Bitacora."));
+
+            if (gestionDePermisosToolStripMenuItem != null)
+                gestionDePermisosToolStripMenuItem.Visible = dataKeys.Any(k => k.StartsWith("Permisos."));
         }
 
         public void AbrirFormularioHijo(Form f)
@@ -136,6 +166,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirFormularioHijo(new FRMBitacoraDeEventos());
+        }
+
+        private void gestionDePermisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FRMGestionPermisos());
         }
     }
 }

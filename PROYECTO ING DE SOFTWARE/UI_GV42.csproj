@@ -58,12 +58,6 @@
     <Compile Include="FRMCambiarContrasenia.Designer.cs">
       <DependentUpon>FRMCambiarContrasenia.cs</DependentUpon>
     </Compile>
-    <Compile Include="FRMFamilias.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FRMFamilias.Designer.cs">
-      <DependentUpon>FRMFamilias.cs</DependentUpon>
-    </Compile>
     <Compile Include="FRMIniciarSesion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,11 +82,11 @@
     <Compile Include="FRMGestionUsuariosAdmin.Designer.cs">
       <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>
     </Compile>
-    <Compile Include="FRMRoles.cs">
+    <Compile Include="FRMGestionPermisos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FRMRoles.Designer.cs">
-      <DependentUpon>FRMRoles.cs</DependentUpon>
+    <Compile Include="FRMGestionPermisos.Designer.cs">
+      <DependentUpon>FRMGestionPermisos.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,9 +95,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FRMCambiarContrasenia.resx">
       <DependentUpon>FRMCambiarContrasenia.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FRMFamilias.resx">
-      <DependentUpon>FRMFamilias.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FRMGestionUsuariosAdmin.resx">
       <DependentUpon>FRMGestionUsuariosAdmin.cs</DependentUpon>
@@ -116,9 +107,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FRMMenuPrincipalUsuario.resx">
       <DependentUpon>FRMMenuPrincipalUsuario.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FRMRoles.resx">
-      <DependentUpon>FRMRoles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

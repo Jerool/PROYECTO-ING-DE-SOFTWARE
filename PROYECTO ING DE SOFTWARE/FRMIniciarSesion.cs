@@ -122,15 +122,27 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            string rol = actual.RolNombre;
             Form formulario;
-            if (rol == "Admin")
+            if (TienePerfilAdministrativo(actual))
                 formulario = new FRMMenuPrincipalAdmin();
             else
                 formulario = new FRMMenuPrincipalUsuario();
 
             formulario.Show();
             this.Hide();
+        }
+
+      
+        private bool TienePerfilAdministrativo(Usuario_GV42 usuario)
+        {
+            if (usuario == null || usuario.Rol == null) return false;
+
+            string nombreRol = usuario.RolNombre ?? string.Empty;
+
+            if (string.Equals(nombreRol, "Usuario", System.StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
         }
     }
 }

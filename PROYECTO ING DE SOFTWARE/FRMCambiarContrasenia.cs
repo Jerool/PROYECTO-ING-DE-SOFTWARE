@@ -105,12 +105,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
         }
 
 
+        // Mismo criterio que FRMIniciarSesion: solo el rol literal "Usuario" va al
+        // menú de usuario común. Cualquier otro rol (incluido el super-rol "Admin"
+        // y los custom creados desde Gestión de Permisos) abre el menú admin, que
+        // internamente filtra items según las patentes del rol.
         private void AbrirMenuPrincipalSegunRol()
         {
-            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre;
-            Form menu;
-            if (rol == "Admin") menu = new FRMMenuPrincipalAdmin();
-            else menu = new FRMMenuPrincipalUsuario();
+            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre ?? string.Empty;
+            Form menu = string.Equals(rol, "Usuario", StringComparison.OrdinalIgnoreCase)
+                ? (Form)new FRMMenuPrincipalUsuario()
+                : new FRMMenuPrincipalAdmin();
             menu.Show();
         }
     }

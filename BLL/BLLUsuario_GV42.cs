@@ -53,6 +53,8 @@ namespace BLL
 
                 Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
 
+
+
                 if (usuario == null)
                 {
                     try
@@ -103,7 +105,11 @@ namespace BLL
 
 
                 _DALUsuario.ResetearIntentosFallidos(login);
-
+                BLLPermisos_GV42 bllPermisos = new BLLPermisos_GV42();
+                if (usuario.Rol != null)
+                {
+                    usuario.Rol = bllPermisos.ObtenerArbolRol(usuario.Rol.Id);
+                }
                 bool sesionIniciada = SessionManager_GV42.Instancia.IniciarSesion(usuario);
                 if (!sesionIniciada)
                 {
@@ -112,14 +118,15 @@ namespace BLL
                 }
                 Auditar(login, "Login", "Login exitoso", "Login correcto", "Baja");
 
-                // Cargamos el idioma preferido del usuario en el manager (Observer subject).
-                // Eso dispara la notificación a todos los formularios suscriptos para que
-                // refresquen sus textos en el idioma correcto.
+           
                 if (!string.IsNullOrWhiteSpace(usuario.Idioma))
                     IdiomaManager_GV42.Instancia.CambiarIdioma(usuario.Idioma);
 
                 return ResultadoLogin.Exitoso;
-            }catch
+
+
+            }
+            catch
             {
                 return ResultadoLogin.Error;
             }
@@ -156,15 +163,10 @@ namespace BLL
 
         public bool ExisteDNI(string dni) => _DALUsuario.ExisteDNI(dni);
 
-        // Cambia el idioma activo del sistema y lo persiste en la base para
-        // el usuario actual. Si no hay sesión activa, solo cambia en memoria
-        // (caso: cambiar idioma desde la pantalla de login antes de loguearse).
         public void CambiarIdioma(string codigoIdioma)
         {
-            // Notifica a todos los observadores y carga las traducciones.
             IdiomaManager_GV42.Instancia.CambiarIdioma(codigoIdioma);
 
-            // Si hay un usuario logueado, guardamos su preferencia en la base.
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual != null)
             {

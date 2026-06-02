@@ -39,9 +39,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.lblUsuarioActual = new System.Windows.Forms.ToolStripStatusLabel();
             this.pnlContenido = new System.Windows.Forms.Panel();
-            this.gestionDeAccesoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rolesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.familiasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionDePermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +67,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.adminToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.usuariosToolStripMenuItem,
             this.bitacoraToolStripMenuItem,
-            this.gestionDeAccesoToolStripMenuItem});
+            this.gestionDePermisosToolStripMenuItem});
             this.adminToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
             this.adminToolStripMenuItem.Size = new System.Drawing.Size(62, 23);
@@ -80,7 +78,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.usuariosToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.usuariosToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
+            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
             this.usuariosToolStripMenuItem.Text = "Usuarios";
             this.usuariosToolStripMenuItem.Click += new System.EventHandler(this.usuariosToolStripMenuItem_Click);
             // 
@@ -89,7 +87,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.bitacoraToolStripMenuItem.BackColor = System.Drawing.Color.White;
             this.bitacoraToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
             // 
@@ -158,26 +156,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.pnlContenido.Size = new System.Drawing.Size(800, 397);
             this.pnlContenido.TabIndex = 2;
             // 
-            // gestionDeAccesoToolStripMenuItem
+            // gestionDePermisosToolStripMenuItem
             // 
-            this.gestionDeAccesoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rolesToolStripMenuItem,
-            this.familiasToolStripMenuItem});
-            this.gestionDeAccesoToolStripMenuItem.Name = "gestionDeAccesoToolStripMenuItem";
-            this.gestionDeAccesoToolStripMenuItem.Size = new System.Drawing.Size(193, 24);
-            this.gestionDeAccesoToolStripMenuItem.Text = "Gestion de Acceso";
-            // 
-            // rolesToolStripMenuItem
-            // 
-            this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            this.rolesToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.rolesToolStripMenuItem.Text = "Roles";
-            // 
-            // familiasToolStripMenuItem
-            // 
-            this.familiasToolStripMenuItem.Name = "familiasToolStripMenuItem";
-            this.familiasToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.familiasToolStripMenuItem.Text = "Familias";
+            this.gestionDePermisosToolStripMenuItem.Name = "gestionDePermisosToolStripMenuItem";
+            this.gestionDePermisosToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
+            this.gestionDePermisosToolStripMenuItem.Text = "Gestion de permisos";
+            this.gestionDePermisosToolStripMenuItem.Click += new System.EventHandler(this.gestionDePermisosToolStripMenuItem_Click);
             // 
             // FRMMenuPrincipalAdmin
             // 
@@ -217,8 +201,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel lblUsuarioActual;
         private System.Windows.Forms.Panel pnlContenido;
-        private System.Windows.Forms.ToolStripMenuItem gestionDeAccesoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rolesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem familiasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gestionDePermisosToolStripMenuItem;
     }
 }

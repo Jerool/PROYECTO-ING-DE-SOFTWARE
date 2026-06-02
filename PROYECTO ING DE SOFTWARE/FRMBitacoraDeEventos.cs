@@ -30,6 +30,68 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
 
             ActualizarIdioma();
+            AplicarPermisos();
+        }
+
+        // Aplica los permisos granulares al form de Bitácora:
+        //   - Bitacora.Ver       → habilita filtros (login, módulo, evento, fechas,
+        //                          criticidad), botones Aplicar/Limpiar y las cajas
+        //                          de Nombre/Apellido del usuario seleccionado.
+        //   - Bitacora.ExportarPDF → habilita el botón Imprimir.
+        //
+        // La grilla siempre se muestra (si llegó al form es porque tiene al menos
+        // un permiso del módulo Bitácora) para que, aún con solo ExportarPDF, el
+        // usuario pueda ver QUÉ se va a exportar antes de generar el PDF.
+        // "Salir" (btnCancelar) queda siempre visible.
+        //
+        // Short-circuit: si el rol es el super-rol "Admin", se muestra todo.
+        private void AplicarPermisos()
+        {
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            if (actual == null || actual.Rol == null) return;
+
+            // Super-rol: todo visible, sin tocar nada.
+            if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
+                              System.StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var bllPermisos = new BLLPermisos_GV42();
+            Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
+            if (rolCompleto == null) return;
+
+            bool puedeVer = rolCompleto.TienePermiso("Bitacora.Ver");
+            bool puedeExportar = rolCompleto.TienePermiso("Bitacora.ExportarPDF");
+
+            // ── Filtros y controles de búsqueda: visibles solo con Bitacora.Ver ──
+            // Si solo puede exportar PDF, no tiene sentido que pueda re-filtrar
+            // los datos: ve la grilla tal cual está cargada por defecto y la
+            // imprime.
+            if (lblLogin != null) lblLogin.Visible = puedeVer;
+            if (txtLogin != null) txtLogin.Visible = puedeVer;
+            if (lblModulo != null) lblModulo.Visible = puedeVer;
+            if (cboModulo != null) cboModulo.Visible = puedeVer;
+            if (lblEvento != null) lblEvento.Visible = puedeVer;
+            if (cboEvento != null) cboEvento.Visible = puedeVer;
+            if (lblCriticidad != null) lblCriticidad.Visible = puedeVer;
+            if (cboCriticidad != null) cboCriticidad.Visible = puedeVer;
+            if (lblFechaInicio != null) lblFechaInicio.Visible = puedeVer;
+            if (dtpFechaInicio != null) dtpFechaInicio.Visible = puedeVer;
+            if (lblFechaFin != null) lblFechaFin.Visible = puedeVer;
+            if (dtpFechaFin != null) dtpFechaFin.Visible = puedeVer;
+            if (btnAplicar != null) btnAplicar.Visible = puedeVer;
+            if (btnLimpiar != null) btnLimpiar.Visible = puedeVer;
+
+            // Nombre/Apellido del usuario seleccionado en la grilla: también es
+            // parte de la "vista" — solo aporta valor si puede explorar la grilla.
+            if (lblNombre != null) lblNombre.Visible = puedeVer;
+            if (txtNombreUsuario != null) txtNombreUsuario.Visible = puedeVer;
+            if (lblApellido != null) lblApellido.Visible = puedeVer;
+            if (txtApellidoUsuario != null) txtApellidoUsuario.Visible = puedeVer;
+
+            // ── Imprimir: solo con Bitacora.ExportarPDF ──
+            if (btnImprimir != null) btnImprimir.Visible = puedeExportar;
+
+            // btnCancelar (Salir) y dgvBitacora quedan siempre visibles.
         }
 
         // Refresca TODOS los textos del form cuando cambia el idioma.
@@ -176,7 +238,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             if (dtpFechaFin.Value < dtpFechaInicio.Value)
             {
-                MessageBox.Show("La fecha fin no puede ser anterior a la fecha inicio.","Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(IdiomaManager_GV42.T("bitacora.fechaInvalida"),
+                                IdiomaManager_GV42.T("general.advertencia"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -211,8 +275,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             if (dgvBitacora.Rows.Count == 0)
             {
-                MessageBox.Show("No hay registros para exportar.",
-                                "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(IdiomaManager_GV42.T("bitacora.sinRegistros"),
+                                IdiomaManager_GV42.T("general.informacion"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -252,14 +317,19 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     generador.Generar(sfd.FileName, "Bitacora de Eventos", subtitulo,
                                       headers, proporciones, filas);
 
-                    DialogResult abrir = MessageBox.Show($"PDF generado correctamente en:\n{sfd.FileName}\n\n¿Querés abrirlo ahora?","Éxito", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    string mensaje = $"{IdiomaManager_GV42.T("bitacora.pdfGenerado")}\n{sfd.FileName}\n\n{IdiomaManager_GV42.T("bitacora.pdfAbrirAhora")}";
+                    DialogResult abrir = MessageBox.Show(mensaje,
+                                                         IdiomaManager_GV42.T("general.exito"),
+                                                         MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                     if (abrir == DialogResult.Yes)
                         System.Diagnostics.Process.Start(sfd.FileName);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("No se pudo generar el PDF.\n\nDetalle: " + ex.Message,"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(IdiomaManager_GV42.T("bitacora.errorPdf") + "\n\n" + ex.Message,
+                                    IdiomaManager_GV42.T("general.error"),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
