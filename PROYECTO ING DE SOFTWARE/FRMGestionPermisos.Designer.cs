@@ -50,15 +50,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void InitializeComponent()
         {
-            // ─── Paleta Material Azul (igual que los demás forms) ───
-            System.Drawing.Color azulOscuro    = System.Drawing.Color.FromArgb(13, 71, 161);
-            System.Drawing.Color azulClaro     = System.Drawing.Color.FromArgb(227, 242, 253);
-            System.Drawing.Color blanco        = System.Drawing.Color.White;
-            System.Drawing.Font  fuenteBase    = new System.Drawing.Font("Segoe UI", 9F);
-            System.Drawing.Font  fuenteTitulo  = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            System.Drawing.Font  fuenteGroup   = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            System.Drawing.Font  fuenteBtn     = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPatentes = new System.Windows.Forms.TabPage();
             this.dgvPatentes = new System.Windows.Forms.DataGridView();
@@ -108,21 +99,14 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.tabControl.Controls.Add(this.tabFamilias);
             this.tabControl.Controls.Add(this.tabRoles);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(900, 600);
             this.tabControl.TabIndex = 0;
-            this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.tabControl.ItemSize = new System.Drawing.Size(140, 34);
-            this.tabControl.Appearance = System.Windows.Forms.TabAppearance.Normal;
-            this.tabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.tabControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
             //
             // tabPatentes
             //
-            this.tabPatentes.BackColor = azulClaro;
             this.tabPatentes.Controls.Add(this.dgvPatentes);
             this.tabPatentes.Controls.Add(this.lblTitPatentes);
             this.tabPatentes.Location = new System.Drawing.Point(4, 22);
@@ -135,15 +119,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblTitPatentes
             //
             this.lblTitPatentes.AutoSize = true;
-            this.lblTitPatentes.Font = fuenteTitulo;
-            this.lblTitPatentes.ForeColor = azulOscuro;
             this.lblTitPatentes.Location = new System.Drawing.Point(15, 15);
             this.lblTitPatentes.Name = "lblTitPatentes";
             this.lblTitPatentes.Text = "Catálogo de patentes del sistema";
             //
             // dgvPatentes
             //
-            EstilarGrilla(this.dgvPatentes, azulOscuro, azulClaro, blanco, fuenteBase);
             this.dgvPatentes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                 | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPatentes.Location = new System.Drawing.Point(15, 50);
@@ -153,7 +134,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             //
             // tabFamilias
             //
-            this.tabFamilias.BackColor = azulClaro;
             this.tabFamilias.Controls.Add(this.btnModificarFamilia);
             this.tabFamilias.Controls.Add(this.gbCrearFamilia);
             this.tabFamilias.Controls.Add(this.btnEliminarFamilia);
@@ -169,15 +149,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblTitFamilias
             //
             this.lblTitFamilias.AutoSize = true;
-            this.lblTitFamilias.Font = fuenteTitulo;
-            this.lblTitFamilias.ForeColor = azulOscuro;
             this.lblTitFamilias.Location = new System.Drawing.Point(15, 15);
             this.lblTitFamilias.Name = "lblTitFamilias";
             this.lblTitFamilias.Text = "Familias existentes";
             //
             // dgvFamilias
             //
-            EstilarGrilla(this.dgvFamilias, azulOscuro, azulClaro, blanco, fuenteBase);
             this.dgvFamilias.Location = new System.Drawing.Point(15, 50);
             this.dgvFamilias.Name = "dgvFamilias";
             this.dgvFamilias.Size = new System.Drawing.Size(380, 240);
@@ -185,22 +162,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
             //
             // btnModificarFamilia
             //
-            EstilarBotonPrimario(this.btnModificarFamilia, azulOscuro, blanco, fuenteBtn);
             this.btnModificarFamilia.Location = new System.Drawing.Point(15, 300);
             this.btnModificarFamilia.Name = "btnModificarFamilia";
             this.btnModificarFamilia.Size = new System.Drawing.Size(380, 34);
             this.btnModificarFamilia.TabIndex = 2;
             this.btnModificarFamilia.Text = "Modificar familia seleccionada";
+            this.btnModificarFamilia.UseVisualStyleBackColor = true;
             this.btnModificarFamilia.Click += new System.EventHandler(this.btnModificarFamilia_Click);
             //
             // btnEliminarFamilia
             //
-            EstilarBotonSecundario(this.btnEliminarFamilia, azulOscuro, blanco, fuenteBtn);
             this.btnEliminarFamilia.Location = new System.Drawing.Point(15, 340);
             this.btnEliminarFamilia.Name = "btnEliminarFamilia";
             this.btnEliminarFamilia.Size = new System.Drawing.Size(380, 34);
             this.btnEliminarFamilia.TabIndex = 3;
             this.btnEliminarFamilia.Text = "Eliminar familia seleccionada";
+            this.btnEliminarFamilia.UseVisualStyleBackColor = true;
             this.btnEliminarFamilia.Click += new System.EventHandler(this.btnEliminarFamilia_Click);
             //
             // gbCrearFamilia
@@ -215,8 +192,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.gbCrearFamilia.Controls.Add(this.clbSubfamilias);
             this.gbCrearFamilia.Controls.Add(this.btnGuardarFamilia);
             this.gbCrearFamilia.Controls.Add(this.btnLimpiarFamilia);
-            this.gbCrearFamilia.Font = fuenteGroup;
-            this.gbCrearFamilia.ForeColor = azulOscuro;
             this.gbCrearFamilia.Location = new System.Drawing.Point(410, 50);
             this.gbCrearFamilia.Name = "gbCrearFamilia";
             this.gbCrearFamilia.Size = new System.Drawing.Size(467, 510);
@@ -227,15 +202,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblNombreFamilia
             //
             this.lblNombreFamilia.AutoSize = true;
-            this.lblNombreFamilia.Font = fuenteBase;
-            this.lblNombreFamilia.ForeColor = azulOscuro;
             this.lblNombreFamilia.Location = new System.Drawing.Point(20, 35);
             this.lblNombreFamilia.Text = "Nombre:";
             //
             // txtNombreFamilia
             //
-            this.txtNombreFamilia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNombreFamilia.Font = fuenteBase;
             this.txtNombreFamilia.Location = new System.Drawing.Point(85, 32);
             this.txtNombreFamilia.Name = "txtNombreFamilia";
             this.txtNombreFamilia.Size = new System.Drawing.Size(362, 23);
@@ -244,17 +215,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblPatentesFamilia
             //
             this.lblPatentesFamilia.AutoSize = true;
-            this.lblPatentesFamilia.Font = fuenteBase;
-            this.lblPatentesFamilia.ForeColor = azulOscuro;
             this.lblPatentesFamilia.Location = new System.Drawing.Point(20, 70);
             this.lblPatentesFamilia.Text = "Patentes a incluir:";
             //
             // clbPatentesFamilia
             //
-            this.clbPatentesFamilia.BackColor = blanco;
-            this.clbPatentesFamilia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.clbPatentesFamilia.CheckOnClick = true;
-            this.clbPatentesFamilia.Font = fuenteBase;
             this.clbPatentesFamilia.Location = new System.Drawing.Point(20, 90);
             this.clbPatentesFamilia.Name = "clbPatentesFamilia";
             this.clbPatentesFamilia.Size = new System.Drawing.Size(427, 156);
@@ -263,17 +229,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblSubfamilias
             //
             this.lblSubfamilias.AutoSize = true;
-            this.lblSubfamilias.Font = fuenteBase;
-            this.lblSubfamilias.ForeColor = azulOscuro;
             this.lblSubfamilias.Location = new System.Drawing.Point(20, 258);
             this.lblSubfamilias.Text = "Subfamilias (anidamiento):";
             //
             // clbSubfamilias
             //
-            this.clbSubfamilias.BackColor = blanco;
-            this.clbSubfamilias.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.clbSubfamilias.CheckOnClick = true;
-            this.clbSubfamilias.Font = fuenteBase;
             this.clbSubfamilias.Location = new System.Drawing.Point(20, 278);
             this.clbSubfamilias.Name = "clbSubfamilias";
             this.clbSubfamilias.Size = new System.Drawing.Size(427, 156);
@@ -281,27 +242,26 @@ namespace PROYECTO_ING_DE_SOFTWARE
             //
             // btnGuardarFamilia
             //
-            EstilarBotonPrimario(this.btnGuardarFamilia, azulOscuro, blanco, fuenteBtn);
             this.btnGuardarFamilia.Location = new System.Drawing.Point(20, 455);
             this.btnGuardarFamilia.Name = "btnGuardarFamilia";
             this.btnGuardarFamilia.Size = new System.Drawing.Size(140, 36);
             this.btnGuardarFamilia.TabIndex = 3;
             this.btnGuardarFamilia.Text = "Guardar";
+            this.btnGuardarFamilia.UseVisualStyleBackColor = true;
             this.btnGuardarFamilia.Click += new System.EventHandler(this.btnGuardarFamilia_Click);
             //
             // btnLimpiarFamilia
             //
-            EstilarBotonSecundario(this.btnLimpiarFamilia, azulOscuro, blanco, fuenteBtn);
             this.btnLimpiarFamilia.Location = new System.Drawing.Point(175, 455);
             this.btnLimpiarFamilia.Name = "btnLimpiarFamilia";
             this.btnLimpiarFamilia.Size = new System.Drawing.Size(140, 36);
             this.btnLimpiarFamilia.TabIndex = 4;
             this.btnLimpiarFamilia.Text = "Limpiar";
+            this.btnLimpiarFamilia.UseVisualStyleBackColor = true;
             this.btnLimpiarFamilia.Click += new System.EventHandler(this.btnLimpiarFamilia_Click);
             //
             // tabRoles
             //
-            this.tabRoles.BackColor = azulClaro;
             this.tabRoles.Controls.Add(this.btnModificarRol);
             this.tabRoles.Controls.Add(this.gbCrearRol);
             this.tabRoles.Controls.Add(this.btnEliminarRol);
@@ -317,15 +277,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblTitRoles
             //
             this.lblTitRoles.AutoSize = true;
-            this.lblTitRoles.Font = fuenteTitulo;
-            this.lblTitRoles.ForeColor = azulOscuro;
             this.lblTitRoles.Location = new System.Drawing.Point(15, 15);
             this.lblTitRoles.Name = "lblTitRoles";
             this.lblTitRoles.Text = "Roles existentes";
             //
             // dgvRoles
             //
-            EstilarGrilla(this.dgvRoles, azulOscuro, azulClaro, blanco, fuenteBase);
             this.dgvRoles.Location = new System.Drawing.Point(15, 50);
             this.dgvRoles.Name = "dgvRoles";
             this.dgvRoles.Size = new System.Drawing.Size(380, 240);
@@ -333,22 +290,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
             //
             // btnModificarRol
             //
-            EstilarBotonPrimario(this.btnModificarRol, azulOscuro, blanco, fuenteBtn);
             this.btnModificarRol.Location = new System.Drawing.Point(15, 300);
             this.btnModificarRol.Name = "btnModificarRol";
             this.btnModificarRol.Size = new System.Drawing.Size(380, 34);
             this.btnModificarRol.TabIndex = 2;
             this.btnModificarRol.Text = "Modificar rol seleccionado";
-     //       this.btnModificarRol.Click += new System.EventHandler(this.btnModificarRol_Click);
+            this.btnModificarRol.UseVisualStyleBackColor = true;
+//            this.btnModificarRol.Click += new System.EventHandler(this.btnModificarRol_Click);
             //
             // btnEliminarRol
             //
-            EstilarBotonSecundario(this.btnEliminarRol, azulOscuro, blanco, fuenteBtn);
             this.btnEliminarRol.Location = new System.Drawing.Point(15, 340);
             this.btnEliminarRol.Name = "btnEliminarRol";
             this.btnEliminarRol.Size = new System.Drawing.Size(380, 34);
             this.btnEliminarRol.TabIndex = 3;
             this.btnEliminarRol.Text = "Eliminar rol seleccionado";
+            this.btnEliminarRol.UseVisualStyleBackColor = true;
             this.btnEliminarRol.Click += new System.EventHandler(this.btnEliminarRol_Click);
             //
             // gbCrearRol
@@ -363,8 +320,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.gbCrearRol.Controls.Add(this.clbFamiliasRol);
             this.gbCrearRol.Controls.Add(this.btnGuardarRol);
             this.gbCrearRol.Controls.Add(this.btnLimpiarRol);
-            this.gbCrearRol.Font = fuenteGroup;
-            this.gbCrearRol.ForeColor = azulOscuro;
             this.gbCrearRol.Location = new System.Drawing.Point(410, 50);
             this.gbCrearRol.Name = "gbCrearRol";
             this.gbCrearRol.Size = new System.Drawing.Size(467, 510);
@@ -375,15 +330,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblNombreRol
             //
             this.lblNombreRol.AutoSize = true;
-            this.lblNombreRol.Font = fuenteBase;
-            this.lblNombreRol.ForeColor = azulOscuro;
             this.lblNombreRol.Location = new System.Drawing.Point(20, 35);
             this.lblNombreRol.Text = "Nombre:";
             //
             // txtNombreRol
             //
-            this.txtNombreRol.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNombreRol.Font = fuenteBase;
             this.txtNombreRol.Location = new System.Drawing.Point(85, 32);
             this.txtNombreRol.Name = "txtNombreRol";
             this.txtNombreRol.Size = new System.Drawing.Size(362, 23);
@@ -392,17 +343,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblPatentesRol
             //
             this.lblPatentesRol.AutoSize = true;
-            this.lblPatentesRol.Font = fuenteBase;
-            this.lblPatentesRol.ForeColor = azulOscuro;
             this.lblPatentesRol.Location = new System.Drawing.Point(20, 70);
             this.lblPatentesRol.Text = "Patentes individuales:";
             //
             // clbPatentesRol
             //
-            this.clbPatentesRol.BackColor = blanco;
-            this.clbPatentesRol.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.clbPatentesRol.CheckOnClick = true;
-            this.clbPatentesRol.Font = fuenteBase;
             this.clbPatentesRol.Location = new System.Drawing.Point(20, 90);
             this.clbPatentesRol.Name = "clbPatentesRol";
             this.clbPatentesRol.Size = new System.Drawing.Size(427, 156);
@@ -411,17 +357,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             // lblFamiliasRol
             //
             this.lblFamiliasRol.AutoSize = true;
-            this.lblFamiliasRol.Font = fuenteBase;
-            this.lblFamiliasRol.ForeColor = azulOscuro;
             this.lblFamiliasRol.Location = new System.Drawing.Point(20, 258);
             this.lblFamiliasRol.Text = "Familias:";
             //
             // clbFamiliasRol
             //
-            this.clbFamiliasRol.BackColor = blanco;
-            this.clbFamiliasRol.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.clbFamiliasRol.CheckOnClick = true;
-            this.clbFamiliasRol.Font = fuenteBase;
             this.clbFamiliasRol.Location = new System.Drawing.Point(20, 278);
             this.clbFamiliasRol.Name = "clbFamiliasRol";
             this.clbFamiliasRol.Size = new System.Drawing.Size(427, 156);
@@ -429,32 +370,30 @@ namespace PROYECTO_ING_DE_SOFTWARE
             //
             // btnGuardarRol
             //
-            EstilarBotonPrimario(this.btnGuardarRol, azulOscuro, blanco, fuenteBtn);
             this.btnGuardarRol.Location = new System.Drawing.Point(20, 455);
             this.btnGuardarRol.Name = "btnGuardarRol";
             this.btnGuardarRol.Size = new System.Drawing.Size(140, 36);
             this.btnGuardarRol.TabIndex = 3;
             this.btnGuardarRol.Text = "Guardar";
+            this.btnGuardarRol.UseVisualStyleBackColor = true;
             this.btnGuardarRol.Click += new System.EventHandler(this.btnGuardarRol_Click);
             //
             // btnLimpiarRol
             //
-            EstilarBotonSecundario(this.btnLimpiarRol, azulOscuro, blanco, fuenteBtn);
             this.btnLimpiarRol.Location = new System.Drawing.Point(175, 455);
             this.btnLimpiarRol.Name = "btnLimpiarRol";
             this.btnLimpiarRol.Size = new System.Drawing.Size(140, 36);
             this.btnLimpiarRol.TabIndex = 4;
             this.btnLimpiarRol.Text = "Limpiar";
+            this.btnLimpiarRol.UseVisualStyleBackColor = true;
             this.btnLimpiarRol.Click += new System.EventHandler(this.btnLimpiarRol_Click);
             //
             // FRMGestionPermisos
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = azulClaro;
             this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.tabControl);
-            this.Font = fuenteBase;
             this.Name = "FRMGestionPermisos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestión de Permisos";
@@ -474,68 +413,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.gbCrearRol.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRoles)).EndInit();
             this.ResumeLayout(false);
-        }
-
-        // ─── Helpers de estilo (Material Design) ───
-        private static void EstilarGrilla(System.Windows.Forms.DataGridView dgv,
-            System.Drawing.Color azulOscuro, System.Drawing.Color azulClaro,
-            System.Drawing.Color blanco, System.Drawing.Font fuente)
-        {
-            dgv.AllowUserToAddRows = false;
-            dgv.AllowUserToDeleteRows = false;
-            dgv.AllowUserToResizeRows = false;
-            dgv.AllowUserToResizeColumns = false;
-            dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dgv.BackgroundColor = blanco;
-            dgv.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dgv.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = azulOscuro;
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = blanco;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = azulOscuro;
-            dgv.ColumnHeadersDefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
-            dgv.ColumnHeadersHeight = 32;
-            dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgv.DefaultCellStyle.BackColor = blanco;
-            dgv.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-            dgv.DefaultCellStyle.Font = fuente;
-            dgv.DefaultCellStyle.SelectionBackColor = azulOscuro;
-            dgv.DefaultCellStyle.SelectionForeColor = blanco;
-            dgv.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(2);
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = azulClaro;
-            dgv.EnableHeadersVisualStyles = false;
-            dgv.GridColor = azulClaro;
-            dgv.MultiSelect = false;
-            dgv.ReadOnly = true;
-            dgv.RowHeadersVisible = false;
-            dgv.RowTemplate.Height = 26;
-            dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        }
-
-        private static void EstilarBotonPrimario(System.Windows.Forms.Button btn,
-            System.Drawing.Color azulOscuro, System.Drawing.Color blanco, System.Drawing.Font fuente)
-        {
-            btn.BackColor = azulOscuro;
-            btn.ForeColor = blanco;
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = fuente;
-            btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            btn.UseVisualStyleBackColor = false;
-        }
-
-        private static void EstilarBotonSecundario(System.Windows.Forms.Button btn,
-            System.Drawing.Color azulOscuro, System.Drawing.Color blanco, System.Drawing.Font fuente)
-        {
-            btn.BackColor = blanco;
-            btn.ForeColor = azulOscuro;
-            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btn.FlatAppearance.BorderColor = azulOscuro;
-            btn.FlatAppearance.BorderSize = 1;
-            btn.Font = fuente;
-            btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            btn.UseVisualStyleBackColor = false;
         }
 
         #endregion

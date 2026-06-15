@@ -26,6 +26,144 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             IdiomaManager_GV42.Instancia.Suscribir(this);
             this.FormClosed += (s, e) => IdiomaManager_GV42.Instancia.Desuscribir(this);
+
+            AplicarEstilos();
+        }
+
+        private void AplicarEstilos()
+        {
+            Color azulOscuro    = Color.FromArgb(13, 71, 161);
+            Color azulClaro     = Color.FromArgb(227, 242, 253);
+            Color blanco        = Color.White;
+            Font  fuenteBase    = new Font("Segoe UI", 9F);
+            Font  fuenteTitulo  = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            Font  fuenteGroup   = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            Font  fuenteBtn     = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            Font  fuenteTabs    = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+
+            this.BackColor = azulClaro;
+            this.Font = fuenteBase;
+
+            tabControl.Font = fuenteTabs;
+            tabControl.SizeMode = TabSizeMode.Fixed;
+            tabControl.ItemSize = new Size(140, 34);
+            tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabControl.DrawItem += TabControl_DrawItem;
+
+            tabPatentes.BackColor = azulClaro;
+            tabFamilias.BackColor = azulClaro;
+            tabRoles.BackColor    = azulClaro;
+
+            EstilarTitulo(lblTitPatentes, azulOscuro, fuenteTitulo);
+            EstilarTitulo(lblTitFamilias, azulOscuro, fuenteTitulo);
+            EstilarTitulo(lblTitRoles,    azulOscuro, fuenteTitulo);
+
+            EstilarGrilla(dgvPatentes, azulOscuro, azulClaro, blanco, fuenteBase);
+            EstilarGrilla(dgvFamilias, azulOscuro, azulClaro, blanco, fuenteBase);
+            EstilarGrilla(dgvRoles,    azulOscuro, azulClaro, blanco, fuenteBase);
+
+            EstilarGroupBox(gbCrearFamilia, azulOscuro, fuenteGroup);
+            EstilarGroupBox(gbCrearRol,     azulOscuro, fuenteGroup);
+
+            foreach (Label lbl in new[] { lblNombreFamilia, lblPatentesFamilia, lblSubfamilias,
+                                          lblNombreRol, lblPatentesRol, lblFamiliasRol })
+            {
+                lbl.ForeColor = azulOscuro;
+                lbl.Font = fuenteBase;
+            }
+
+            foreach (TextBox txt in new[] { txtNombreFamilia, txtNombreRol })
+            {
+                txt.BorderStyle = BorderStyle.FixedSingle;
+                txt.Font = fuenteBase;
+            }
+
+            foreach (CheckedListBox clb in new[] { clbPatentesFamilia, clbSubfamilias,
+                                                   clbPatentesRol, clbFamiliasRol })
+            {
+                clb.BackColor = blanco;
+                clb.BorderStyle = BorderStyle.FixedSingle;
+                clb.Font = fuenteBase;
+            }
+
+            EstilarBotonPrimario(btnModificarFamilia, azulOscuro, blanco, fuenteBtn);
+            EstilarBotonPrimario(btnModificarRol,     azulOscuro, blanco, fuenteBtn);
+            EstilarBotonPrimario(btnGuardarFamilia,   azulOscuro, blanco, fuenteBtn);
+            EstilarBotonPrimario(btnGuardarRol,       azulOscuro, blanco, fuenteBtn);
+
+            EstilarBotonSecundario(btnEliminarFamilia, azulOscuro, blanco, fuenteBtn);
+            EstilarBotonSecundario(btnEliminarRol,     azulOscuro, blanco, fuenteBtn);
+            EstilarBotonSecundario(btnLimpiarFamilia,  azulOscuro, blanco, fuenteBtn);
+            EstilarBotonSecundario(btnLimpiarRol,      azulOscuro, blanco, fuenteBtn);
+        }
+
+        private static void EstilarTitulo(Label lbl, Color color, Font fuente)
+        {
+            lbl.ForeColor = color;
+            lbl.Font = fuente;
+        }
+
+        private static void EstilarGroupBox(GroupBox gb, Color color, Font fuente)
+        {
+            gb.ForeColor = color;
+            gb.Font = fuente;
+        }
+
+        private static void EstilarGrilla(DataGridView dgv, Color azulOscuro, Color azulClaro, Color blanco, Font fuente)
+        {
+            dgv.AllowUserToAddRows = false;
+            dgv.AllowUserToDeleteRows = false;
+            dgv.AllowUserToResizeRows = false;
+            dgv.AllowUserToResizeColumns = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.BackgroundColor = blanco;
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = azulOscuro;
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = blanco;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = azulOscuro;
+            dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(4);
+            dgv.ColumnHeadersHeight = 32;
+            dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgv.DefaultCellStyle.BackColor = blanco;
+            dgv.DefaultCellStyle.ForeColor = Color.Black;
+            dgv.DefaultCellStyle.Font = fuente;
+            dgv.DefaultCellStyle.SelectionBackColor = azulOscuro;
+            dgv.DefaultCellStyle.SelectionForeColor = blanco;
+            dgv.DefaultCellStyle.Padding = new Padding(2);
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = azulClaro;
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.GridColor = azulClaro;
+            dgv.MultiSelect = false;
+            dgv.ReadOnly = true;
+            dgv.RowHeadersVisible = false;
+            dgv.RowTemplate.Height = 26;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        }
+
+        private static void EstilarBotonPrimario(Button btn, Color azulOscuro, Color blanco, Font fuente)
+        {
+            btn.BackColor = azulOscuro;
+            btn.ForeColor = blanco;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = fuente;
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
+        }
+
+        private static void EstilarBotonSecundario(Button btn, Color azulOscuro, Color blanco, Font fuente)
+        {
+            btn.BackColor = blanco;
+            btn.ForeColor = azulOscuro;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderColor = azulOscuro;
+            btn.FlatAppearance.BorderSize = 1;
+            btn.Font = fuente;
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
         }
 
         private void FRMGestionPermisos_Load(object sender, EventArgs e)
