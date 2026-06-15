@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,13 @@ namespace BLL
 
     public class GeneradorPdf_GV42
     {
-        private const int ANCHO_PAGINA = 792;      
+        private const int ANCHO_PAGINA = 792;
         private const int ALTO_PAGINA = 612;
         private const int MARGEN = 50;
         private const int ALTO_FILA = 18;
         private const int FILAS_POR_PAGINA = 22;
+
+        private static readonly CultureInfo INV = CultureInfo.InvariantCulture;
 
         private MemoryStream _buffer;
         private List<long> _offsetsObjetos;
@@ -60,7 +63,6 @@ namespace BLL
             float anchoUtil = ANCHO_PAGINA - 2 * MARGEN;
             float[] anchos = anchosProporcionales.Select(pct => pct * anchoUtil).ToArray();
 
-            // ── Content stream de cada página ──
             for (int p = 0; p < totalPaginas; p++)
             {
                 int idContents = primerIdContents + p;
@@ -68,37 +70,32 @@ namespace BLL
                 int filaFin = Math.Min(filaInicio + FILAS_POR_PAGINA, filas.Count);
 
                 StringBuilder content = new StringBuilder();
-
                 int yActual = ALTO_PAGINA - MARGEN;
 
-                // ── Título (texto negro, sin colores de fondo) ──
                 content.Append("BT\n");
-                content.Append("0 0 0 rg\n");                          // Texto negro
-                content.Append("/F2 16 Tf\n");                         // Helvetica-Bold 16pt
-                content.AppendFormat("1 0 0 1 {0} {1} Tm\n", MARGEN, yActual - 16);
-                content.AppendFormat("({0}) Tj\n", EscaparTexto(titulo));
+                content.Append("0 0 0 rg\n");
+                content.Append("/F2 16 Tf\n");
+                content.AppendFormat(INV, "1 0 0 1 {0} {1} Tm\n", MARGEN, yActual - 16);
+                content.AppendFormat(INV, "({0}) Tj\n", EscaparTexto(titulo));
                 content.Append("ET\n");
                 yActual -= 24;
 
-                // ── Subtítulo en gris medio ──
                 content.Append("BT\n");
-                content.Append("0.45 0.45 0.45 rg\n");                 // Gris medio
+                content.Append("0.45 0.45 0.45 rg\n");
                 content.Append("/F1 9 Tf\n");
-                content.AppendFormat("1 0 0 1 {0} {1} Tm\n", MARGEN, yActual);
+                content.AppendFormat(INV, "1 0 0 1 {0} {1} Tm\n", MARGEN, yActual);
                 string subtitFinal = subtitulo + (totalPaginas > 1 ? $"   |   Pagina {p + 1} de {totalPaginas}" : "");
-                content.AppendFormat("({0}) Tj\n", EscaparTexto(subtitFinal));
+                content.AppendFormat(INV, "({0}) Tj\n", EscaparTexto(subtitFinal));
                 content.Append("ET\n");
                 yActual -= 20;
 
-                // ── Línea horizontal separando título del cuerpo ──
-                content.Append("0.7 0.7 0.7 RG\n");                    // Línea gris claro
-                content.Append("0.6 w\n");                             // Grosor 0.6pt
-                content.AppendFormat("{0} {1} m\n", MARGEN, yActual);
-                content.AppendFormat("{0} {1} l\n", MARGEN + anchoUtil, yActual);
+                content.Append("0.7 0.7 0.7 RG\n");
+                content.Append("0.6 w\n");
+                content.AppendFormat(INV, "{0} {1} m\n", MARGEN, yActual);
+                content.AppendFormat(INV, "{0} {1} l\n", MARGEN + anchoUtil, yActual);
                 content.Append("S\n");
                 yActual -= 14;
 
-                // ── Cabecera de tabla: solo texto en bold, sin fondo ──
                 int yHeaderBaseline = yActual;
                 content.Append("BT\n");
                 content.Append("0 0 0 rg\n");
@@ -106,51 +103,47 @@ namespace BLL
                 float xCol = MARGEN;
                 for (int h = 0; h < headers.Length; h++)
                 {
-                    content.AppendFormat("1 0 0 1 {0} {1} Tm\n", xCol, yHeaderBaseline);
-                    content.AppendFormat("({0}) Tj\n", EscaparTexto(headers[h]));
+                    content.AppendFormat(INV, "1 0 0 1 {0} {1} Tm\n", xCol, yHeaderBaseline);
+                    content.AppendFormat(INV, "({0}) Tj\n", EscaparTexto(headers[h]));
                     xCol += anchos[h];
                 }
                 content.Append("ET\n");
                 yActual -= 8;
 
-                // ── Línea debajo de los encabezados ──
                 content.Append("0.5 0.5 0.5 RG\n");
                 content.Append("0.7 w\n");
-                content.AppendFormat("{0} {1} m\n", MARGEN, yActual);
-                content.AppendFormat("{0} {1} l\n", MARGEN + anchoUtil, yActual);
+                content.AppendFormat(INV, "{0} {1} m\n", MARGEN, yActual);
+                content.AppendFormat(INV, "{0} {1} l\n", MARGEN + anchoUtil, yActual);
                 content.Append("S\n");
                 yActual -= 12;
 
-                // ── Filas de datos: texto negro, sin fondo, separadas por línea gris muy clara ──
                 for (int f = filaInicio; f < filaFin; f++)
                 {
                     string[] valores = filas[f];
 
                     content.Append("BT\n");
-                    content.Append("0 0 0 rg\n");                       // Texto negro
+                    content.Append("0 0 0 rg\n");
                     content.Append("/F1 9 Tf\n");
                     xCol = MARGEN;
                     for (int c = 0; c < headers.Length; c++)
                     {
                         string val = c < valores.Length ? (valores[c] ?? "") : "";
-                        // Truncamos si no entra en la celda (estimación: 1 char ≈ 5pt).
                         int maxChars = (int)(anchos[c] / 5);
                         if (val.Length > maxChars && maxChars > 1)
                             val = val.Substring(0, maxChars - 1) + ".";
 
-                        content.AppendFormat("1 0 0 1 {0} {1} Tm\n", xCol, yActual);
-                        content.AppendFormat("({0}) Tj\n", EscaparTexto(val));
+                        content.AppendFormat(INV, "1 0 0 1 {0} {1} Tm\n", xCol, yActual);
+                        content.AppendFormat(INV, "({0}) Tj\n", EscaparTexto(val));
                         xCol += anchos[c];
                     }
                     content.Append("ET\n");
 
                     yActual -= ALTO_FILA;
 
-                    // Línea muy suave separando filas
                     content.Append("0.88 0.88 0.88 RG\n");
                     content.Append("0.3 w\n");
-                    content.AppendFormat("{0} {1} m\n", MARGEN, yActual + 4);
-                    content.AppendFormat("{0} {1} l\n", MARGEN + anchoUtil, yActual + 4);
+                    content.AppendFormat(INV, "{0} {1} m\n", MARGEN, yActual + 4);
+                    content.AppendFormat(INV, "{0} {1} l\n", MARGEN + anchoUtil, yActual + 4);
                     content.Append("S\n");
                 }
 
@@ -163,7 +156,6 @@ namespace BLL
 
             File.WriteAllBytes(ruta, _buffer.ToArray());
         }
-
 
         private void EscribirHeader()
         {

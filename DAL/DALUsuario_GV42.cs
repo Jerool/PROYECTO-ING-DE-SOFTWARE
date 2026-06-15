@@ -1,4 +1,4 @@
-using Servicios;                        
+using Servicios;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -109,7 +109,6 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
-
         public void ModificarRol(string dni, int idRol)
         {
             string query = "UPDATE Usuario SET IdRol = @IdRol WHERE DNI = @DNI";
@@ -149,8 +148,6 @@ namespace DAL
             _acceso.escribir(query, p);
         }
 
-        // Persiste el idioma elegido. Se llama cuando el usuario cambia idioma
-        // desde el menú. La próxima vez que loguee, la app arranca en ese idioma.
         public void GuardarIdioma(string login, string idioma)
         {
             string query = "UPDATE Usuario SET Idioma = @Idioma WHERE UserName = @Login";
@@ -211,7 +208,7 @@ namespace DAL
                 Nombre = row["Nombre"].ToString(),
                 Login = row["UserName"].ToString(),
                 Contrasena = row["Contrasena"].ToString(),
- 
+
                 Rol = new Rol_GV42
                 {
                     Id = Convert.ToInt32(row["IdRol"]),
@@ -246,7 +243,6 @@ namespace DAL
             }
             return lista;
         }
-
 
         public Rol_GV42 BuscarPorNombre(string nombre)
         {

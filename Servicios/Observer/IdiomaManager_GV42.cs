@@ -10,17 +10,13 @@ namespace Servicios
     {
         private static IdiomaManager_GV42 _instancia;
 
-
         private readonly List<IObservadorIdioma_GV42> _observadores;
-
 
         private Dictionary<string, string> _traducciones;
         private string _idiomaActual;
 
-
         public const string ES = "es";
         public const string EN = "en";
-
 
         public const string IDIOMA_POR_DEFECTO = ES;
 
@@ -50,23 +46,20 @@ namespace Servicios
                 _observadores.Add(observador);
         }
 
-
         public void Desuscribir(IObservadorIdioma_GV42 observador)
         {
             if (observador == null) return;
             _observadores.Remove(observador);
         }
 
-
         private void Notificar()
         {
             foreach (IObservadorIdioma_GV42 obs in _observadores.ToArray())
             {
                 try { obs.ActualizarIdioma(); }
-                catch { /* observador roto, lo ignoramos */ }
+                catch {  }
             }
         }
-
 
         public void CambiarIdioma(string codigoIdioma)
         {
@@ -82,16 +75,13 @@ namespace Servicios
             Notificar();
         }
 
-
         public string Traducir(string clave)
         {
             if (string.IsNullOrEmpty(clave)) return clave;
             return _traducciones.TryGetValue(clave, out string valor) ? valor : clave;
         }
 
-
         public static string T(string clave) => Instancia.Traducir(clave);
-
 
         private Dictionary<string, string> CargarDesdeArchivo(string codigoIdioma)
         {
@@ -125,7 +115,6 @@ namespace Servicios
             }
             return dic;
         }
-
 
         private string Desescapar(string s)
         {

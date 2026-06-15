@@ -14,7 +14,6 @@ namespace Servicios
         public Familia_GV42() { }
         public Familia_GV42(int id, string nombre) { Id = id; Nombre = nombre; }
 
-
         public IEnumerable<Patente_GV42> ObtenerPatentes()
         {
             var vistas = new HashSet<int>();

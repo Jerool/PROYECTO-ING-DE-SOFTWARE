@@ -11,7 +11,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private Form _formularioActual = null;
         private readonly BLLUsuario_GV42 _bllUsuario;
 
-        // Items del menú "Idioma" agregados dinámicamente (no están en el Designer).
         private ToolStripMenuItem _menuIdioma;
         private ToolStripMenuItem _itemEspanol;
         private ToolStripMenuItem _itemIngles;
@@ -28,7 +27,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             ActualizarIdioma();
         }
 
-        // Agrega el ToolStripMenuItem "Idioma" con Español / English al MenuStrip.
         private void ConstruirMenuIdioma()
         {
             if (menuStrip1 == null) return;
@@ -46,7 +44,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             menuStrip1.Items.Add(_menuIdioma);
         }
 
-        // Traduce TODOS los textos del menú principal admin.
         public void ActualizarIdioma()
         {
             if (adminToolStripMenuItem != null) adminToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.admin");
@@ -72,13 +69,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             AplicarPermisosMenu();
         }
 
-        // Oculta los items del menú admin para los que el usuario no tiene patente.
-        // Criterio: el item aparece si el rol tiene AL MENOS UNA patente del módulo
-        // correspondiente. Adentro de cada form se filtran los botones específicos
-        // por patente individual.
-        //
-        // Caso especial: si el rol es el super-rol "Admin", dejamos TODO visible.
-        // El menú "Usuario" (cambiar clave, logout) queda siempre disponible.
         private void AplicarPermisosMenu()
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
@@ -88,7 +78,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
                               StringComparison.OrdinalIgnoreCase))
                 return;
 
-            // Cargamos el árbol completo del rol (patentes directas + familias expandidas).
             var bllPermisos = new BLLPermisos_GV42();
             Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
             if (rolCompleto == null) return;
@@ -172,5 +161,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             AbrirFormularioHijo(new FRMGestionPermisos());
         }
+
     }
 }

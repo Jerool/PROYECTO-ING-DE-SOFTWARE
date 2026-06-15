@@ -325,7 +325,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
-            this.lblNombre.Location = new System.Drawing.Point(183, 253);
+            this.lblNombre.Location = new System.Drawing.Point(166, 253);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(58, 17);
             this.lblNombre.TabIndex = 19;
@@ -348,7 +348,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.lblApellido.AutoSize = true;
             this.lblApellido.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblApellido.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
-            this.lblApellido.Location = new System.Drawing.Point(440, 253);
+            this.lblApellido.Location = new System.Drawing.Point(429, 252);
             this.lblApellido.Name = "lblApellido";
             this.lblApellido.Size = new System.Drawing.Size(57, 17);
             this.lblApellido.TabIndex = 21;

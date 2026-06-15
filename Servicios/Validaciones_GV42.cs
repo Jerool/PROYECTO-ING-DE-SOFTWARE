@@ -8,7 +8,6 @@ namespace Servicios
 
         public const string REGEX_DNI = @"^\d{8}$";
 
-
         public const string REGEX_EMAIL = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
         public const string REGEX_SOLO_LETRAS = @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$";
@@ -28,7 +27,6 @@ namespace Servicios
         public static bool EsContrasenaValida(string contrasena) => !string.IsNullOrWhiteSpace(contrasena) && Regex.IsMatch(contrasena, REGEX_CONTRASENA);
 
         public static bool EsLoginValido(string login) => !string.IsNullOrWhiteSpace(login) && Regex.IsMatch(login, REGEX_LOGIN);
-
 
         public const string MENSAJE_DNI = "El DNI debe tener exactamente 8 dígitos numéricos (sin puntos ni espacios). Ej: 46947544";
 

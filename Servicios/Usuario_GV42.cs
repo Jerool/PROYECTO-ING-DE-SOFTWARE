@@ -63,7 +63,6 @@ namespace Servicios
             set { _Email = value; }
         }
 
-
         private bool _Bloqueo;
         public bool Bloqueo
         {
@@ -83,8 +82,6 @@ namespace Servicios
 
         public bool DebeCambiarContrasena { get; set; }
 
-        // Idioma preferido del usuario ("es" / "en"). Se carga al loguearse
-        // para que la app arranque en el idioma que el usuario usó la última vez.
         public string Idioma { get; set; } = "es";
 
         public Usuario_GV42(string dni, string apellidos, string nombre, string login, string password, Rol_GV42 rol, string email)

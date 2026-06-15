@@ -11,22 +11,17 @@ namespace Servicios
     {
         public string Login { get; set; }
 
- 
         public Modulo_GV42 Modulo { get; set; }
 
-
         public TipoEvento_GV42 TipoEvento { get; set; }
-
 
         public string Detalle { get; set; }
 
         public string Criticidad { get; set; }
         public DateTime FechaHora { get; set; }
 
-
         public string ModuloNombre => Modulo != null ? Modulo.Nombre : string.Empty;
         public string TipoEventoNombre => TipoEvento != null ? TipoEvento.Nombre : string.Empty;
-
 
         public string Evento
         {
@@ -39,7 +34,6 @@ namespace Servicios
         }
 
         public Bitacora_GV42() { }
-
 
         public Bitacora_GV42(string login, string modulo, string tipoEvento, string detalle, string criticidad, DateTime fechaHora)
         {

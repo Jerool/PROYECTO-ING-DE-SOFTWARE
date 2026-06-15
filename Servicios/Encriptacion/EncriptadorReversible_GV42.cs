@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Servicios
 {
-    
+
     public class EncriptadorReversible_GV42
     {
         private static EncriptadorReversible_GV42 _instancia;

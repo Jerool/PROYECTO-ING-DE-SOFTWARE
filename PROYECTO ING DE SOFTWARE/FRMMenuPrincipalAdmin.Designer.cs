@@ -32,6 +32,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.adminToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionDePermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cambiarClaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,7 +40,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.lblUsuarioActual = new System.Windows.Forms.ToolStripStatusLabel();
             this.pnlContenido = new System.Windows.Forms.Panel();
-            this.gestionDePermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -90,6 +90,13 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
+            // 
+            // gestionDePermisosToolStripMenuItem
+            // 
+            this.gestionDePermisosToolStripMenuItem.Name = "gestionDePermisosToolStripMenuItem";
+            this.gestionDePermisosToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
+            this.gestionDePermisosToolStripMenuItem.Text = "Gestion de permisos";
+            this.gestionDePermisosToolStripMenuItem.Click += new System.EventHandler(this.gestionDePermisosToolStripMenuItem_Click);
             // 
             // usuarioToolStripMenuItem
             // 
@@ -155,13 +162,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.pnlContenido.Name = "pnlContenido";
             this.pnlContenido.Size = new System.Drawing.Size(800, 397);
             this.pnlContenido.TabIndex = 2;
-            // 
-            // gestionDePermisosToolStripMenuItem
-            // 
-            this.gestionDePermisosToolStripMenuItem.Name = "gestionDePermisosToolStripMenuItem";
-            this.gestionDePermisosToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
-            this.gestionDePermisosToolStripMenuItem.Text = "Gestion de permisos";
-            this.gestionDePermisosToolStripMenuItem.Click += new System.EventHandler(this.gestionDePermisosToolStripMenuItem_Click);
+//            this.pnlContenido.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlContenido_Paint);
             // 
             // FRMMenuPrincipalAdmin
             // 

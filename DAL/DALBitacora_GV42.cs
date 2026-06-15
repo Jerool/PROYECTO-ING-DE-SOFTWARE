@@ -120,7 +120,6 @@ namespace DAL
             return lista;
         }
 
-
         public List<string> ListarTiposEvento()
         {
             List<TipoEvento_GV42> entidades = ListarEventos();
@@ -213,7 +212,6 @@ namespace DAL
             }
             return lista;
         }
-
 
         public Modulo_GV42 BuscarModulo(string nombre)
         {

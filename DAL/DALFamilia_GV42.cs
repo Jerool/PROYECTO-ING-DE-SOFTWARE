@@ -19,7 +19,6 @@ namespace DAL
             _dalPatente = new DALPatente_GV42();
         }
 
-  
         public List<Familia_GV42> ListarTodasPlanas()
         {
             string query = "SELECT Id, Nombre FROM Familia ORDER BY Nombre";
@@ -44,7 +43,7 @@ namespace DAL
 
         private Familia_GV42 ObtenerArbolRec(int idFamilia, HashSet<int> visitadas)
         {
-            if (!visitadas.Add(idFamilia)) return null; 
+            if (!visitadas.Add(idFamilia)) return null;
 
             string qFam = "SELECT Id, Nombre FROM Familia WHERE Id = @Id";
             SqlParameter[] pFam = { new SqlParameter("@Id", idFamilia) };
@@ -85,7 +84,6 @@ namespace DAL
             return familia;
         }
 
-
         public int Crear(string nombre, List<int> idsPatentes, List<int> idsSubfamilias)
         {
 
@@ -117,13 +115,75 @@ namespace DAL
 
         public void Eliminar(int idFamilia)
         {
-
+            _acceso.escribir(
+                "DELETE FROM FamiliaPatente WHERE IdFamilia = @Id",
+                new[] { new SqlParameter("@Id", idFamilia) });
             _acceso.escribir(
                 "DELETE FROM FamiliaIntegrada WHERE IdFamiliaPadre = @Id OR IdFamiliaHija = @Id",
                 new[] { new SqlParameter("@Id", idFamilia) });
             _acceso.escribir(
                 "DELETE FROM Familia WHERE Id = @Id",
                 new[] { new SqlParameter("@Id", idFamilia) });
+        }
+
+        public void Modificar(int idFamilia, string nombre, List<int> idsPatentes, List<int> idsSubfamilias)
+        {
+            _acceso.escribir(
+                "UPDATE Familia SET Nombre = @Nombre WHERE Id = @Id",
+                new[] { new SqlParameter("@Nombre", nombre), new SqlParameter("@Id", idFamilia) });
+
+            _acceso.escribir(
+                "DELETE FROM FamiliaPatente WHERE IdFamilia = @Id",
+                new[] { new SqlParameter("@Id", idFamilia) });
+            _acceso.escribir(
+                "DELETE FROM FamiliaIntegrada WHERE IdFamiliaPadre = @Id",
+                new[] { new SqlParameter("@Id", idFamilia) });
+
+            foreach (int idPat in idsPatentes ?? new List<int>())
+            {
+                _acceso.escribir(
+                    "INSERT INTO FamiliaPatente (IdFamilia, IdPatente) VALUES (@F, @P)",
+                    new[] { new SqlParameter("@F", idFamilia), new SqlParameter("@P", idPat) });
+            }
+
+            foreach (int idSub in idsSubfamilias ?? new List<int>())
+            {
+                _acceso.escribir(
+                    "INSERT INTO FamiliaIntegrada (IdFamiliaPadre, IdFamiliaHija) VALUES (@P, @H)",
+                    new[] { new SqlParameter("@P", idFamilia), new SqlParameter("@H", idSub) });
+            }
+        }
+
+        public int CantidadRolesQueUsan(int idFamilia)
+        {
+            string q = "SELECT COUNT(*) FROM RolFamilia WHERE IdFamilia = @Id";
+            object res = _acceso.leerEscalar(q, new[] { new SqlParameter("@Id", idFamilia) });
+            return res == null || res == DBNull.Value ? 0 : Convert.ToInt32(res);
+        }
+
+        public int CantidadFamiliasQueLaContienen(int idFamilia)
+        {
+            string q = "SELECT COUNT(*) FROM FamiliaIntegrada WHERE IdFamiliaHija = @Id";
+            object res = _acceso.leerEscalar(q, new[] { new SqlParameter("@Id", idFamilia) });
+            return res == null || res == DBNull.Value ? 0 : Convert.ToInt32(res);
+        }
+
+        public List<string> NombresRolesQueUsan(int idFamilia)
+        {
+            string q = "SELECT R.Nombre FROM RolFamilia RF " +
+                       "INNER JOIN Roles R ON R.Id = RF.IdRol " +
+                       "WHERE RF.IdFamilia = @Id";
+            DataTable dt = _acceso.leer(q, new[] { new SqlParameter("@Id", idFamilia) });
+            return dt.Rows.Cast<DataRow>().Select(r => r["Nombre"].ToString()).ToList();
+        }
+
+        public List<string> NombresFamiliasQueLaContienen(int idFamilia)
+        {
+            string q = "SELECT F.Nombre FROM FamiliaIntegrada FI " +
+                       "INNER JOIN Familia F ON F.Id = FI.IdFamiliaPadre " +
+                       "WHERE FI.IdFamiliaHija = @Id";
+            DataTable dt = _acceso.leer(q, new[] { new SqlParameter("@Id", idFamilia) });
+            return dt.Rows.Cast<DataRow>().Select(r => r["Nombre"].ToString()).ToList();
         }
 
         public List<int> IdsPatentesDirectas(int idFamilia)

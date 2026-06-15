@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace Servicios
 {
 
-
     public class SessionManager_GV42
     {
         private static SessionManager_GV42 _instancia;
-
 
         private Usuario_GV42 _usuarioActual = null;
 
@@ -26,7 +24,6 @@ namespace Servicios
                 return _instancia;
             }
         }
-
 
         public bool IniciarSesion(Usuario_GV42 usuario)
         {
@@ -46,7 +43,6 @@ namespace Servicios
         {
             return _usuarioActual != null;
         }
-
 
         public Usuario_GV42 ObtenerUsuarioActual()
         {

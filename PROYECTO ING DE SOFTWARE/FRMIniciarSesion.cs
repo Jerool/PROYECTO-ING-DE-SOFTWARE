@@ -14,8 +14,6 @@ using static BLL.BLLUsuario_GV42;
 namespace PROYECTO_ING_DE_SOFTWARE
 {
 
-    // Implementa IObservadorIdioma_GV42: el form se suscribe al manager y refresca
-    // sus textos cuando se notifica un cambio de idioma.
     public partial class FRMIniciarSesion : Form, IObservadorIdioma_GV42
     {
         private readonly BLLUsuario_GV42 _bllUsuario;
@@ -31,7 +29,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             ActualizarIdioma();
         }
 
-        // Refresca TODOS los textos visibles del formulario en el idioma actual.
         public void ActualizarIdioma()
         {
             this.Text = IdiomaManager_GV42.T("login.titulo");
@@ -105,7 +102,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             }
         }
 
-
         private void AbrirFormularioSegunRol()
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
@@ -132,7 +128,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.Hide();
         }
 
-      
         private bool TienePerfilAdministrativo(Usuario_GV42 usuario)
         {
             if (usuario == null || usuario.Rol == null) return false;

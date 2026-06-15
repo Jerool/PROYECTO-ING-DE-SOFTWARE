@@ -38,7 +38,6 @@ namespace DAL
             return lista;
         }
 
-    
         public Rol_GV42 ObtenerArbol(int idRol)
         {
 
@@ -80,7 +79,6 @@ namespace DAL
             return rol;
         }
 
-
         public int Crear(string nombre, List<int> idsPatentes, List<int> idsFamilias)
         {
 
@@ -116,7 +114,6 @@ namespace DAL
             return Convert.ToInt32(res) > 0;
         }
 
-
         public int CantidadUsuariosConRol(int idRol)
         {
             string q = "SELECT COUNT(1) FROM Usuario WHERE IdRol = @Id";
@@ -126,11 +123,39 @@ namespace DAL
 
         public void Eliminar(int idRol)
         {
-
+            _acceso.escribir("DELETE FROM RolPatente WHERE IdRol = @Id",
+                new[] { new SqlParameter("@Id", idRol) });
+            _acceso.escribir("DELETE FROM RolFamilia WHERE IdRol = @Id",
+                new[] { new SqlParameter("@Id", idRol) });
             _acceso.escribir("DELETE FROM Roles WHERE Id = @Id",
                 new[] { new SqlParameter("@Id", idRol) });
         }
 
+        public void Modificar(int idRol, string nombre, List<int> idsPatentes, List<int> idsFamilias)
+        {
+            _acceso.escribir(
+                "UPDATE Roles SET Nombre = @Nombre WHERE Id = @Id",
+                new[] { new SqlParameter("@Nombre", nombre), new SqlParameter("@Id", idRol) });
+
+            _acceso.escribir("DELETE FROM RolPatente WHERE IdRol = @Id",
+                new[] { new SqlParameter("@Id", idRol) });
+            _acceso.escribir("DELETE FROM RolFamilia WHERE IdRol = @Id",
+                new[] { new SqlParameter("@Id", idRol) });
+
+            foreach (int idPat in idsPatentes ?? new List<int>())
+            {
+                _acceso.escribir(
+                    "INSERT INTO RolPatente (IdRol, IdPatente) VALUES (@R, @P)",
+                    new[] { new SqlParameter("@R", idRol), new SqlParameter("@P", idPat) });
+            }
+
+            foreach (int idFam in idsFamilias ?? new List<int>())
+            {
+                _acceso.escribir(
+                    "INSERT INTO RolFamilia (IdRol, IdFamilia) VALUES (@R, @F)",
+                    new[] { new SqlParameter("@R", idRol), new SqlParameter("@F", idFam) });
+            }
+        }
 
         public List<int> IdsPatentesDirectas(int idRol)
         {

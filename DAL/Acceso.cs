@@ -39,7 +39,7 @@ namespace DAL
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; /*(localdb)\MSSQLLocalDB JERE*/ /*Desktop - L5HB13 LAUTY*/
+                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True";
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }
@@ -106,7 +106,6 @@ namespace DAL
             }
         }
 
-     
         public int escribir(string query, SqlParameter[] parametro)
         {
             SqlTransaction tx = null;
@@ -116,7 +115,7 @@ namespace DAL
             {
                 comando.Parameters.Clear();
                 tx = IniciarTransaccion();
-                comando.Connection = tx.Connection;   
+                comando.Connection = tx.Connection;
                 comando.Transaction = tx;
                 comando.CommandText = query;
                 if (parametro != null)
@@ -156,7 +155,7 @@ namespace DAL
                 }
 
                 adaptador.SelectCommand = comando;
-                adaptador.Fill(dt);         
+                adaptador.Fill(dt);
             }
             catch (SqlException ex)
             {
@@ -168,7 +167,6 @@ namespace DAL
             }
             return dt;
         }
-
 
         public object leerEscalar(string query, SqlParameter[] parametro)
         {

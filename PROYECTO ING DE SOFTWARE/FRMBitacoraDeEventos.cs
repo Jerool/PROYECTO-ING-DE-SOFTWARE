@@ -33,24 +33,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             AplicarPermisos();
         }
 
-        // Aplica los permisos granulares al form de Bitácora:
-        //   - Bitacora.Ver       → habilita filtros (login, módulo, evento, fechas,
-        //                          criticidad), botones Aplicar/Limpiar y las cajas
-        //                          de Nombre/Apellido del usuario seleccionado.
-        //   - Bitacora.ExportarPDF → habilita el botón Imprimir.
-        //
-        // La grilla siempre se muestra (si llegó al form es porque tiene al menos
-        // un permiso del módulo Bitácora) para que, aún con solo ExportarPDF, el
-        // usuario pueda ver QUÉ se va a exportar antes de generar el PDF.
-        // "Salir" (btnCancelar) queda siempre visible.
-        //
-        // Short-circuit: si el rol es el super-rol "Admin", se muestra todo.
         private void AplicarPermisos()
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual == null || actual.Rol == null) return;
 
-            // Super-rol: todo visible, sin tocar nada.
             if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
                               System.StringComparison.OrdinalIgnoreCase))
                 return;
@@ -62,10 +49,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             bool puedeVer = rolCompleto.TienePermiso("Bitacora.Ver");
             bool puedeExportar = rolCompleto.TienePermiso("Bitacora.ExportarPDF");
 
-            // ── Filtros y controles de búsqueda: visibles solo con Bitacora.Ver ──
-            // Si solo puede exportar PDF, no tiene sentido que pueda re-filtrar
-            // los datos: ve la grilla tal cual está cargada por defecto y la
-            // imprime.
             if (lblLogin != null) lblLogin.Visible = puedeVer;
             if (txtLogin != null) txtLogin.Visible = puedeVer;
             if (lblModulo != null) lblModulo.Visible = puedeVer;
@@ -81,20 +64,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (btnAplicar != null) btnAplicar.Visible = puedeVer;
             if (btnLimpiar != null) btnLimpiar.Visible = puedeVer;
 
-            // Nombre/Apellido del usuario seleccionado en la grilla: también es
-            // parte de la "vista" — solo aporta valor si puede explorar la grilla.
             if (lblNombre != null) lblNombre.Visible = puedeVer;
             if (txtNombreUsuario != null) txtNombreUsuario.Visible = puedeVer;
             if (lblApellido != null) lblApellido.Visible = puedeVer;
             if (txtApellidoUsuario != null) txtApellidoUsuario.Visible = puedeVer;
 
-            // ── Imprimir: solo con Bitacora.ExportarPDF ──
             if (btnImprimir != null) btnImprimir.Visible = puedeExportar;
 
-            // btnCancelar (Salir) y dgvBitacora quedan siempre visibles.
         }
 
-        // Refresca TODOS los textos del form cuando cambia el idioma.
         public void ActualizarIdioma()
         {
             this.Text = IdiomaManager_GV42.T("bitacora.titulo");
@@ -113,7 +91,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (btnImprimir != null) btnImprimir.Text = IdiomaManager_GV42.T("bitacora.imprimir");
             if (btnCancelar != null) btnCancelar.Text = IdiomaManager_GV42.T("bitacora.salir");
 
-            // Refrescamos headers de la grilla si ya está cargada.
             if (dgvBitacora != null && dgvBitacora.Columns.Count > 0)
             {
                 if (dgvBitacora.Columns.Contains("Login"))
@@ -130,7 +107,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     dgvBitacora.Columns["FechaHora"].HeaderText = IdiomaManager_GV42.T("bitacora.fechaHora");
             }
         }
-
 
         private void FRMBitacoraDeEventos_Load(object sender, EventArgs e)
         {
@@ -255,7 +231,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             CargarGrilla(resultados);
         }
-
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {

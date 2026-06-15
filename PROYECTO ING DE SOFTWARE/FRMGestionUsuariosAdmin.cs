@@ -1,4 +1,4 @@
-using Servicios;                        // Para la entidad Usuario_GV42 y el SessionManager
+using Servicios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,24 +32,13 @@ namespace PROYECTO_ING_DE_SOFTWARE
             ActualizarIdioma();
             AplicarPermisos();
 
-
         }
 
-        // Oculta los botones de acciones a los que el usuario logueado NO tenga
-        // patente. Mapeo:
-        //   btnCrear              → Usuarios.Crear
-        //   btnModificar          → Usuarios.Modificar
-        //   btnDesbloquear        → Usuarios.Desbloquear
-        //   btnActivarDesactivar  → Usuarios.Activar
-        //
-        // La grilla y el filtro Activos/Todos quedan siempre visibles porque
-        // ya estás en este form (presupone Usuarios.Ver).
         private void AplicarPermisos()
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual == null || actual.Rol == null) return;
 
-            // Short-circuit super-rol: si es "Admin", todos los botones visibles.
             if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
                               System.StringComparison.OrdinalIgnoreCase))
                 return;
@@ -68,7 +57,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 btnActivarDesactivar.Visible = rolCompleto.TienePermiso("Usuarios.Activar");
         }
 
-        // Refresca TODOS los textos del form cuando cambia el idioma.
         public void ActualizarIdioma()
         {
             this.Text = IdiomaManager_GV42.T("usuarios.titulo");
@@ -93,15 +81,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (rbActivos != null) rbActivos.Text = IdiomaManager_GV42.T("usuarios.activos");
             if (rbTodos != null) rbTodos.Text = IdiomaManager_GV42.T("usuarios.todos");
 
-            // El label de modo se setea según el modo actual.
             if (lblMensaje != null) lblMensaje.Text = TraducirModo(_modo);
 
-            // Refrescamos los headers de la grilla en el nuevo idioma sin
-            // recargar los datos.
             ConfigurarColumnasGrilla();
         }
 
-        // Helper para traducir el modo actual a texto amigable en el idioma activo.
         private string TraducirModo(string modo)
         {
             string etiquetaModo = IdiomaManager_GV42.T("usuarios.modo");
@@ -119,15 +103,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void ConfigurarGrillaSoloLectura()
         {
-            dgvUsuarios.ReadOnly = true;                  
-            dgvUsuarios.AllowUserToAddRows = false;       
-            dgvUsuarios.AllowUserToDeleteRows = false;    
-            dgvUsuarios.AllowUserToResizeRows = false;    
-            dgvUsuarios.AllowUserToResizeColumns = false; 
-            dgvUsuarios.AllowUserToOrderColumns = false;  
+            dgvUsuarios.ReadOnly = true;
+            dgvUsuarios.AllowUserToAddRows = false;
+            dgvUsuarios.AllowUserToDeleteRows = false;
+            dgvUsuarios.AllowUserToResizeRows = false;
+            dgvUsuarios.AllowUserToResizeColumns = false;
+            dgvUsuarios.AllowUserToOrderColumns = false;
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvUsuarios.MultiSelect = false;
-            dgvUsuarios.RowHeadersVisible = false;      
+            dgvUsuarios.RowHeadersVisible = false;
             dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvUsuarios.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
@@ -156,14 +140,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
             }
         }
 
-        // Oculta columnas internas/sensibles y aplica los headers traducidos.
-        // Llamada desde CargarGrilla y también desde ActualizarIdioma para que el
-        // cambio de idioma refresque los encabezados sin recargar datos.
         private void ConfigurarColumnasGrilla()
         {
             if (dgvUsuarios.Columns.Count == 0) return;
 
-            // ── Columnas a ocultar (datos internos del modelo) ──
             string[] aOcultar = {
                 "Contrasena", "IntentosFallidos", "UltimoIntentoFallido",
                 "Rol", "DebeCambiarContrasena", "Idioma"
@@ -172,7 +152,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 if (dgvUsuarios.Columns.Contains(col))
                     dgvUsuarios.Columns[col].Visible = false;
 
-            // ── Headers traducidos ──
             if (dgvUsuarios.Columns.Contains("DNI"))
                 dgvUsuarios.Columns["DNI"].HeaderText = IdiomaManager_GV42.T("usuarios.dni");
             if (dgvUsuarios.Columns.Contains("Apellido"))
@@ -353,13 +332,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
             string email = txtEmail.Text.Trim();
             Rol_GV42 rol = comboBox1.SelectedItem as Rol_GV42;
 
-            if (string.IsNullOrEmpty(dni) || string.IsNullOrEmpty(apellido) ||
-                string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email) ||
-                rol == null)
+            if (string.IsNullOrEmpty(dni) || string.IsNullOrEmpty(apellido) ||string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email) ||rol == null)
             {
-                MessageBox.Show(IdiomaManager_GV42.T("general.completarCampos"),
-                                IdiomaManager_GV42.T("general.advertencia"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(IdiomaManager_GV42.T("general.completarCampos"),IdiomaManager_GV42.T("general.advertencia"),MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -374,9 +349,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             if (!Validaciones_GV42.EsApellidoValido(apellido))
             {
-                MessageBox.Show(Validaciones_GV42.MENSAJE_APELLIDO,
-                                IdiomaManager_GV42.T("general.advertencia"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Validaciones_GV42.MENSAJE_APELLIDO,IdiomaManager_GV42.T("general.advertencia"),MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtApellido.Focus();
                 return;
             }
@@ -497,9 +470,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             if (_usuarioSeleccionado == null)
             {
-                MessageBox.Show(IdiomaManager_GV42.T("usuarios.seleccionarUsuario"),
-                                IdiomaManager_GV42.T("general.advertencia"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(IdiomaManager_GV42.T("usuarios.seleccionarUsuario"),IdiomaManager_GV42.T("general.advertencia"),MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

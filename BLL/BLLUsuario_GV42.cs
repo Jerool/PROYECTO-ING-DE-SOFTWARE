@@ -33,12 +33,11 @@ namespace BLL
             Error
         }
 
-
         private void Auditar(string login, string modulo, string tipoEvento, string detalle, string criticidad)
         {
-           
+
             BLLBitacora_GV42.Instancia.RegistrarEvento(login, modulo, tipoEvento, detalle, criticidad);
-           
+
         }
 
         public ResultadoLogin IntentarLogin(string login, string contrasena)
@@ -53,8 +52,6 @@ namespace BLL
 
                 Usuario_GV42 usuario = _DALUsuario.BuscarPorLogin(login);
 
-
-
                 if (usuario == null)
                 {
                     try
@@ -66,7 +63,6 @@ namespace BLL
                         return ResultadoLogin.UsuarioInexistente;
                     }
                 }
-
 
                 if (usuario.Bloqueo)
                 {
@@ -103,7 +99,6 @@ namespace BLL
                     }
                 }
 
-
                 _DALUsuario.ResetearIntentosFallidos(login);
                 BLLPermisos_GV42 bllPermisos = new BLLPermisos_GV42();
                 if (usuario.Rol != null)
@@ -118,12 +113,10 @@ namespace BLL
                 }
                 Auditar(login, "Usuario", "Login exitoso", "Login correcto", "Baja");
 
-           
                 if (!string.IsNullOrWhiteSpace(usuario.Idioma))
                     IdiomaManager_GV42.Instancia.CambiarIdioma(usuario.Idioma);
 
                 return ResultadoLogin.Exitoso;
-
 
             }
             catch
@@ -131,7 +124,6 @@ namespace BLL
                 return ResultadoLogin.Error;
             }
 
-            
         }
 
         private int CalcularNuevosIntentos(Usuario_GV42 usuario)
@@ -150,12 +142,11 @@ namespace BLL
                     return 1;
             }
             catch { throw new Exception("Error"); }
-            
+
         }
 
         public List<Usuario_GV42> ListarActivos() => _DALUsuario.ListarActivos();
         public List<Usuario_GV42> ListarTodos() => _DALUsuario.ListarTodos();
-
 
         public List<Rol_GV42> ListarRoles() => _DALUsuario.ListarRoles();
 
@@ -165,8 +156,7 @@ namespace BLL
 
         public void CambiarIdioma(string codigoIdioma)
         {
-            // Guardamos el idioma ANTERIOR para registrarlo en la bitácora.
-            // Así el detalle queda como "es -> en".
+
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             string idiomaAnterior = actual != null
                 ? (actual.Idioma ?? IdiomaManager_GV42.Instancia.IdiomaActual)
@@ -179,7 +169,6 @@ namespace BLL
                 _DALUsuario.GuardarIdioma(actual.Login, codigoIdioma);
                 actual.Idioma = codigoIdioma;
 
-                // Auditamos solo si efectivamente cambió de idioma y hay sesión.
                 if (!string.Equals(idiomaAnterior, codigoIdioma, StringComparison.OrdinalIgnoreCase))
                 {
                     Auditar(actual.Login, "Usuario", "Idioma cambiado",
@@ -211,7 +200,6 @@ namespace BLL
             _DALUsuario.ModificarEmail(dni, email);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin", "Email modificado", $"DNI: {dni}", "Media");
         }
-
 
         public void ModificarRol(string dni, Rol_GV42 rol)
         {
@@ -286,7 +274,7 @@ namespace BLL
                 Auditar(login, "Usuario", "Contraseña cambiada exitosamente", "Cambio de contraseña", "Baja");
                 return ResultadoCambioContrasena.Exitoso;
             }
-            catch 
+            catch
             {
                 throw new Exception("Error");
             }

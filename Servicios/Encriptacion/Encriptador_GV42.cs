@@ -24,7 +24,6 @@ namespace Servicios
             }
         }
 
-
         public string EncriptarContrasena(string contrasenaPlana)
         {
             if (string.IsNullOrEmpty(contrasenaPlana))
@@ -34,10 +33,9 @@ namespace Servicios
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasenaPlana));
 
-
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in bytes)
-                sb.Append(b.ToString("x2"));   
+                sb.Append(b.ToString("x2"));
                 return sb.ToString();
             }
         }

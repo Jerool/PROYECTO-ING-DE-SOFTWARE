@@ -8,7 +8,6 @@ namespace Servicios
         int Id { get; }
         string Nombre { get; }
 
-    
         IEnumerable<Patente_GV42> ObtenerPatentes();
     }
 }
