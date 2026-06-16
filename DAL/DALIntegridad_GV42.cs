@@ -197,5 +197,40 @@ namespace DAL
             object res = _acceso.leerEscalar("SELECT COUNT(1) FROM IntegridadDVV", null);
             return Convert.ToInt32(res) > 0;
         }
+
+        public void HacerBackupSQL(string connStringMaster, string nombreBd, string rutaArchivoBak)
+        {
+            using (var conn = new SqlConnection(connStringMaster))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText =
+                        $"BACKUP DATABASE [{nombreBd}] TO DISK = @ruta WITH INIT, FORMAT, NAME = N'Backup automatico';";
+                    cmd.Parameters.AddWithValue("@ruta", rutaArchivoBak);
+                    cmd.CommandTimeout = 120;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RestaurarBackupSQL(string connStringMaster, string nombreBd, string rutaArchivoBak)
+        {
+            SqlConnection.ClearAllPools();
+            using (var conn = new SqlConnection(connStringMaster))
+            {
+                conn.Open();
+                string sql =
+                    $"ALTER DATABASE [{nombreBd}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; " +
+                    $"RESTORE DATABASE [{nombreBd}] FROM DISK = @ruta WITH REPLACE; " +
+                    $"ALTER DATABASE [{nombreBd}] SET MULTI_USER;";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ruta", rutaArchivoBak);
+                    cmd.CommandTimeout = 120;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

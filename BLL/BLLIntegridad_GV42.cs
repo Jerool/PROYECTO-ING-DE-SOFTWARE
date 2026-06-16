@@ -2,7 +2,6 @@ using DAL;
 using Servicios;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -91,18 +90,7 @@ namespace BLL
             string nombreArchivo = $"GestionUsuario_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
             string rutaCompleta = Path.Combine(CARPETA_BACKUPS, nombreArchivo);
 
-            using (var conn = new SqlConnection(CONN_MASTER))
-            {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText =
-                        $"BACKUP DATABASE [{NOMBRE_BD}] TO DISK = @ruta WITH INIT, FORMAT, NAME = N'Backup automatico';";
-                    cmd.Parameters.AddWithValue("@ruta", rutaCompleta);
-                    cmd.CommandTimeout = 120;
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            _dal.HacerBackupSQL(CONN_MASTER, NOMBRE_BD, rutaCompleta);
 
             LimpiarBackupsViejos();
             return rutaCompleta;
@@ -153,23 +141,7 @@ namespace BLL
             if (!File.Exists(rutaArchivoBak))
                 throw new Exception($"El archivo de backup no existe: {rutaArchivoBak}");
 
-            SqlConnection.ClearAllPools();
-
-            using (var conn = new SqlConnection(CONN_MASTER))
-            {
-                conn.Open();
-                string sql =
-                    $"ALTER DATABASE [{NOMBRE_BD}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; " +
-                    $"RESTORE DATABASE [{NOMBRE_BD}] FROM DISK = @ruta WITH REPLACE; " +
-                    $"ALTER DATABASE [{NOMBRE_BD}] SET MULTI_USER;";
-
-                using (var cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@ruta", rutaArchivoBak);
-                    cmd.CommandTimeout = 120;
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            _dal.RestaurarBackupSQL(CONN_MASTER, NOMBRE_BD, rutaArchivoBak);
         }
     }
 
