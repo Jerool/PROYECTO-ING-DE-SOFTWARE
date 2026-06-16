@@ -154,5 +154,22 @@
     "patente.Usuarios.Activar": "User Management - Activate",
     "patente.Bitacora.Ver": "Audit Log - View",
     "patente.Bitacora.ExportarPDF": "Audit Log - Export PDF",
-    "patente.Permisos.Gestionar": "Permissions - Manage"
+    "patente.Permisos.Gestionar": "Permissions - Manage",
+
+    "integridad.titulo": "Integrity Control",
+    "integridad.tituloAlerta": "Integrity compromised",
+    "integridad.mensaje": "Modifications to the database made from outside the application were detected. Choose how to proceed.",
+    "integridad.tablasAfectadas": "Affected tables:",
+    "integridad.botonRestore": "Restore (recalculate)",
+    "integridad.botonBackup": "Backup (restore)",
+    "integridad.confirmRestore": "Accept the current database state as valid and overwrite DVH/DVV?",
+    "integridad.confirmBackup": "This will restore the database from a .bak file and CLOSE the application. Continue?",
+    "integridad.seleccionarBak": "Select the backup file (.bak)",
+    "integridad.restoreOk": "DVH and DVV recalculated successfully. The database is now the valid baseline.",
+    "integridad.backupOk": "Database restored successfully. The application will close.",
+    "integridad.backupError": "Could not restore the backup.",
+    "integridad.cerrandoAppBackup": "The database was restored from backup. The application will close — open it again.",
+    "integridad.errorVerificacion": "Could not verify database integrity.",
+    "integridad.sinBackups": "No backups are available. The application creates one automatically each time an admin logs in with a healthy database. Sign in at least once to create the first backup.",
+    "integridad.archivoARestaurar": "The following backup will be restored:"
 }

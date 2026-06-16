@@ -154,5 +154,22 @@
     "patente.Usuarios.Activar": "Gestión Usuarios - Activar",
     "patente.Bitacora.Ver": "Bitácora - Ver",
     "patente.Bitacora.ExportarPDF": "Bitácora - Exportar PDF",
-    "patente.Permisos.Gestionar": "Permisos - Gestionar"
+    "patente.Permisos.Gestionar": "Permisos - Gestionar",
+
+    "integridad.titulo": "Control de Integridad",
+    "integridad.tituloAlerta": "Integridad comprometida",
+    "integridad.mensaje": "Se detectaron alteraciones en la base de datos realizadas desde fuera de la aplicación. Elegí cómo proceder.",
+    "integridad.tablasAfectadas": "Tablas afectadas:",
+    "integridad.botonRestore": "Restore (recalcular)",
+    "integridad.botonBackup": "Backup (restaurar)",
+    "integridad.confirmRestore": "¿Aceptar el estado actual de la base como válido y reescribir los DVH/DVV?",
+    "integridad.confirmBackup": "Esto va a restaurar la base desde un archivo .bak y CERRAR la aplicación. ¿Continuar?",
+    "integridad.seleccionarBak": "Seleccioná el archivo de backup (.bak)",
+    "integridad.restoreOk": "DVH y DVV recalculados correctamente. La base queda como nueva referencia válida.",
+    "integridad.backupOk": "Base restaurada correctamente. La aplicación se va a cerrar.",
+    "integridad.backupError": "No se pudo restaurar el backup.",
+    "integridad.cerrandoAppBackup": "La base fue restaurada desde el backup. La aplicación se va a cerrar — abrila de nuevo.",
+    "integridad.errorVerificacion": "No se pudo verificar la integridad de la base de datos.",
+    "integridad.sinBackups": "No hay backups disponibles. La aplicación genera uno automáticamente cada vez que un admin se loguea con la base íntegra. Iniciá sesión al menos una vez para crear el primer backup.",
+    "integridad.archivoARestaurar": "Se restaurará el siguiente backup:"
 }

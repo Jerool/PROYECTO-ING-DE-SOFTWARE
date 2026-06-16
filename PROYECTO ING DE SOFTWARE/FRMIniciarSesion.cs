@@ -118,14 +118,78 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
+            bool esAdmin = TienePerfilAdministrativo(actual);
+
+            if (esAdmin)
+            {
+                if (!VerificarIntegridad(actual))
+                {
+                    BLLUsuario_GV42.CerrarSesión();
+                    return;
+                }
+            }
+
             Form formulario;
-            if (TienePerfilAdministrativo(actual))
+            if (esAdmin)
                 formulario = new FRMMenuPrincipalAdmin();
             else
                 formulario = new FRMMenuPrincipalUsuario();
 
             formulario.Show();
             this.Hide();
+        }
+
+        private bool VerificarIntegridad(Usuario_GV42 actual)
+        {
+            try
+            {
+                var bllInt = new BLLIntegridad_GV42();
+                ResultadoIntegridad res = bllInt.Verificar();
+
+                if (res.EsIntegra)
+                {
+                    try { bllInt.HacerBackupAutomatico(); } catch { }
+                    return true;
+                }
+
+                BLLBitacora_GV42.Instancia.RegistrarEvento(
+                    actual.Login, "Admin", "Integridad comprometida",
+                    string.Join(", ", res.TablasComprometidas), "Alta");
+
+                using (var frm = new FRMIntegridad(res))
+                {
+                    DialogResult dr = frm.ShowDialog(this);
+
+                    if (frm.SeRestauroBackup)
+                    {
+                        MessageBox.Show(
+                            IdiomaManager_GV42.T("integridad.cerrandoAppBackup"),
+                            IdiomaManager_GV42.T("integridad.titulo"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Application.Exit();
+                        return false;
+                    }
+
+                    if (frm.SeRecalcularon)
+                    {
+                        BLLBitacora_GV42.Instancia.RegistrarEvento(
+                            actual.Login, "Admin", "Integridad recalculada",
+                            "Admin aceptó los cambios externos como válidos.", "Alta");
+                        try { bllInt.HacerBackupAutomatico(); } catch { }
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    IdiomaManager_GV42.T("integridad.errorVerificacion") + "\n\n" + ex.Message,
+                    IdiomaManager_GV42.T("general.error"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
         }
 
         private bool TienePerfilAdministrativo(Usuario_GV42 usuario)

@@ -1,14 +1,11 @@
 -- ════════════════════════════════════════════════════════════════════════
--- Migración: catálogo completo de TipoEvento
+-- Migración: catálogo completo de TipoEvento (incluye Integridad)
 -- ════════════════════════════════════════════════════════════════════════
+-- DALBitacora.Guardar valida que el tipo de evento exista en TipoEvento
+-- antes de insertar el registro en EVENTOS. Cada nombre que el código C#
+-- use al llamar Auditar(...) tiene que estar en esta tabla.
 --
--- DALBitacora.Guardar valida que el tipo de evento exista en la tabla
--- TipoEvento antes de insertar el registro en EVENTOS (ResolverIdTipoEvento
--- lanza excepción si no encuentra). Por eso, cada vez que el código usa un
--- string nuevo en Auditar(...), tenemos que asegurarnos de que esté en
--- TipoEvento. Este script garantiza eso.
---
--- Es IDEMPOTENTE: corre cuantas veces quieras; solo inserta los faltantes.
+-- Es IDEMPOTENTE: solo inserta los que faltan.
 -- ════════════════════════════════════════════════════════════════════════
 
 INSERT INTO TipoEvento (Nombre)
@@ -30,10 +27,13 @@ SELECT v.Nombre FROM (VALUES
     ('Usuario desactivado'),
     ('Usuario desbloqueado'),
     ('Email modificado'),
-    ('Rol modificado')
+    ('Rol modificado'),
+    -- ── Eventos del módulo de Integridad (DVH/DVV) ──
+    ('Integridad comprometida'),
+    ('Integridad recalculada')
 ) AS v(Nombre)
 WHERE NOT EXISTS (SELECT 1 FROM TipoEvento t WHERE t.Nombre = v.Nombre);
 GO
 
--- ─── Verificación (opcional) ───────────────────────────────────────────
+-- Verificación opcional:
 -- SELECT * FROM TipoEvento ORDER BY Nombre;

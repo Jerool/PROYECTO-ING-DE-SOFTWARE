@@ -55,6 +55,7 @@
     <Compile Include="Singlenton\SessionManager_GV42.cs" />
     <Compile Include="Usuario_GV42.cs" />
     <Compile Include="Validaciones_GV42.cs" />
+    <Compile Include="Integridad\CalculadorIntegridad_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

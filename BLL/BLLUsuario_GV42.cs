@@ -13,12 +13,19 @@ namespace BLL
     public class BLLUsuario_GV42
     {
         private readonly DALUsuario_GV42 _DALUsuario;
+        private readonly BLLIntegridad_GV42 _bllIntegridad;
         public const int MAX_INTENTOS = 3;
         private static readonly TimeSpan VENTANA_INTENTOS = TimeSpan.FromHours(1);
 
         public BLLUsuario_GV42()
         {
             _DALUsuario = new DALUsuario_GV42();
+            _bllIntegridad = new BLLIntegridad_GV42();
+        }
+
+        private void RecalcularUsuario()
+        {
+            try { _bllIntegridad.RecalcularTabla("Usuario"); } catch { }
         }
 
         public enum ResultadoLogin
@@ -186,6 +193,7 @@ namespace BLL
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
             _DALUsuario.Desbloquear(dni, contrasenaCifrada);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin", "Usuario desbloqueado", $"Usuario {login} desbloqueado y contraseña reseteada", "Media");
+            RecalcularUsuario();
         }
 
         public void ActivarDesactivar(string dni, bool activo)
@@ -193,12 +201,14 @@ namespace BLL
             _DALUsuario.ActivarDesactivar(dni, activo);
             string accion = activo ? "Usuario activado" : "Usuario desactivado";
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin", accion, $"DNI: {dni}", "Media");
+            RecalcularUsuario();
         }
 
         public void ModificarEmail(string dni, string email)
         {
             _DALUsuario.ModificarEmail(dni, email);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin", "Email modificado", $"DNI: {dni}", "Media");
+            RecalcularUsuario();
         }
 
         public void ModificarRol(string dni, Rol_GV42 rol)
@@ -206,6 +216,7 @@ namespace BLL
             if (rol == null) throw new Exception("Debe seleccionar un rol válido.");
             _DALUsuario.ModificarRol(dni, rol.Id);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin","Rol modificado", $"DNI {dni} -> rol {rol.Nombre}", "Media");
+            RecalcularUsuario();
         }
         public void CrearUsuario(string dni, string apellido, string nombre, string email, Rol_GV42 rol)
         {
@@ -237,6 +248,7 @@ namespace BLL
             if (filas == 0)
             throw new Exception("El INSERT no afectó ninguna fila. Verificá la base de datos.");
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin","Usuario creado", $"Login: {login}", "Baja");
+            RecalcularUsuario();
         }
 
         public enum ResultadoCambioContrasena

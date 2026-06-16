@@ -661,6 +661,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void btnModificarRol_Click_1(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnModificarRol_Click(object sender, EventArgs e)
+        {
             if (dgvRoles.CurrentRow == null)
             {
                 MessageBox.Show(IdiomaManager_GV42.T("permisos.seleccioneRol"),

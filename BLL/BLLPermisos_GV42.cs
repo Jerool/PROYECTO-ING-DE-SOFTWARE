@@ -12,12 +12,34 @@ namespace BLL
         private readonly DALPatente_GV42 _dalPatente;
         private readonly DALFamilia_GV42 _dalFamilia;
         private readonly DALRol_GV42 _dalRol;
+        private readonly BLLIntegridad_GV42 _bllIntegridad;
 
         public BLLPermisos_GV42()
         {
             _dalPatente = new DALPatente_GV42();
             _dalFamilia = new DALFamilia_GV42();
             _dalRol = new DALRol_GV42();
+            _bllIntegridad = new BLLIntegridad_GV42();
+        }
+
+        private void RecalcularFamilias()
+        {
+            try
+            {
+                _bllIntegridad.RecalcularTabla("Familia");
+                _bllIntegridad.RecalcularTabla("FamiliaPatente");
+                _bllIntegridad.RecalcularTabla("FamiliaIntegrada");
+            } catch { }
+        }
+
+        private void RecalcularRoles()
+        {
+            try
+            {
+                _bllIntegridad.RecalcularTabla("Roles");
+                _bllIntegridad.RecalcularTabla("RolPatente");
+                _bllIntegridad.RecalcularTabla("RolFamilia");
+            } catch { }
         }
 
         public List<Patente_GV42> ListarPatentes() => _dalPatente.ListarTodas();
@@ -50,7 +72,9 @@ namespace BLL
                     $"Ya existe una familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
                     "No se permiten familias duplicadas.");
 
-            return _dalFamilia.Crear(nombre, idsPatentes, idsSubfamilias);
+            int idCreada = _dalFamilia.Crear(nombre, idsPatentes, idsSubfamilias);
+            RecalcularFamilias();
+            return idCreada;
         }
 
         private void ValidarRedundanciaPatentesYSubfamilias(List<int> idsPatentes, List<int> idsSubfamilias)
@@ -128,6 +152,7 @@ namespace BLL
             }
 
             _dalFamilia.Eliminar(idFamilia);
+            RecalcularFamilias();
         }
 
         public int CrearRol(string nombre, List<int> idsPatentes, List<int> idsFamilias)
@@ -153,7 +178,9 @@ namespace BLL
                     $"Ya existe un rol con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
                     "No se permiten roles duplicados.");
 
-            return _dalRol.Crear(nombre, idsPatentes, idsFamilias);
+            int idCreado = _dalRol.Crear(nombre, idsPatentes, idsFamilias);
+            RecalcularRoles();
+            return idCreado;
         }
 
         private void ValidarRedundanciaPatentesYFamilias(List<int> idsPatentes, List<int> idsFamilias)
@@ -207,6 +234,7 @@ namespace BLL
             }
 
             _dalRol.Eliminar(idRol);
+            RecalcularRoles();
         }
 
         public bool TienePermiso(int idRol, string dataKey)
@@ -252,6 +280,7 @@ namespace BLL
                     $"Ya existe otra familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'.");
 
             _dalFamilia.Modificar(idFamilia, nombre, idsPatentes, idsSubfamilias);
+            RecalcularFamilias();
         }
 
         public void ModificarRol(int idRol, string nombre, List<int> idsPatentes, List<int> idsFamilias)
@@ -278,6 +307,7 @@ namespace BLL
                     $"Ya existe otro rol con la misma composición efectiva de patentes: '{equivalente.Nombre}'.");
 
             _dalRol.Modificar(idRol, nombre, idsPatentes, idsFamilias);
+            RecalcularRoles();
         }
 
         private bool ContieneFamiliaRec(Familia_GV42 nodo, int idBuscado)

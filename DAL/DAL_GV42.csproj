@@ -48,6 +48,7 @@
     <Compile Include="DALPatente_GV42.cs" />
     <Compile Include="DALRol_GV42.cs" />
     <Compile Include="DALUsuario_GV42.cs" />
+    <Compile Include="DALIntegridad_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

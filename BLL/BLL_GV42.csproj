@@ -45,6 +45,7 @@
     <Compile Include="BLLPermisos_GV42.cs" />
     <Compile Include="BLLUsuario_GV42.cs" />
     <Compile Include="GeneradorPdf_GV42.cs" />
+    <Compile Include="BLLIntegridad_GV42.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
