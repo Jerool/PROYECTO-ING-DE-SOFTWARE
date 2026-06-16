@@ -148,7 +148,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
                 if (res.EsIntegra)
                 {
-                    try { bllInt.HacerBackupAutomatico(); } catch { }
+                    try { bllInt.IniciarBackupsProgramados(); } catch { }
                     return true;
                 }
 
@@ -175,7 +175,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
                         BLLBitacora_GV42.Instancia.RegistrarEvento(
                             actual.Login, "Admin", "Integridad recalculada",
                             "Admin aceptó los cambios externos como válidos.", "Alta");
-                        try { bllInt.HacerBackupAutomatico(); } catch { }
+                        try { bllInt.IniciarBackupsProgramados(); } catch { }
                         return true;
                     }
 

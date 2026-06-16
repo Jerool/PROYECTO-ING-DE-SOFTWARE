@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace BLL
 {
@@ -16,6 +17,10 @@ namespace BLL
             @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True";
         private const string CARPETA_BACKUPS = @"C:\Backups\GestionUsuario";
         private const int CANTIDAD_BACKUPS_A_CONSERVAR = 5;
+        public const int INTERVALO_BACKUP_HORAS = 3;
+
+        private static Timer _timerBackup;
+        private static readonly object _lockTimer = new object();
 
         public BLLIntegridad_GV42()
         {
@@ -142,6 +147,62 @@ namespace BLL
                 throw new Exception($"El archivo de backup no existe: {rutaArchivoBak}");
 
             _dal.RestaurarBackupSQL(CONN_MASTER, NOMBRE_BD, rutaArchivoBak);
+        }
+
+        public void IniciarBackupsProgramados()
+        {
+            lock (_lockTimer)
+            {
+                if (DebeHacerBackupAhora())
+                    EjecutarBackupProgramado(null);
+
+                if (_timerBackup != null) return;
+
+                TimeSpan intervalo = TimeSpan.FromHours(INTERVALO_BACKUP_HORAS);
+                _timerBackup = new Timer(EjecutarBackupProgramado, null, intervalo, intervalo);
+            }
+        }
+
+        public void DetenerBackupsProgramados()
+        {
+            lock (_lockTimer)
+            {
+                _timerBackup?.Dispose();
+                _timerBackup = null;
+            }
+        }
+
+        private bool DebeHacerBackupAhora()
+        {
+            string ultimo = ObtenerUltimoBackup();
+            if (string.IsNullOrEmpty(ultimo)) return true;
+
+            try
+            {
+                FileInfo fi = new FileInfo(ultimo);
+                TimeSpan transcurrido = DateTime.Now - fi.CreationTime;
+                return transcurrido.TotalHours >= INTERVALO_BACKUP_HORAS;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private void EjecutarBackupProgramado(object state)
+        {
+            try
+            {
+                ResultadoIntegridad res = Verificar();
+                if (!res.EsIntegra) return;
+
+                string ruta = HacerBackupAutomatico();
+
+                BLLBitacora_GV42.Instancia.RegistrarEvento(
+                    "SISTEMA", "Admin", "Backup automatico generado",
+                    $"Ruta: {ruta}", "Baja");
+            }
+            catch { }
         }
     }
 
