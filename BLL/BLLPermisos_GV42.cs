@@ -68,8 +68,7 @@ namespace BLL
             HashSet<int> patentesEfectivasNueva = ConstruirPatentesEfectivas(idsPatentes, idsSubfamilias);
             Familia_GV42 equivalente = BuscarFamiliaConMismasPatentesEfectivas(patentesEfectivasNueva);
             if (equivalente != null)
-                throw new Exception(
-                    $"Ya existe una familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
+                throw new Exception($"Ya existe una familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
                     "No se permiten familias duplicadas.");
 
             int idCreada = _dalFamilia.Crear(nombre, idsPatentes, idsSubfamilias);
@@ -79,29 +78,162 @@ namespace BLL
 
         private void ValidarRedundanciaPatentesYSubfamilias(List<int> idsPatentes, List<int> idsSubfamilias)
         {
-            if (idsPatentes.Count == 0 || idsSubfamilias.Count == 0) return;
-
-            foreach (int idSub in idsSubfamilias)
+            // ── (a) Patente directa que ya viene por alguna subfamilia ──
+            if (idsPatentes.Count > 0 && idsSubfamilias.Count > 0)
             {
-                Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idSub);
-                if (arbol == null) continue;
-
-                HashSet<int> patentesDeLaSub = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
-
-                foreach (int idPat in idsPatentes)
+                foreach (int idSub in idsSubfamilias)
                 {
-                    if (patentesDeLaSub.Contains(idPat))
-                    {
+                    Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idSub);
+                    if (arbol == null) continue;
 
-                        Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
-                        string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
-                        throw new Exception(
-                            $"La patente '{nombrePat}' ya está incluida en la subfamilia '{arbol.Nombre}'. " +
-                            "Es redundante agregarla directamente. Quitala de las patentes individuales " +
-                            "o quitá la subfamilia.");
+                    HashSet<int> patentesDeLaSub = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
+
+                    foreach (int idPat in idsPatentes)
+                    {
+                        if (patentesDeLaSub.Contains(idPat))
+                        {
+                            Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
+                            string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
+                            throw new Exception(
+                                $"La patente '{nombrePat}' ya está incluida en la subfamilia '{arbol.Nombre}'. " +
+                                "Es redundante agregarla directamente. Quitala de las patentes individuales " +
+                                "o quitá la subfamilia.");
+                        }
                     }
                 }
             }
+
+            // ── (b) Dos subfamilias hermanas comparten alguna patente ──
+            if (idsSubfamilias.Count >= 2)
+            {
+                var efectivasPorSub = new Dictionary<int, HashSet<int>>();
+                var nombresPorSub = new Dictionary<int, string>();
+                foreach (int idSub in idsSubfamilias)
+                {
+                    Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idSub);
+                    if (arbol == null) continue;
+                    efectivasPorSub[idSub] = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
+                    nombresPorSub[idSub] = arbol.Nombre;
+                }
+
+                var subs = efectivasPorSub.Keys.ToList();
+                for (int i = 0; i < subs.Count; i++)
+                {
+                    for (int j = i + 1; j < subs.Count; j++)
+                    {
+                        var solapadas = efectivasPorSub[subs[i]].Intersect(efectivasPorSub[subs[j]]).ToList();
+                        if (solapadas.Any())
+                        {
+                            Patente_GV42 pat = _dalPatente.BuscarPorId(solapadas.First());
+                            string nombrePat = pat != null ? pat.Nombre : $"Id {solapadas.First()}";
+                            throw new Exception(
+                                $"La patente '{nombrePat}' está incluida tanto en la subfamilia '{nombresPorSub[subs[i]]}' " +
+                                $"como en '{nombresPorSub[subs[j]]}'. Es redundante incluir ambas subfamilias.");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ValidarRedundanciaEnAscendentesFamilia(int idFamiliaModificada, HashSet<int> nuevasEfectivas)
+        {
+            foreach (var famAncestro in _dalFamilia.ListarTodasPlanas())
+            {
+                if (famAncestro.Id == idFamiliaModificada) continue;
+
+                Familia_GV42 arbolAncestro = _dalFamilia.ObtenerArbol(famAncestro.Id);
+                if (arbolAncestro == null) continue;
+
+                if (!ContieneFamiliaRec(arbolAncestro, idFamiliaModificada)) continue;
+
+                // (a) Patentes directas del ancestro que se solapan con las nuevas efectivas.
+                var patentesDirectas = _dalFamilia.IdsPatentesDirectas(famAncestro.Id);
+                var solapDirectas = patentesDirectas.Intersect(nuevasEfectivas).ToList();
+                if (solapDirectas.Any())
+                {
+                    Patente_GV42 pat = _dalPatente.BuscarPorId(solapDirectas.First());
+                    string nombrePat = pat != null ? pat.Nombre : $"Id {solapDirectas.First()}";
+                    throw new Exception(
+                        $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
+                        $"en la familia ancestro '{famAncestro.Nombre}' (ya está allí como patente directa " +
+                        $"y aparecería también por esta familia). Quitala del ancestro primero.");
+                }
+
+                // (b) Patentes que aporta otra subfamilia hermana del ancestro, solapadas con las nuevas efectivas.
+                var subsDelAncestro = _dalFamilia.IdsSubfamiliasDirectas(famAncestro.Id);
+                foreach (int idHermana in subsDelAncestro)
+                {
+                    if (idHermana == idFamiliaModificada) continue;
+                    Familia_GV42 arbolHermana = _dalFamilia.ObtenerArbol(idHermana);
+                    if (arbolHermana == null) continue;
+                    if (ContieneFamiliaRec(arbolHermana, idFamiliaModificada)) continue;
+
+                    HashSet<int> efectivasHermana = new HashSet<int>(arbolHermana.ObtenerPatentes().Select(p => p.Id));
+                    var solapHermana = efectivasHermana.Intersect(nuevasEfectivas).ToList();
+                    if (solapHermana.Any())
+                    {
+                        Patente_GV42 pat = _dalPatente.BuscarPorId(solapHermana.First());
+                        string nombrePat = pat != null ? pat.Nombre : $"Id {solapHermana.First()}";
+                        throw new Exception(
+                            $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
+                            $"en el ancestro '{famAncestro.Nombre}' (ya está incluida vía la subfamilia hermana " +
+                            $"'{arbolHermana.Nombre}'). Quitala de la hermana o no la agregues acá.");
+                    }
+                }
+            }
+
+            // ── Mismas dos validaciones pero para roles que contengan la familia ──
+            foreach (var rol in _dalRol.ListarTodos())
+            {
+                Rol_GV42 arbolRol = _dalRol.ObtenerArbol(rol.Id);
+                if (arbolRol == null) continue;
+                if (!RolContieneFamiliaRec(arbolRol, idFamiliaModificada)) continue;
+
+                var patentesDirectasRol = _dalRol.IdsPatentesDirectas(rol.Id);
+                var solapDirectas = patentesDirectasRol.Intersect(nuevasEfectivas).ToList();
+                if (solapDirectas.Any())
+                {
+                    Patente_GV42 pat = _dalPatente.BuscarPorId(solapDirectas.First());
+                    string nombrePat = pat != null ? pat.Nombre : $"Id {solapDirectas.First()}";
+                    throw new Exception(
+                        $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
+                        $"en el rol '{rol.Nombre}'. Quitala del rol primero.");
+                }
+
+                var familiasDelRol = _dalRol.IdsFamiliasDirectas(rol.Id);
+                foreach (int idFamHermana in familiasDelRol)
+                {
+                    if (idFamHermana == idFamiliaModificada) continue;
+                    Familia_GV42 arbolHermana = _dalFamilia.ObtenerArbol(idFamHermana);
+                    if (arbolHermana == null) continue;
+                    if (ContieneFamiliaRec(arbolHermana, idFamiliaModificada)) continue;
+
+                    HashSet<int> efectivasHermana = new HashSet<int>(arbolHermana.ObtenerPatentes().Select(p => p.Id));
+                    var solapHermana = efectivasHermana.Intersect(nuevasEfectivas).ToList();
+                    if (solapHermana.Any())
+                    {
+                        Patente_GV42 pat = _dalPatente.BuscarPorId(solapHermana.First());
+                        string nombrePat = pat != null ? pat.Nombre : $"Id {solapHermana.First()}";
+                        throw new Exception(
+                            $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
+                            $"en el rol '{rol.Nombre}' (ya está incluida vía la familia '{arbolHermana.Nombre}').");
+                    }
+                }
+            }
+        }
+
+        private bool RolContieneFamiliaRec(Rol_GV42 rol, int idFamiliaBuscada)
+        {
+            if (rol == null) return false;
+            foreach (var hijo in rol.Hijos)
+            {
+                if (hijo is Familia_GV42 fam)
+                {
+                    if (fam.Id == idFamiliaBuscada) return true;
+                    if (ContieneFamiliaRec(fam, idFamiliaBuscada)) return true;
+                }
+            }
+            return false;
         }
 
         private HashSet<int> ConstruirPatentesEfectivas(List<int> idsPatentes, List<int> idsSubfamilias)
@@ -185,25 +317,58 @@ namespace BLL
 
         private void ValidarRedundanciaPatentesYFamilias(List<int> idsPatentes, List<int> idsFamilias)
         {
-            if (idsPatentes.Count == 0 || idsFamilias.Count == 0) return;
-
-            foreach (int idFam in idsFamilias)
+            // ── (a) Patente directa que ya viene por alguna familia ──
+            if (idsPatentes.Count > 0 && idsFamilias.Count > 0)
             {
-                Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idFam);
-                if (arbol == null) continue;
-
-                HashSet<int> patentesDeLaFam = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
-
-                foreach (int idPat in idsPatentes)
+                foreach (int idFam in idsFamilias)
                 {
-                    if (patentesDeLaFam.Contains(idPat))
+                    Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idFam);
+                    if (arbol == null) continue;
+
+                    HashSet<int> patentesDeLaFam = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
+
+                    foreach (int idPat in idsPatentes)
                     {
-                        Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
-                        string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
-                        throw new Exception(
-                            $"La patente '{nombrePat}' ya está incluida en la familia '{arbol.Nombre}'. " +
-                            "Es redundante agregarla directamente. Quitala de las patentes individuales " +
-                            "o quitá la familia.");
+                        if (patentesDeLaFam.Contains(idPat))
+                        {
+                            Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
+                            string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
+                            throw new Exception(
+                                $"La patente '{nombrePat}' ya está incluida en la familia '{arbol.Nombre}'. " +
+                                "Es redundante agregarla directamente. Quitala de las patentes individuales " +
+                                "o quitá la familia.");
+                        }
+                    }
+                }
+            }
+
+            // ── (b) Dos familias hermanas comparten alguna patente ──
+            if (idsFamilias.Count >= 2)
+            {
+                var efectivasPorFam = new Dictionary<int, HashSet<int>>();
+                var nombresPorFam = new Dictionary<int, string>();
+                foreach (int idFam in idsFamilias)
+                {
+                    Familia_GV42 arbol = _dalFamilia.ObtenerArbol(idFam);
+                    if (arbol == null) continue;
+                    efectivasPorFam[idFam] = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
+                    nombresPorFam[idFam] = arbol.Nombre;
+                }
+
+                var fams = efectivasPorFam.Keys.ToList();
+                for (int i = 0; i < fams.Count; i++)
+                {
+                    for (int j = i + 1; j < fams.Count; j++)
+                    {
+                        var solapadas = efectivasPorFam[fams[i]].Intersect(efectivasPorFam[fams[j]]).ToList();
+                        if (solapadas.Any())
+                        {
+                            Patente_GV42 pat = _dalPatente.BuscarPorId(solapadas.First());
+                            string nombrePat = pat != null ? pat.Nombre : $"Id {solapadas.First()}";
+                            throw new Exception(
+                                $"La patente '{nombrePat}' está incluida tanto en la familia '{nombresPorFam[fams[i]]}' " +
+                                $"como en '{nombresPorFam[fams[j]]}'. Es redundante incluir ambas familias.");
+                        }
                     }
                 }
             }
@@ -274,7 +439,15 @@ namespace BLL
             ValidarRedundanciaPatentesYSubfamilias(idsPatentes, idsSubfamilias);
 
             HashSet<int> patentesEfectivasNueva = ConstruirPatentesEfectivas(idsPatentes, idsSubfamilias);
+
+            ValidarRedundanciaEnAscendentesFamilia(idFamilia, patentesEfectivasNueva);
+
             Familia_GV42 equivalente = BuscarFamiliaConMismasPatentesEfectivas(patentesEfectivasNueva, excluirId: idFamilia);
+            if (equivalente != null)
+                throw new Exception($"Ya existe otra familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
+                    "No se permiten familias duplicadas.");
+
+
             if (equivalente != null)
                 throw new Exception(
                     $"Ya existe otra familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'.");

@@ -39,7 +39,7 @@ namespace DAL
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True";
+                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; //(localdb)\MSSQLLocalDB
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }
