@@ -106,6 +106,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
 
+            if (!VerificarIntegridad(actual))
+            {
+                BLLUsuario_GV42.CerrarSesión();
+                return;
+            }
+
             if (actual != null && actual.DebeCambiarContrasena)
             {
                 MessageBox.Show(IdiomaManager_GV42.T("login.cambioRequeridoMensaje"),
@@ -118,23 +124,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 return;
             }
 
-            bool esAdmin = TienePerfilAdministrativo(actual);
-
-            if (esAdmin)
-            {
-                if (!VerificarIntegridad(actual))
-                {
-                    BLLUsuario_GV42.CerrarSesión();
-                    return;
-                }
-            }
-
-            Form formulario;
-            if (esAdmin)
-                formulario = new FRMMenuPrincipalAdmin();
-            else
-                formulario = new FRMMenuPrincipalUsuario();
-
+            Form formulario = new FRMMenuPrincipalAdmin();
             formulario.Show();
             this.Hide();
         }
@@ -156,7 +146,25 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     actual.Login, "Admin", "Integridad comprometida",
                     string.Join(", ", res.TablasComprometidas), "Alta");
 
-                using (var frm = new FRMIntegridad(res))
+                var bllPermisos = new BLLPermisos_GV42();
+                Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
+                var dataKeys = rolCompleto != null
+                    ? rolCompleto.ObtenerPatentes().Select(p => p.DataKey ?? string.Empty).ToList()
+                    : new List<string>();
+
+                bool puedeRecalcular = dataKeys.Contains("Integridad.Recalcular");
+                bool puedeRestaurar  = dataKeys.Contains("Integridad.Restore");
+
+                if (!puedeRecalcular && !puedeRestaurar)
+                {
+                    MessageBox.Show(
+                        IdiomaManager_GV42.T("integridad.sistemaInactivoMensaje"),
+                        IdiomaManager_GV42.T("integridad.sistemaInactivoTitulo"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                using (var frm = new FRMIntegridad(res, puedeRecalcular, puedeRestaurar))
                 {
                     DialogResult dr = frm.ShowDialog(this);
 
@@ -192,16 +200,5 @@ namespace PROYECTO_ING_DE_SOFTWARE
             }
         }
 
-        private bool TienePerfilAdministrativo(Usuario_GV42 usuario)
-        {
-            if (usuario == null || usuario.Rol == null) return false;
-
-            string nombreRol = usuario.RolNombre ?? string.Empty;
-
-            if (string.Equals(nombreRol, "Usuario", System.StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return true;
-        }
     }
 }

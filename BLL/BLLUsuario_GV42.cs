@@ -148,7 +148,7 @@ namespace BLL
                 else
                     return 1;
             }
-            catch { throw new Exception("Error"); }
+            catch { throw new Exception(IdiomaManager_GV42.T("err.errorGenerico")); }
 
         }
 
@@ -213,7 +213,7 @@ namespace BLL
 
         public void ModificarRol(string dni, Rol_GV42 rol)
         {
-            if (rol == null) throw new Exception("Debe seleccionar un rol válido.");
+            if (rol == null) throw new Exception(IdiomaManager_GV42.T("err.rolValido"));
             _DALUsuario.ModificarRol(dni, rol.Id);
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin","Rol modificado", $"DNI {dni} -> rol {rol.Nombre}", "Media");
             RecalcularUsuario();
@@ -221,17 +221,17 @@ namespace BLL
         public void CrearUsuario(string dni, string apellido, string nombre, string email, Rol_GV42 rol)
         {
             if (rol == null)
-            throw new Exception("Debe seleccionar un rol.");
+                throw new Exception(IdiomaManager_GV42.T("err.rolSeleccionar"));
 
             if (_DALUsuario.ExisteDNI(dni))
-            throw new Exception($"Ya existe un usuario con el DNI '{dni}'.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.dniDuplicado"), dni));
             string ultimos3 = dni.Length >= 3 ? dni.Substring(dni.Length - 3) : dni;
             string contrasenaPlana = nombre.ToLower() + ultimos3;
             string contrasenaCifrada = Encriptador_GV42.Instancia.EncriptarContrasena(contrasenaPlana);
             string login = nombre.ToLower() + ultimos3;
 
             if (_DALUsuario.BuscarPorLogin(login) != null)
-            throw new Exception($"Ya existe un usuario con el login '{login}'.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.usuarioLoginDuplicado"), login));
 
             Usuario_GV42 u = new Usuario_GV42
             {
@@ -246,7 +246,7 @@ namespace BLL
 
             int filas = _DALUsuario.AgregarUsuario(u);
             if (filas == 0)
-            throw new Exception("El INSERT no afectó ninguna fila. Verificá la base de datos.");
+                throw new Exception(IdiomaManager_GV42.T("err.insertFallido"));
             Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login, "Admin","Usuario creado", $"Login: {login}", "Baja");
             RecalcularUsuario();
         }
@@ -288,7 +288,7 @@ namespace BLL
             }
             catch
             {
-                throw new Exception("Error");
+                throw new Exception(IdiomaManager_GV42.T("err.errorGenerico"));
             }
         }
 
@@ -297,6 +297,7 @@ namespace BLL
             BLLUsuario_GV42 bll = new BLLUsuario_GV42();
             bll.Auditar(SessionManager_GV42.Instancia.ObtenerUsuarioActual().Login,"Usuario", "Logout realizado", "LogOut", "Alta");
             SessionManager_GV42.Instancia.CerrarSesion();
+            IdiomaManager_GV42.Instancia.CambiarIdioma(IdiomaManager_GV42.ES);
         }
     }
 }

@@ -16,6 +16,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
         public bool SeRecalcularon { get; private set; }
 
         public FRMIntegridad(ResultadoIntegridad resultado)
+            : this(resultado, puedeRecalcular: true, puedeRestaurar: true)
+        {
+        }
+
+        public FRMIntegridad(ResultadoIntegridad resultado, bool puedeRecalcular, bool puedeRestaurar)
         {
             InitializeComponent();
             _bll = new BLLIntegridad_GV42();
@@ -27,6 +32,9 @@ namespace PROYECTO_ING_DE_SOFTWARE
             AplicarEstilos();
             CargarTablas();
             ActualizarIdioma();
+
+            if (btnRestore != null) btnRestore.Visible = puedeRecalcular;
+            if (btnBackup != null)  btnBackup.Visible  = puedeRestaurar;
         }
 
         private void AplicarEstilos()

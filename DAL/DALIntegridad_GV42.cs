@@ -156,6 +156,14 @@ namespace DAL
             return (res == null || res == DBNull.Value) ? null : res.ToString();
         }
 
+        public void RecalcularTabla(string nombreTabla)
+        {
+            Dictionary<string, string> dvhs = CalcularDVHsTabla(nombreTabla);
+            GuardarDVHs(nombreTabla, dvhs);
+            string dvv = CalculadorIntegridad_GV42.CalcularDVV(dvhs.Values);
+            GuardarDVV(nombreTabla, dvv);
+        }
+
         public void GuardarDVHs(string nombreTabla, Dictionary<string, string> dvhs)
         {
             _acceso.escribir(

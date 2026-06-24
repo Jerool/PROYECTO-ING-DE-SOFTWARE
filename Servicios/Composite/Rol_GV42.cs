@@ -43,13 +43,9 @@ namespace Servicios
             }
         }
 
-        public const string ROL_SUPER_ADMIN = "Admin";
-
         public bool TienePermiso(string dataKey)
         {
             if (string.IsNullOrEmpty(dataKey)) return false;
-            if (string.Equals(Nombre, ROL_SUPER_ADMIN, System.StringComparison.OrdinalIgnoreCase))
-                return true;
             return ObtenerPatentes().Any(p => p.DataKey == dataKey);
         }
         public override string ToString()

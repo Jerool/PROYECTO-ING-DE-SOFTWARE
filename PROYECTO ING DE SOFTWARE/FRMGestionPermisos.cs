@@ -168,8 +168,34 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void FRMGestionPermisos_Load(object sender, EventArgs e)
         {
+            AplicarPermisosTabs();
             RecargarTodo();
             ActualizarIdioma();
+        }
+
+        private void AplicarPermisosTabs()
+        {
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            if (actual == null || actual.Rol == null) return;
+
+            Rol_GV42 rolCompleto = _bll.ObtenerArbolRol(actual.Rol.Id);
+            if (rolCompleto == null) return;
+
+            var dataKeys = rolCompleto.ObtenerPatentes()
+                .Select(p => p.DataKey ?? string.Empty)
+                .ToList();
+
+            bool puedePatentes = dataKeys.Contains("Permisos.Patentes");
+            bool puedeFamilias = dataKeys.Contains("Permisos.Familias");
+            bool puedeRoles    = dataKeys.Contains("Permisos.Roles");
+
+            if (tabControl.TabPages.Contains(tabPatentes)) tabControl.TabPages.Remove(tabPatentes);
+            if (tabControl.TabPages.Contains(tabFamilias)) tabControl.TabPages.Remove(tabFamilias);
+            if (tabControl.TabPages.Contains(tabRoles))    tabControl.TabPages.Remove(tabRoles);
+
+            if (puedePatentes) tabControl.TabPages.Add(tabPatentes);
+            if (puedeFamilias) tabControl.TabPages.Add(tabFamilias);
+            if (puedeRoles)    tabControl.TabPages.Add(tabRoles);
         }
 
         private void RecargarTodo()
@@ -509,6 +535,13 @@ namespace PROYECTO_ING_DE_SOFTWARE
             try
             {
                 _bll.ModificarRol(_idRolEdicion, nombre, idsPatentes, idsFamilias);
+
+                if (EsRolDelUsuarioActual(_idRolEdicion))
+                {
+                    ForzarReloginPorCambioDePropioRol();
+                    return;
+                }
+
                 MessageBox.Show(IdiomaManager_GV42.T("permisos.rolModificado"),
                                 IdiomaManager_GV42.T("general.exito"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -520,6 +553,31 @@ namespace PROYECTO_ING_DE_SOFTWARE
                 MessageBox.Show(ex.Message, IdiomaManager_GV42.T("general.error"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool EsRolDelUsuarioActual(int idRol)
+        {
+            Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+            return actual != null && actual.Rol != null && actual.Rol.Id == idRol;
+        }
+
+        private void ForzarReloginPorCambioDePropioRol()
+        {
+            MessageBox.Show(
+                IdiomaManager_GV42.T("permisos.mensajeRolPropio"),
+                IdiomaManager_GV42.T("permisos.tituloRolPropio"),
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            BLLUsuario_GV42.CerrarSesión();
+
+            var login = new FRMIniciarSesion();
+            login.Show();
+
+            var menuPrincipal = Application.OpenForms
+                .OfType<FRMMenuPrincipalAdmin>()
+                .FirstOrDefault();
+            if (menuPrincipal != null)
+                menuPrincipal.Close();
         }
 
         private void EliminarRol()
@@ -636,6 +694,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (lblTitPatentes != null) lblTitPatentes.Text = IdiomaManager_GV42.T("permisos.titPatentes");
 
             if (lblTitFamilias != null) lblTitFamilias.Text = IdiomaManager_GV42.T("permisos.titFamilias");
+            if (btnModificarFamilia != null) btnModificarFamilia.Text = IdiomaManager_GV42.T("permisos.modificarFamilia");
             if (btnEliminarFamilia != null) btnEliminarFamilia.Text = IdiomaManager_GV42.T("permisos.eliminarFamilia");
             if (gbCrearFamilia != null) gbCrearFamilia.Text = IdiomaManager_GV42.T("permisos.crearFamilia");
             if (lblNombreFamilia != null) lblNombreFamilia.Text = IdiomaManager_GV42.T("permisos.nombre");
@@ -645,6 +704,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (btnLimpiarFamilia != null) btnLimpiarFamilia.Text = IdiomaManager_GV42.T("permisos.limpiar");
 
             if (lblTitRoles != null) lblTitRoles.Text = IdiomaManager_GV42.T("permisos.titRoles");
+            if (btnModificarRol != null) btnModificarRol.Text = IdiomaManager_GV42.T("permisos.modificarRol");
             if (btnEliminarRol != null) btnEliminarRol.Text = IdiomaManager_GV42.T("permisos.eliminarRol");
             if (gbCrearRol != null) gbCrearRol.Text = IdiomaManager_GV42.T("permisos.crearRol");
             if (lblNombreRol != null) lblNombreRol.Text = IdiomaManager_GV42.T("permisos.nombre");

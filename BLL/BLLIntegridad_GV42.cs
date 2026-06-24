@@ -134,17 +134,16 @@ namespace BLL
         {
             string ruta = ObtenerUltimoBackup();
             if (string.IsNullOrEmpty(ruta))
-                throw new Exception("No hay backups disponibles para restaurar. " +
-                                    "Iniciá sesión como admin al menos una vez para generar el primero.");
+                throw new Exception(IdiomaManager_GV42.T("err.backupSinDisponibles"));
             RestaurarBackupDesdeRuta(ruta);
         }
 
         public void RestaurarBackupDesdeRuta(string rutaArchivoBak)
         {
             if (string.IsNullOrWhiteSpace(rutaArchivoBak))
-                throw new Exception("La ruta del backup es obligatoria.");
+                throw new Exception(IdiomaManager_GV42.T("err.backupRutaObligatoria"));
             if (!File.Exists(rutaArchivoBak))
-                throw new Exception($"El archivo de backup no existe: {rutaArchivoBak}");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.backupArchivoNoExiste"), rutaArchivoBak));
 
             _dal.RestaurarBackupSQL(CONN_MASTER, NOMBRE_BD, rutaArchivoBak);
         }

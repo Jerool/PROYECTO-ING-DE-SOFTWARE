@@ -39,10 +39,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual == null || actual.Rol == null) return;
 
-            if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
-                              System.StringComparison.OrdinalIgnoreCase))
-                return;
-
             var bllPermisos = new BLLPermisos_GV42();
             Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
             if (rolCompleto == null) return;

@@ -14,6 +14,7 @@ namespace DAL
     {
 
         private readonly Acceso _acceso;
+        private readonly DALIntegridad_GV42 _dalIntegridad;
         private const string SELECT_BASE =
             "SELECT U.DNI, U.Apellido, U.Nombre, U.UserName, U.Contrasena, " +
             "       U.IdRol, R.Nombre AS RolNombre, " +
@@ -26,6 +27,12 @@ namespace DAL
         public DALUsuario_GV42()
         {
             _acceso = Acceso.Instancia;
+            _dalIntegridad = new DALIntegridad_GV42();
+        }
+
+        private void RecalcularIntegridadUsuario()
+        {
+            try { _dalIntegridad.RecalcularTabla("Usuario"); } catch { }
         }
 
         public bool ExisteDNI(string dni)
@@ -68,6 +75,7 @@ namespace DAL
                 new SqlParameter("@UserName", login)
             };
             _acceso.escribir(query, parametros);
+            RecalcularIntegridadUsuario();
         }
 
         public void Desbloquear(string dni, string contrasenaCifrada)
@@ -85,6 +93,7 @@ namespace DAL
                 new SqlParameter("@DNI", dni)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void ActivarDesactivar(string dni, bool activo)
@@ -95,6 +104,7 @@ namespace DAL
                 new SqlParameter("@DNI",    dni)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void ModificarEmail(string dni, string email)
@@ -107,6 +117,7 @@ namespace DAL
                 new SqlParameter("@DNI",   dni)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void ModificarRol(string dni, int idRol)
@@ -117,6 +128,7 @@ namespace DAL
                 new SqlParameter("@DNI",   dni)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void CambiarContrasena(string login, string contrasenaCifrada)
@@ -131,6 +143,7 @@ namespace DAL
                 new SqlParameter("@Login", login)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void ActualizarIntentosFallidos(string login, int nuevosIntentos, DateTime momentoIntento)
@@ -146,6 +159,7 @@ namespace DAL
                 new SqlParameter("@Login",    login)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void GuardarIdioma(string login, string idioma)
@@ -156,6 +170,7 @@ namespace DAL
                 new SqlParameter("@Login",  login)
             };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public void ResetearIntentosFallidos(string login)
@@ -167,6 +182,7 @@ namespace DAL
                 "WHERE UserName = @Login";
             SqlParameter[] p = { new SqlParameter("@Login", login) };
             _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
         }
 
         public int AgregarUsuario(Usuario_GV42 usuario)
@@ -186,7 +202,9 @@ namespace DAL
                 new SqlParameter("@IdRol", usuario.Rol.Id),
                 new SqlParameter("@Email", EncriptadorReversible_GV42.Instancia.Encriptar(usuario.Email))
             };
-            return _acceso.escribir(query, p);
+            int filas = _acceso.escribir(query, p);
+            RecalcularIntegridadUsuario();
+            return filas;
         }
 
         private List<Usuario_GV42> MapearLista(DataTable dt)

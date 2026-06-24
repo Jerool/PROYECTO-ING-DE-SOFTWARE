@@ -74,10 +74,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
             Usuario_GV42 actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
             if (actual == null || actual.Rol == null) return;
 
-            if (string.Equals(actual.RolNombre, Rol_GV42.ROL_SUPER_ADMIN,
-                              StringComparison.OrdinalIgnoreCase))
-                return;
-
             var bllPermisos = new BLLPermisos_GV42();
             Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);
             if (rolCompleto == null) return;
@@ -94,6 +90,31 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             if (gestionDePermisosToolStripMenuItem != null)
                 gestionDePermisosToolStripMenuItem.Visible = dataKeys.Any(k => k.StartsWith("Permisos."));
+
+            bool puedeCambiarClave = dataKeys.Contains("Sesion.CambiarClave");
+            bool puedeReLogin      = dataKeys.Contains("Sesion.ReLogin");
+            bool puedeLogout       = dataKeys.Contains("Sesion.Logout");
+
+            if (cambiarClaveToolStripMenuItem != null)
+            {
+                cambiarClaveToolStripMenuItem.Visible = puedeCambiarClave;
+                cambiarClaveToolStripMenuItem.Available = puedeCambiarClave;
+            }
+
+            if (reLoginToolStripMenuItem != null)
+            {
+                reLoginToolStripMenuItem.Visible = puedeReLogin;
+                reLoginToolStripMenuItem.Available = puedeReLogin;
+            }
+
+            if (logOutToolStripMenuItem != null)
+            {
+                logOutToolStripMenuItem.Visible = puedeLogout;
+                logOutToolStripMenuItem.Available = puedeLogout;
+            }
+
+            if (usuarioToolStripMenuItem != null)
+                usuarioToolStripMenuItem.Visible = puedeCambiarClave || puedeReLogin || puedeLogout;
         }
 
         public void AbrirFormularioHijo(Form f)

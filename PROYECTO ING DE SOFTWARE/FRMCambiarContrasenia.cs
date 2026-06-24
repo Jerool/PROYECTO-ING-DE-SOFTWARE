@@ -106,10 +106,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void AbrirMenuPrincipalSegunRol()
         {
-            string rol = SessionManager_GV42.Instancia.ObtenerUsuarioActual().RolNombre ?? string.Empty;
-            Form menu = string.Equals(rol, "Usuario", StringComparison.OrdinalIgnoreCase)
-                ? (Form)new FRMMenuPrincipalUsuario()
-                : new FRMMenuPrincipalAdmin();
+            Form menu = new FRMMenuPrincipalAdmin();
             menu.Show();
         }
     }

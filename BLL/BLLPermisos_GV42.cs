@@ -42,6 +42,17 @@ namespace BLL
             } catch { }
         }
 
+        private void Auditar(string tipoEvento, string detalle, string criticidad)
+        {
+            try
+            {
+                var actual = SessionManager_GV42.Instancia.ObtenerUsuarioActual();
+                string login = actual != null ? actual.Login : "SISTEMA";
+                BLLBitacora_GV42.Instancia.RegistrarEvento(login, "Admin", tipoEvento, detalle, criticidad);
+            }
+            catch { }
+        }
+
         public List<Patente_GV42> ListarPatentes() => _dalPatente.ListarTodas();
         public List<Familia_GV42> ListarFamilias() => _dalFamilia.ListarTodasPlanas();
         public List<Rol_GV42> ListarRoles()      => _dalRol.ListarTodos();
@@ -52,26 +63,28 @@ namespace BLL
         public int CrearFamilia(string nombre, List<int> idsPatentes, List<int> idsSubfamilias)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new Exception("El nombre de la familia es obligatorio.");
+                throw new Exception(IdiomaManager_GV42.T("err.nombreFamiliaObligatorio"));
 
             if (_dalFamilia.ListarTodasPlanas().Any(f => f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new Exception($"Ya existe una familia con el nombre '{nombre}'. Elegí otro nombre.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.familiaNombreDuplicado"), nombre));
 
             idsPatentes    = (idsPatentes ?? new List<int>()).Distinct().OrderBy(i => i).ToList();
             idsSubfamilias = (idsSubfamilias ?? new List<int>()).Distinct().OrderBy(i => i).ToList();
 
             if (idsPatentes.Count == 0 && idsSubfamilias.Count == 0)
-                throw new Exception("La familia debe contener al menos una patente o una subfamilia.");
+                throw new Exception(IdiomaManager_GV42.T("err.familiaSinContenido"));
 
             ValidarRedundanciaPatentesYSubfamilias(idsPatentes, idsSubfamilias);
 
             HashSet<int> patentesEfectivasNueva = ConstruirPatentesEfectivas(idsPatentes, idsSubfamilias);
             Familia_GV42 equivalente = BuscarFamiliaConMismasPatentesEfectivas(patentesEfectivasNueva);
             if (equivalente != null)
-                throw new Exception($"Ya existe una familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
-                    "No se permiten familias duplicadas.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.familiaComposicionDuplicada"), equivalente.Nombre));
 
             int idCreada = _dalFamilia.Crear(nombre, idsPatentes, idsSubfamilias);
+            Auditar("Familia creada",
+                    $"Nombre: '{nombre}', Patentes: {idsPatentes.Count}, Subfamilias: {idsSubfamilias.Count}",
+                    "Media");
             RecalcularFamilias();
             return idCreada;
         }
@@ -94,10 +107,8 @@ namespace BLL
                         {
                             Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
                             string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
-                            throw new Exception(
-                                $"La patente '{nombrePat}' ya está incluida en la subfamilia '{arbol.Nombre}'. " +
-                                "Es redundante agregarla directamente. Quitala de las patentes individuales " +
-                                "o quitá la subfamilia.");
+                            throw new Exception(string.Format(
+                                IdiomaManager_GV42.T("err.redundanciaPatenteEnSub"), nombrePat, arbol.Nombre));
                         }
                     }
                 }
@@ -126,9 +137,9 @@ namespace BLL
                         {
                             Patente_GV42 pat = _dalPatente.BuscarPorId(solapadas.First());
                             string nombrePat = pat != null ? pat.Nombre : $"Id {solapadas.First()}";
-                            throw new Exception(
-                                $"La patente '{nombrePat}' está incluida tanto en la subfamilia '{nombresPorSub[subs[i]]}' " +
-                                $"como en '{nombresPorSub[subs[j]]}'. Es redundante incluir ambas subfamilias.");
+                            throw new Exception(string.Format(
+                                IdiomaManager_GV42.T("err.redundanciaSubsCompartenPatente"),
+                                nombrePat, nombresPorSub[subs[i]], nombresPorSub[subs[j]]));
                         }
                     }
                 }
@@ -153,10 +164,8 @@ namespace BLL
                 {
                     Patente_GV42 pat = _dalPatente.BuscarPorId(solapDirectas.First());
                     string nombrePat = pat != null ? pat.Nombre : $"Id {solapDirectas.First()}";
-                    throw new Exception(
-                        $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
-                        $"en la familia ancestro '{famAncestro.Nombre}' (ya está allí como patente directa " +
-                        $"y aparecería también por esta familia). Quitala del ancestro primero.");
+                    throw new Exception(string.Format(
+                        IdiomaManager_GV42.T("err.redundanciaAscendenteDirecta"), nombrePat, famAncestro.Nombre));
                 }
 
                 // (b) Patentes que aporta otra subfamilia hermana del ancestro, solapadas con las nuevas efectivas.
@@ -174,10 +183,9 @@ namespace BLL
                     {
                         Patente_GV42 pat = _dalPatente.BuscarPorId(solapHermana.First());
                         string nombrePat = pat != null ? pat.Nombre : $"Id {solapHermana.First()}";
-                        throw new Exception(
-                            $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
-                            $"en el ancestro '{famAncestro.Nombre}' (ya está incluida vía la subfamilia hermana " +
-                            $"'{arbolHermana.Nombre}'). Quitala de la hermana o no la agregues acá.");
+                        throw new Exception(string.Format(
+                            IdiomaManager_GV42.T("err.redundanciaAscendenteHermana"),
+                            nombrePat, famAncestro.Nombre, arbolHermana.Nombre));
                     }
                 }
             }
@@ -195,9 +203,8 @@ namespace BLL
                 {
                     Patente_GV42 pat = _dalPatente.BuscarPorId(solapDirectas.First());
                     string nombrePat = pat != null ? pat.Nombre : $"Id {solapDirectas.First()}";
-                    throw new Exception(
-                        $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
-                        $"en el rol '{rol.Nombre}'. Quitala del rol primero.");
+                    throw new Exception(string.Format(
+                        IdiomaManager_GV42.T("err.redundanciaAscendenteRolDirecta"), nombrePat, rol.Nombre));
                 }
 
                 var familiasDelRol = _dalRol.IdsFamiliasDirectas(rol.Id);
@@ -214,9 +221,9 @@ namespace BLL
                     {
                         Patente_GV42 pat = _dalPatente.BuscarPorId(solapHermana.First());
                         string nombrePat = pat != null ? pat.Nombre : $"Id {solapHermana.First()}";
-                        throw new Exception(
-                            $"No se puede aplicar la modificación: la patente '{nombrePat}' quedaría duplicada " +
-                            $"en el rol '{rol.Nombre}' (ya está incluida vía la familia '{arbolHermana.Nombre}').");
+                        throw new Exception(string.Format(
+                            IdiomaManager_GV42.T("err.redundanciaAscendenteRolFamilia"),
+                            nombrePat, rol.Nombre, arbolHermana.Nombre));
                     }
                 }
             }
@@ -268,49 +275,44 @@ namespace BLL
             List<string> rolesQueLaUsan = _dalFamilia.NombresRolesQueUsan(idFamilia);
             if (rolesQueLaUsan.Count > 0)
             {
-                throw new Exception(
-                    $"No se puede eliminar la familia porque está asignada a {rolesQueLaUsan.Count} rol(es): " +
-                    $"{string.Join(", ", rolesQueLaUsan)}. " +
-                    "Modificá esos roles para quitarles la familia antes de eliminarla.");
+                throw new Exception(string.Format(
+                    IdiomaManager_GV42.T("err.familiaEnUsoRoles"),
+                    rolesQueLaUsan.Count, string.Join(", ", rolesQueLaUsan)));
             }
 
             List<string> familiasQueLaContienen = _dalFamilia.NombresFamiliasQueLaContienen(idFamilia);
             if (familiasQueLaContienen.Count > 0)
             {
-                throw new Exception(
-                    $"No se puede eliminar la familia porque es subfamilia de {familiasQueLaContienen.Count} familia(s): " +
-                    $"{string.Join(", ", familiasQueLaContienen)}. " +
-                    "Modificá esas familias para quitarles esta subfamilia antes de eliminarla.");
+                throw new Exception(string.Format(
+                    IdiomaManager_GV42.T("err.familiaEnUsoFamilias"),
+                    familiasQueLaContienen.Count, string.Join(", ", familiasQueLaContienen)));
             }
 
             _dalFamilia.Eliminar(idFamilia);
+            Auditar("Familia eliminada", $"IdFamilia: {idFamilia}", "Alta");
             RecalcularFamilias();
         }
 
         public int CrearRol(string nombre, List<int> idsPatentes, List<int> idsFamilias)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new Exception("El nombre del rol es obligatorio.");
+                throw new Exception(IdiomaManager_GV42.T("err.nombreRolObligatorio"));
 
             if (_dalRol.ListarTodos().Any(r => r.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new Exception($"Ya existe un rol con el nombre '{nombre}'. Elegí otro nombre.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.rolNombreDuplicado"), nombre));
 
             idsPatentes = (idsPatentes ?? new List<int>()).Distinct().ToList();
             idsFamilias = (idsFamilias ?? new List<int>()).Distinct().ToList();
 
             if (idsPatentes.Count == 0 && idsFamilias.Count == 0)
-                throw new Exception("El rol debe contener al menos una patente o una familia.");
+                throw new Exception(IdiomaManager_GV42.T("err.rolSinContenido"));
 
             ValidarRedundanciaPatentesYFamilias(idsPatentes, idsFamilias);
 
-            HashSet<int> efectivasNuevo = ConstruirPatentesEfectivas(idsPatentes, idsFamilias);
-            Rol_GV42 equivalente = BuscarRolConMismasPatentesEfectivas(efectivasNuevo);
-            if (equivalente != null)
-                throw new Exception(
-                    $"Ya existe un rol con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
-                    "No se permiten roles duplicados.");
-
             int idCreado = _dalRol.Crear(nombre, idsPatentes, idsFamilias);
+            Auditar("Rol creado",
+                    $"Nombre: '{nombre}', Patentes: {idsPatentes.Count}, Familias: {idsFamilias.Count}",
+                    "Media");
             RecalcularRoles();
             return idCreado;
         }
@@ -333,10 +335,8 @@ namespace BLL
                         {
                             Patente_GV42 pat = _dalPatente.BuscarPorId(idPat);
                             string nombrePat = pat != null ? pat.Nombre : $"Id {idPat}";
-                            throw new Exception(
-                                $"La patente '{nombrePat}' ya está incluida en la familia '{arbol.Nombre}'. " +
-                                "Es redundante agregarla directamente. Quitala de las patentes individuales " +
-                                "o quitá la familia.");
+                            throw new Exception(string.Format(
+                                IdiomaManager_GV42.T("err.redundanciaPatenteEnFam"), nombrePat, arbol.Nombre));
                         }
                     }
                 }
@@ -365,27 +365,13 @@ namespace BLL
                         {
                             Patente_GV42 pat = _dalPatente.BuscarPorId(solapadas.First());
                             string nombrePat = pat != null ? pat.Nombre : $"Id {solapadas.First()}";
-                            throw new Exception(
-                                $"La patente '{nombrePat}' está incluida tanto en la familia '{nombresPorFam[fams[i]]}' " +
-                                $"como en '{nombresPorFam[fams[j]]}'. Es redundante incluir ambas familias.");
+                            throw new Exception(string.Format(
+                                IdiomaManager_GV42.T("err.redundanciaFamsCompartenPatente"),
+                                nombrePat, nombresPorFam[fams[i]], nombresPorFam[fams[j]]));
                         }
                     }
                 }
             }
-        }
-
-        private Rol_GV42 BuscarRolConMismasPatentesEfectivas(HashSet<int> patentesEfectivas, int excluirId = 0)
-        {
-            foreach (var rol in _dalRol.ListarTodos())
-            {
-                if (rol.Id == excluirId) continue;
-                Rol_GV42 arbol = _dalRol.ObtenerArbol(rol.Id);
-                if (arbol == null) continue;
-                HashSet<int> efectivas = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
-                if (efectivas.SetEquals(patentesEfectivas))
-                    return rol;
-            }
-            return null;
         }
 
         public void EliminarRol(int idRol)
@@ -393,12 +379,11 @@ namespace BLL
             int cantUsuarios = _dalRol.CantidadUsuariosConRol(idRol);
             if (cantUsuarios > 0)
             {
-                throw new Exception(
-                    $"No se puede eliminar el rol porque está asignado a {cantUsuarios} usuario(s). " +
-                    "Reasigná esos usuarios a otro rol antes de eliminarlo.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.rolEnUso"), cantUsuarios));
             }
 
             _dalRol.Eliminar(idRol);
+            Auditar("Rol eliminado", $"IdRol: {idRol}", "Alta");
             RecalcularRoles();
         }
 
@@ -411,29 +396,28 @@ namespace BLL
         public void ModificarFamilia(int idFamilia, string nombre, List<int> idsPatentes, List<int> idsSubfamilias)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new Exception("El nombre de la familia es obligatorio.");
+                throw new Exception(IdiomaManager_GV42.T("err.nombreFamiliaObligatorio"));
 
             if (_dalFamilia.ListarTodasPlanas()
                 .Any(f => f.Id != idFamilia && f.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new Exception($"Ya existe otra familia con el nombre '{nombre}'.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.familiaOtroNombreDuplicado"), nombre));
 
             idsPatentes    = (idsPatentes ?? new List<int>()).Distinct().OrderBy(i => i).ToList();
             idsSubfamilias = (idsSubfamilias ?? new List<int>()).Distinct().OrderBy(i => i).ToList();
 
             if (idsPatentes.Count == 0 && idsSubfamilias.Count == 0)
-                throw new Exception("La familia debe contener al menos una patente o una subfamilia.");
+                throw new Exception(IdiomaManager_GV42.T("err.familiaSinContenido"));
 
             if (idsSubfamilias.Contains(idFamilia))
-                throw new Exception("Una familia no puede contenerse a sí misma como subfamilia.");
+                throw new Exception(IdiomaManager_GV42.T("err.familiaCiclo"));
 
             foreach (int idSub in idsSubfamilias)
             {
                 Familia_GV42 arbolSub = _dalFamilia.ObtenerArbol(idSub);
                 if (arbolSub == null) continue;
                 if (ContieneFamiliaRec(arbolSub, idFamilia))
-                    throw new Exception(
-                        $"No se puede agregar la subfamilia '{arbolSub.Nombre}' porque ya contiene a esta familia. " +
-                        "Se generaría un ciclo.");
+                    throw new Exception(string.Format(
+                        IdiomaManager_GV42.T("err.familiaCicloTransitivo"), arbolSub.Nombre));
             }
 
             ValidarRedundanciaPatentesYSubfamilias(idsPatentes, idsSubfamilias);
@@ -444,8 +428,7 @@ namespace BLL
 
             Familia_GV42 equivalente = BuscarFamiliaConMismasPatentesEfectivas(patentesEfectivasNueva, excluirId: idFamilia);
             if (equivalente != null)
-                throw new Exception($"Ya existe otra familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'. " +
-                    "No se permiten familias duplicadas.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.familiaOtraComposicionDuplicada"), equivalente.Nombre));
 
 
             if (equivalente != null)
@@ -453,33 +436,33 @@ namespace BLL
                     $"Ya existe otra familia con la misma composición efectiva de patentes: '{equivalente.Nombre}'.");
 
             _dalFamilia.Modificar(idFamilia, nombre, idsPatentes, idsSubfamilias);
+            Auditar("Familia modificada",
+                    $"IdFamilia: {idFamilia}, Nombre: '{nombre}', Patentes: {idsPatentes.Count}, Subfamilias: {idsSubfamilias.Count}",
+                    "Media");
             RecalcularFamilias();
         }
 
         public void ModificarRol(int idRol, string nombre, List<int> idsPatentes, List<int> idsFamilias)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new Exception("El nombre del rol es obligatorio.");
+                throw new Exception(IdiomaManager_GV42.T("err.nombreRolObligatorio"));
 
             if (_dalRol.ListarTodos()
                 .Any(r => r.Id != idRol && r.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase)))
-                throw new Exception($"Ya existe otro rol con el nombre '{nombre}'.");
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.rolOtroNombreDuplicado"), nombre));
 
             idsPatentes = (idsPatentes ?? new List<int>()).Distinct().ToList();
             idsFamilias = (idsFamilias ?? new List<int>()).Distinct().ToList();
 
             if (idsPatentes.Count == 0 && idsFamilias.Count == 0)
-                throw new Exception("El rol debe contener al menos una patente o una familia.");
+                throw new Exception(IdiomaManager_GV42.T("err.rolSinContenido"));
 
             ValidarRedundanciaPatentesYFamilias(idsPatentes, idsFamilias);
 
-            HashSet<int> efectivasNuevo = ConstruirPatentesEfectivas(idsPatentes, idsFamilias);
-            Rol_GV42 equivalente = BuscarRolConMismasPatentesEfectivas(efectivasNuevo, excluirId: idRol);
-            if (equivalente != null)
-                throw new Exception(
-                    $"Ya existe otro rol con la misma composición efectiva de patentes: '{equivalente.Nombre}'.");
-
             _dalRol.Modificar(idRol, nombre, idsPatentes, idsFamilias);
+            Auditar("Rol modificado",
+                    $"IdRol: {idRol}, Nombre: '{nombre}', Patentes: {idsPatentes.Count}, Familias: {idsFamilias.Count}",
+                    "Media");
             RecalcularRoles();
         }
 
