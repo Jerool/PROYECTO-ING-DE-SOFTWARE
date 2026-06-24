@@ -162,6 +162,7 @@
     "patente.Sesion.CambiarClave": "Session - Change Password",
     "patente.Sesion.ReLogin": "Session - Re-Login",
     "patente.Sesion.Logout": "Session - Logout",
+    "patente.Sesion.CambiarIdioma": "Session - Change Language",
     "patente.Integridad.Recalcular": "Integrity - Recalculate",
     "patente.Integridad.Restore": "Integrity - Restore",
     "integridad.sistemaInactivoTitulo": "System inactive",

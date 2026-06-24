@@ -115,6 +115,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             if (usuarioToolStripMenuItem != null)
                 usuarioToolStripMenuItem.Visible = puedeCambiarClave || puedeReLogin || puedeLogout;
+
+            bool puedeCambiarIdioma = dataKeys.Contains("Sesion.CambiarIdioma");
+            if (_menuIdioma != null)
+                _menuIdioma.Visible = puedeCambiarIdioma;
         }
 
         public void AbrirFormularioHijo(Form f)
