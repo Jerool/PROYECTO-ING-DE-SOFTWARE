@@ -309,6 +309,11 @@ namespace BLL
 
             ValidarRedundanciaPatentesYFamilias(idsPatentes, idsFamilias);
 
+            HashSet<int> efectivasNuevo = ConstruirPatentesEfectivas(idsPatentes, idsFamilias);
+            Rol_GV42 equivalente = BuscarRolConMismasPatentesEfectivas(efectivasNuevo);
+            if (equivalente != null)
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.rolComposicionDuplicada"), equivalente.Nombre));
+
             int idCreado = _dalRol.Crear(nombre, idsPatentes, idsFamilias);
             Auditar("Rol creado",
                     $"Nombre: '{nombre}', Patentes: {idsPatentes.Count}, Familias: {idsFamilias.Count}",
@@ -372,6 +377,20 @@ namespace BLL
                     }
                 }
             }
+        }
+
+        private Rol_GV42 BuscarRolConMismasPatentesEfectivas(HashSet<int> patentesEfectivas, int excluirId = 0)
+        {
+            foreach (var rol in _dalRol.ListarTodos())
+            {
+                if (rol.Id == excluirId) continue;
+                Rol_GV42 arbol = _dalRol.ObtenerArbol(rol.Id);
+                if (arbol == null) continue;
+                HashSet<int> efectivas = new HashSet<int>(arbol.ObtenerPatentes().Select(p => p.Id));
+                if (efectivas.SetEquals(patentesEfectivas))
+                    return rol;
+            }
+            return null;
         }
 
         public void EliminarRol(int idRol)
@@ -458,6 +477,11 @@ namespace BLL
                 throw new Exception(IdiomaManager_GV42.T("err.rolSinContenido"));
 
             ValidarRedundanciaPatentesYFamilias(idsPatentes, idsFamilias);
+
+            HashSet<int> efectivasNuevo = ConstruirPatentesEfectivas(idsPatentes, idsFamilias);
+            Rol_GV42 equivalente = BuscarRolConMismasPatentesEfectivas(efectivasNuevo, excluirId: idRol);
+            if (equivalente != null)
+                throw new Exception(string.Format(IdiomaManager_GV42.T("err.rolOtraComposicionDuplicada"), equivalente.Nombre));
 
             _dalRol.Modificar(idRol, nombre, idsPatentes, idsFamilias);
             Auditar("Rol modificado",
