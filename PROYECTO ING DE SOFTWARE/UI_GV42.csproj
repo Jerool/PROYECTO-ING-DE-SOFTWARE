@@ -97,6 +97,9 @@
     <Compile Include="FRMIntegridad.Designer.cs">
       <DependentUpon>FRMIntegridad.cs</DependentUpon>
     </Compile>
+    <Compile Include="FRMSeleccionInstancia.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FRMBitacoraDeEventos.resx">
@@ -143,6 +146,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EsquemaCompleto.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Idiomas\es.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -163,6 +169,9 @@
       <Project>{662e6a38-a516-4610-ae55-4a12fc4f0fcb}</Project>
       <Name>Servicios_GV42</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

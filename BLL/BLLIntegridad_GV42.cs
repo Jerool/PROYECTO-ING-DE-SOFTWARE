@@ -13,8 +13,17 @@ namespace BLL
         private readonly DALIntegridad_GV42 _dal;
 
         private const string NOMBRE_BD = "Gestion Usuario";
-        private const string CONN_MASTER =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True";
+
+        private static string CONN_MASTER
+        {
+            get
+            {
+                string instancia = Servicios.Instalacion.ConfiguracionBD_GV42.LeerInstanciaGuardada();
+                if (string.IsNullOrEmpty(instancia)) instancia = @"(localdb)\MSSQLLocalDB";
+                return $"Data Source={instancia};Initial Catalog=master;Integrated Security=True";
+            }
+        }
+
         private const string CARPETA_BACKUPS = @"C:\Backups\GestionUsuario";
         private const int CANTIDAD_BACKUPS_A_CONSERVAR = 5;
         public const int INTERVALO_BACKUP_HORAS = 3;

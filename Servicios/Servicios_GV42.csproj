@@ -50,6 +50,8 @@
     <Compile Include="Composite\Patente_GV42.cs" />
     <Compile Include="Composite\Rol_GV42.cs" />
     <Compile Include="Bitacora\TipoEvento_GV42.cs" />
+    <Compile Include="Instalacion\ConfiguracionBD_GV42.cs" />
+    <Compile Include="Instalacion\DetectorInstancias_GV42.cs" />
     <Compile Include="Observer\IObservadorIdioma_GV42.cs" />
     <Compile Include="Observer\IdiomaManager_GV42.cs" />
     <Compile Include="Singlenton\SessionManager_GV42.cs" />

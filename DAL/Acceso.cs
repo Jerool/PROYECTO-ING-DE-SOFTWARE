@@ -16,6 +16,8 @@ namespace DAL
 
         protected SqlConnection conexion = null;
 
+        public static string ConnectionString { get; set; }
+
         private Acceso()
         {
             conexion = new SqlConnection();
@@ -39,7 +41,10 @@ namespace DAL
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True"; //(localdb)\MSSQLLocalDB
+                    string cs = ConnectionString;
+                    if (string.IsNullOrEmpty(cs))
+                        cs = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=""Gestion Usuario"";Integrated Security=True";
+                    conexion.ConnectionString = cs;
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }

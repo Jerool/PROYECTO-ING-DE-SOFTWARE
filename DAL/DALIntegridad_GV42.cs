@@ -14,7 +14,8 @@ namespace DAL
         public static readonly string[] TABLAS_PROTEGIDAS = {
             "Usuario", "Roles", "Familia", "Patente",
             "FamiliaPatente", "FamiliaIntegrada",
-            "RolPatente", "RolFamilia"
+            "RolPatente", "RolFamilia",
+            "Modulo", "TipoEvento"
         };
 
         public DALIntegridad_GV42()
@@ -34,8 +35,34 @@ namespace DAL
                 case "FamiliaIntegrada": return DVHsFamiliaIntegrada();
                 case "RolPatente":       return DVHsRolPatente();
                 case "RolFamilia":       return DVHsRolFamilia();
+                case "Modulo":           return DVHsModulo();
+                case "TipoEvento":       return DVHsTipoEvento();
                 default: throw new Exception("Tabla protegida desconocida: " + nombreTabla);
             }
+        }
+
+        private Dictionary<string, string> DVHsModulo()
+        {
+            DataTable dt = _acceso.leer("SELECT Id, Nombre FROM Modulo", null);
+            var dict = new Dictionary<string, string>();
+            foreach (DataRow r in dt.Rows)
+            {
+                string id = Convert.ToString(r["Id"]);
+                dict[id] = CalculadorIntegridad_GV42.CalcularDVH(r["Id"], r["Nombre"]);
+            }
+            return dict;
+        }
+
+        private Dictionary<string, string> DVHsTipoEvento()
+        {
+            DataTable dt = _acceso.leer("SELECT Id, Nombre FROM TipoEvento", null);
+            var dict = new Dictionary<string, string>();
+            foreach (DataRow r in dt.Rows)
+            {
+                string id = Convert.ToString(r["Id"]);
+                dict[id] = CalculadorIntegridad_GV42.CalcularDVH(r["Id"], r["Nombre"]);
+            }
+            return dict;
         }
 
         private Dictionary<string, string> DVHsUsuario()

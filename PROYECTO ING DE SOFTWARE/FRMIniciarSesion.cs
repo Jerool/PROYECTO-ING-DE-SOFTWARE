@@ -17,6 +17,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
     public partial class FRMIniciarSesion : Form, IObservadorIdioma_GV42
     {
         private readonly BLLUsuario_GV42 _bllUsuario;
+        private ResultadoIntegridad _resultadoIntegridadPrelogin;
 
         public FRMIniciarSesion()
         {
@@ -59,6 +60,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtLogIn.Focus();
                 return;
+            }
+
+            try
+            {
+                _resultadoIntegridadPrelogin = new BLLIntegridad_GV42().Verificar();
+            }
+            catch
+            {
+                _resultadoIntegridadPrelogin = null;
             }
 
             ResultadoLogin resultado = _bllUsuario.IntentarLogin(login, contrasena);
@@ -134,7 +144,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             try
             {
                 var bllInt = new BLLIntegridad_GV42();
-                ResultadoIntegridad res = bllInt.Verificar();
+                ResultadoIntegridad res = _resultadoIntegridadPrelogin ?? bllInt.Verificar();
 
                 if (res.EsIntegra)
                 {
