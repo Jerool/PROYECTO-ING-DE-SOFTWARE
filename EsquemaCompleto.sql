@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [Gestion Usuario]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Database [Gestion Usuario]    Script Date: 7/7/2026 7:40:53 PM ******/
 CREATE DATABASE [Gestion Usuario]
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
@@ -68,7 +68,7 @@ ALTER DATABASE [Gestion Usuario] SET DELAYED_DURABILITY = DISABLED
 GO
 USE [Gestion Usuario]
 GO
-/****** Object:  Table [dbo].[EVENTOS]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[EVENTOS]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -87,7 +87,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Familia]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[Familia]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -101,7 +101,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FamiliaIntegrada]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[FamiliaIntegrada]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -116,7 +116,7 @@ CREATE TABLE [dbo].[FamiliaIntegrada](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FamiliaPatente]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[FamiliaPatente]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -131,7 +131,7 @@ CREATE TABLE [dbo].[FamiliaPatente](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[IntegridadDVH]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[IntegridadDVH]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -148,7 +148,7 @@ CREATE TABLE [dbo].[IntegridadDVH](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[IntegridadDVV]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[IntegridadDVV]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -163,7 +163,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Modulo]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[Modulo]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -177,7 +177,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Patente]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[Patente]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -192,7 +192,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Roles]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[Roles]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,7 +206,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RolFamilia]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[RolFamilia]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -221,7 +221,7 @@ CREATE TABLE [dbo].[RolFamilia](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RolPatente]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[RolPatente]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -236,7 +236,7 @@ CREATE TABLE [dbo].[RolPatente](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TipoEvento]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[TipoEvento]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -250,7 +250,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Usuario]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Table [dbo].[Usuario]    Script Date: 7/7/2026 7:40:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -783,6 +783,36 @@ INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdM
 GO
 INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2649, N'jeremias544', N'Alta', CAST(N'2026-07-06T18:40:01.983' AS DateTime), 5, 17, N'Modulo, TipoEvento')
 INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2650, N'jeremias544', N'Alta', CAST(N'2026-07-06T18:40:07.767' AS DateTime), 5, 18, N'Admin aceptó los cambios externos como válidos.')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2651, N'jeremias544', N'Baja', CAST(N'2026-07-06T18:54:59.307' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2652, N'jeremias544', N'Media', CAST(N'2026-07-06T22:59:25.310' AS DateTime), 4, 5, N'Intento 1/3')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2653, N'jeremias544', N'Baja', CAST(N'2026-07-06T22:59:33.250' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2654, N'jeremias544', N'Alta', CAST(N'2026-07-06T23:42:09.947' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2655, N'jeremias544', N'Baja', CAST(N'2026-07-06T23:52:51.137' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2656, N'jeremias544', N'Baja', CAST(N'2026-07-06T23:52:56.990' AS DateTime), 4, 16, N'es -> en')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2657, N'jeremias544', N'Baja', CAST(N'2026-07-06T23:53:35.727' AS DateTime), 4, 16, N'en -> es')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2658, N'jeremias544', N'Alta', CAST(N'2026-07-06T23:53:37.520' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2659, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:20:09.690' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2660, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:20:09.707' AS DateTime), 5, 17, N'[Insertado] Patente#18 | [Insertado] Patente#19 | [Insertado] RolPatente#1_18 | [Insertado] RolPatente#1_19 | [Insertado] RolPatente#10_18 | [Insertado] RolPatente#10_19 | [Insertado] RolPatente#19_18 | [Insertado] RolPatente#19_19')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2661, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:20:17.710' AS DateTime), 5, 18, N'Admin aceptó los cambios externos como válidos.')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2663, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:22:38.360' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2664, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:22:38.363' AS DateTime), 5, 17, N'[Insertado] TipoEvento#25')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2665, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:22:41.383' AS DateTime), 5, 18, N'Admin aceptó los cambios externos como válidos.')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2666, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:27:01.163' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2667, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:27:01.170' AS DateTime), 5, 17, N'[Eliminado] Patente#19 | [Eliminado] RolPatente#1_19 | [Eliminado] RolPatente#10_19 | [Eliminado] RolPatente#19_19')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2668, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:27:04.087' AS DateTime), 5, 18, N'Admin aceptó los cambios externos como válidos.')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2669, N'jeremias544', N'Media', CAST(N'2026-07-07T19:28:23.367' AS DateTime), 5, 12, N'IdRol: 23, Nombre: ''jere'', Patentes: 3, Familias: 0')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2670, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:28:30.800' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2671, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:28:42.627' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2672, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:28:53.740' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2673, N'olivia333', N'Baja', CAST(N'2026-07-07T19:29:05.317' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2674, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:29:31.717' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2675, N'jeremias544', N'Media', CAST(N'2026-07-07T19:29:51.507' AS DateTime), 5, 12, N'IdRol: 23, Nombre: ''jere'', Patentes: 3, Familias: 0')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2676, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:29:55.797' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2677, N'olivia333', N'Baja', CAST(N'2026-07-07T19:30:03.917' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2678, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:30:14.967' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2679, N'jeremias544', N'Alta', CAST(N'2026-07-07T19:35:31.057' AS DateTime), 4, 15, N'LogOut')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2680, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:35:39.820' AS DateTime), 4, 7, N'Login correcto')
+INSERT [dbo].[EVENTOS] ([Id_Evento], [UserName], [Criticidad], [FechaHora], [IdModulo], [IdTipoEvento], [Detalle]) VALUES (2681, N'jeremias544', N'Baja', CAST(N'2026-07-07T19:36:22.757' AS DateTime), 4, 16, N'es -> en')
 SET IDENTITY_INSERT [dbo].[EVENTOS] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Familia] ON 
@@ -825,6 +855,7 @@ INSERT [dbo].[Patente] ([Id], [Nombre], [DataKey]) VALUES (14, N'Permisos - Role
 INSERT [dbo].[Patente] ([Id], [Nombre], [DataKey]) VALUES (15, N'Integridad - Recalcular', N'Integridad.Recalcular')
 INSERT [dbo].[Patente] ([Id], [Nombre], [DataKey]) VALUES (16, N'Integridad - Restore', N'Integridad.Restore')
 INSERT [dbo].[Patente] ([Id], [Nombre], [DataKey]) VALUES (17, N'Cambiar Idioma', N'Sesion.CambiarIdioma')
+INSERT [dbo].[Patente] ([Id], [Nombre], [DataKey]) VALUES (18, N'Backup - Crear', N'Backup.Crear')
 SET IDENTITY_INSERT [dbo].[Patente] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Roles] ON 
@@ -859,6 +890,7 @@ INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (1, 14)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (1, 15)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (1, 16)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (1, 17)
+INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (1, 18)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (8, 9)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (8, 10)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (8, 11)
@@ -876,6 +908,7 @@ INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (10, 13)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (10, 15)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (10, 16)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (10, 17)
+INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (10, 18)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (11, 2)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (11, 9)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (11, 10)
@@ -898,17 +931,20 @@ INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (19, 14)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (19, 15)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (19, 16)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (19, 17)
+INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (19, 18)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (21, 9)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (21, 10)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (21, 11)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (21, 17)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (22, 17)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (23, 10)
+INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (23, 16)
 INSERT [dbo].[RolPatente] ([IdRol], [IdPatente]) VALUES (23, 17)
 GO
 SET IDENTITY_INSERT [dbo].[TipoEvento] ON 
 
 INSERT [dbo].[TipoEvento] ([Id], [Nombre]) VALUES (24, N'Backup automatico generado')
+INSERT [dbo].[TipoEvento] ([Id], [Nombre]) VALUES (25, N'Backup manual generado')
 INSERT [dbo].[TipoEvento] ([Id], [Nombre]) VALUES (14, N'Contraseña cambiada exitosamente')
 INSERT [dbo].[TipoEvento] ([Id], [Nombre]) VALUES (5, N'Contraseña incorrecta')
 INSERT [dbo].[TipoEvento] ([Id], [Nombre]) VALUES (11, N'Email modificado')
@@ -946,10 +982,10 @@ INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'23642736', N'rodriguez', N'rosalia', N'rosalia736', N'861fece367bdd79a8d8436c0c0c03d3bdaadbf0f8b04cf9ed27d4c9800b2ab35', N'ZhRyJpB6yTEvM68su5AGc5/jKCNtUEjy5J314GwKF5E=', 0, 1, 15, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'23642737', N'rodriguez', N'roxana', N'roxana737', N'2f30da4b70ef4dd1ff0c3004ea2fe2ae696a905d5a09dc42beb875e422011753', N'roxana@gmail.com', 0, 1, 1, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'33333333', N'Gomez', N'Olivia', N'olivia333', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'IKXN9blAl5Zqe5QCofA32VpH9wQ2VwHG3dDW4SSXptI=', 0, 1, 23, 0, NULL, 0, N'es')
-INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'44444444', N'Pignataro', N'thiago', N'thiago444', N'92966223827b5069660cd0e3ec0cd906f0a32223af26c22ad14e66eec5c80c75', N'f2Z3GIQxJ6cKjnzeW+ujjHz1v1J0eWkWiYhuuRUJmkg=', 0, 1, 10, 0, NULL, 0, N'es')
+INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'44444444', N'Pignataro', N'1', N'thiago444', N'92966223827b5069660cd0e3ec0cd906f0a32223af26c22ad14e66eec5c80c75', N'f2Z3GIQxJ6cKjnzeW+ujjHz1v1J0eWkWiYhuuRUJmkg=', 0, 1, 10, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'46947540', N'Rico', N'Julian', N'julian540', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'xBWBO+r7Cx2nlsV1L2YE53gr5Ji/JGWLFb94CpjHWRg=', 0, 1, 1, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'46947542', N'Gomez', N'Dylan', N'dylan542', N'e34b9d2c74e67d52c92d05e86fe33f399e7838d93aba62862b1a889c5f76fe50', N'GIHVR3AySRiFkfZ/uHSVa5sjQsMIIP1clqNp1rsZX3w=', 0, 1, 1, 0, NULL, 0, N'es')
-INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'46947544', N'Gomez', N'Jeremias', N'jeremias544', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'facundojeremias@gmail.com', 0, 1, 1, 0, NULL, 0, N'es')
+INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'46947544', N'Gomez', N'Jeremias', N'jeremias544', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'facundojeremias@gmail.com', 0, 1, 1, 0, NULL, 0, N'en')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'47333212', N'Vergara', N'Lautaro111', N'lautaro212', N'914dd5e733e4e6922adb7f4ddd2fcc6612e357cc23454b0b3106145e139436af', N'lautaro@email.com', 0, 1, 1, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'55555555', N'vergara', N'lautaro', N'lautaro555', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'B1Kfkv6j+9/yWXidUj5So4zGuizGyQfjLKSwOhJqBhU=', 0, 1, 10, 0, NULL, 0, N'es')
 INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [Email], [Bloqueo], [Activo], [IdRol], [IntentosFallidos], [UltimoIntentoFallido], [DebeCambiarContrasena], [Idioma]) VALUES (N'66666666', N'rodriguez', N'matias', N'matias666', N'bded47e467ed1d20b249e6b8080bd37492872fe0b5c729fae6fd52f8ef769ee7', N'YU/gA00NnsH5fuiuqVIU99/ACvpZrJhHvdA8fA3YYVg=', 0, 1, 8, 0, NULL, 0, N'es')
@@ -958,7 +994,7 @@ INSERT [dbo].[Usuario] ([DNI], [Apellido], [Nombre], [UserName], [Contrasena], [
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Familia__75E3EFCF8D641F54]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__Familia__75E3EFCFCCD3709D]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Familia] ADD UNIQUE NONCLUSTERED 
 (
 	[Nombre] ASC
@@ -966,7 +1002,7 @@ ALTER TABLE [dbo].[Familia] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Modulo__75E3EFCFFB4F17B8]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__Modulo__75E3EFCFE089E561]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Modulo] ADD UNIQUE NONCLUSTERED 
 (
 	[Nombre] ASC
@@ -974,7 +1010,7 @@ ALTER TABLE [dbo].[Modulo] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Patente__6A1C4B2F6828E7B3]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__Patente__6A1C4B2F111F5458]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Patente] ADD UNIQUE NONCLUSTERED 
 (
 	[DataKey] ASC
@@ -982,7 +1018,7 @@ ALTER TABLE [dbo].[Patente] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Patente__75E3EFCFC1740BC8]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__Patente__75E3EFCF8F29985D]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Patente] ADD UNIQUE NONCLUSTERED 
 (
 	[Nombre] ASC
@@ -990,7 +1026,7 @@ ALTER TABLE [dbo].[Patente] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Roles__75E3EFCF1F205323]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__Roles__75E3EFCF226891CC]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Roles] ADD UNIQUE NONCLUSTERED 
 (
 	[Nombre] ASC
@@ -998,7 +1034,7 @@ ALTER TABLE [dbo].[Roles] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__TipoEven__75E3EFCFB3894F75]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ__TipoEven__75E3EFCFFE0147AB]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[TipoEvento] ADD UNIQUE NONCLUSTERED 
 (
 	[Nombre] ASC
@@ -1006,7 +1042,7 @@ ALTER TABLE [dbo].[TipoEvento] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ_UserName]    Script Date: 7/6/2026 6:45:25 PM ******/
+/****** Object:  Index [UQ_UserName]    Script Date: 7/7/2026 7:40:53 PM ******/
 ALTER TABLE [dbo].[Usuario] ADD  CONSTRAINT [UQ_UserName] UNIQUE NONCLUSTERED 
 (
 	[UserName] ASC

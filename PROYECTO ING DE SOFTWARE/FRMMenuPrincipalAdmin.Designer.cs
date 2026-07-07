@@ -33,6 +33,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.usuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionDePermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cambiarClaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +68,8 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.adminToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.usuariosToolStripMenuItem,
             this.bitacoraToolStripMenuItem,
-            this.gestionDePermisosToolStripMenuItem});
+            this.gestionDePermisosToolStripMenuItem,
+            this.backupToolStripMenuItem});
             this.adminToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
             this.adminToolStripMenuItem.Size = new System.Drawing.Size(62, 23);
@@ -97,6 +99,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.gestionDePermisosToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
             this.gestionDePermisosToolStripMenuItem.Text = "Gestion de permisos";
             this.gestionDePermisosToolStripMenuItem.Click += new System.EventHandler(this.gestionDePermisosToolStripMenuItem_Click);
+            //
+            // backupToolStripMenuItem
+            //
+            this.backupToolStripMenuItem.BackColor = System.Drawing.Color.White;
+            this.backupToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(71)))), ((int)(((byte)(161)))));
+            this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            this.backupToolStripMenuItem.Size = new System.Drawing.Size(205, 24);
+            this.backupToolStripMenuItem.Text = "Backup";
+            this.backupToolStripMenuItem.Click += new System.EventHandler(this.backupToolStripMenuItem_Click);
             // 
             // usuarioToolStripMenuItem
             // 
@@ -203,5 +214,6 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private System.Windows.Forms.ToolStripStatusLabel lblUsuarioActual;
         private System.Windows.Forms.Panel pnlContenido;
         private System.Windows.Forms.ToolStripMenuItem gestionDePermisosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem backupToolStripMenuItem;
     }
 }

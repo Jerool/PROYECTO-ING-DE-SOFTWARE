@@ -50,6 +50,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
             if (usuariosToolStripMenuItem != null) usuariosToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuarios");
             if (bitacoraToolStripMenuItem != null) bitacoraToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.bitacora");
             if (gestionDePermisosToolStripMenuItem != null) gestionDePermisosToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.gestionPermisos");
+            if (backupToolStripMenuItem != null) backupToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.backup");
             if (usuarioToolStripMenuItem != null) usuarioToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.usuario");
             if (reLoginToolStripMenuItem != null) reLoginToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.relogin");
             if (cambiarClaveToolStripMenuItem != null) cambiarClaveToolStripMenuItem.Text = IdiomaManager_GV42.T("menu.cambiarClave");
@@ -90,6 +91,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             if (gestionDePermisosToolStripMenuItem != null)
                 gestionDePermisosToolStripMenuItem.Visible = dataKeys.Any(k => k.StartsWith("Permisos."));
+
+            if (backupToolStripMenuItem != null)
+                backupToolStripMenuItem.Visible =
+                    dataKeys.Contains("Backup.Crear") ||
+                    dataKeys.Contains("Integridad.Restore");
 
             bool puedeCambiarClave = dataKeys.Contains("Sesion.CambiarClave");
             bool puedeReLogin      = dataKeys.Contains("Sesion.ReLogin");
@@ -185,6 +191,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void gestionDePermisosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirFormularioHijo(new FRMGestionPermisos());
+        }
+
+        private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FRMBackupManual());
         }
 
     }

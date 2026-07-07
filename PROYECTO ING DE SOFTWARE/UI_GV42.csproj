@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FRMBackupManual.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FRMBitacoraDeEventos.cs">
       <SubType>Form</SubType>
     </Compile>

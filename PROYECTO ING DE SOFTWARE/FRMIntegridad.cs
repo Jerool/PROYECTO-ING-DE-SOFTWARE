@@ -168,17 +168,27 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
-            string ultimo = _bll.ObtenerUltimoBackup();
-            if (string.IsNullOrEmpty(ultimo))
+            string rutaSeleccionada;
+
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                MessageBox.Show(IdiomaManager_GV42.T("integridad.sinBackups"),
-                                IdiomaManager_GV42.T("general.advertencia"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                ofd.Title  = IdiomaManager_GV42.T("backup.ofdTitulo");
+                ofd.Filter = IdiomaManager_GV42.T("backup.ofdFiltro");
+                ofd.CheckFileExists = true;
+
+                string ultimo = _bll.ObtenerUltimoBackup();
+                if (!string.IsNullOrEmpty(ultimo))
+                {
+                    ofd.InitialDirectory = System.IO.Path.GetDirectoryName(ultimo);
+                    ofd.FileName = System.IO.Path.GetFileName(ultimo);
+                }
+
+                if (ofd.ShowDialog(this) != DialogResult.OK) return;
+                rutaSeleccionada = ofd.FileName;
             }
 
             string mensaje = IdiomaManager_GV42.T("integridad.confirmBackup") +
-                             "\n\n" + IdiomaManager_GV42.T("integridad.archivoARestaurar") + "\n" + ultimo;
+                             "\n\n" + IdiomaManager_GV42.T("integridad.archivoARestaurar") + "\n" + rutaSeleccionada;
 
             DialogResult r = MessageBox.Show(mensaje,
                                              IdiomaManager_GV42.T("integridad.titulo"),
@@ -187,7 +197,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             try
             {
-                _bll.RestaurarUltimoBackup();
+                _bll.RestaurarBackupDesdeRuta(rutaSeleccionada);
                 SeRestauroBackup = true;
                 MessageBox.Show(IdiomaManager_GV42.T("integridad.backupOk"),
                                 IdiomaManager_GV42.T("general.exito"),

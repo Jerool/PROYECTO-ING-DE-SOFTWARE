@@ -176,6 +176,23 @@ namespace BLL
             RestaurarBackupDesdeRuta(ruta);
         }
 
+        public void HacerBackupEnRuta(string rutaArchivoBak)
+        {
+            if (string.IsNullOrWhiteSpace(rutaArchivoBak))
+                throw new Exception(IdiomaManager_GV42.T("err.backupRutaObligatoria"));
+
+            string carpeta = Path.GetDirectoryName(rutaArchivoBak);
+            if (!string.IsNullOrEmpty(carpeta) && !Directory.Exists(carpeta))
+                Directory.CreateDirectory(carpeta);
+
+            _dal.HacerBackupSQL(CONN_MASTER, NOMBRE_BD, rutaArchivoBak);
+
+            BLLBitacora_GV42.Instancia.RegistrarEvento(
+                SessionManager_GV42.Instancia.ObtenerUsuarioActual()?.Login ?? "SISTEMA",
+                "Admin", "Backup manual generado",
+                $"Ruta: {rutaArchivoBak}", "Media");
+        }
+
         public void RestaurarBackupDesdeRuta(string rutaArchivoBak)
         {
             if (string.IsNullOrWhiteSpace(rutaArchivoBak))
