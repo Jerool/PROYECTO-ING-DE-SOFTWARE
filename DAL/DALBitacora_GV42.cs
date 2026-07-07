@@ -139,7 +139,7 @@ namespace DAL
         private int ResolverIdModulo(Modulo_GV42 m)
         {
             if (m == null)
-                throw new Exception("La bitácora no tiene módulo asignado.");
+                throw new Exception(IdiomaManager_GV42.T("err.bitacoraSinModulo"));
 
             if (m.Id > 0) return m.Id;
 
@@ -153,7 +153,7 @@ namespace DAL
         private int ResolverIdTipoEvento(TipoEvento_GV42 t)
         {
             if (t == null)
-                throw new Exception("La bitácora no tiene tipo de evento asignado.");
+                throw new Exception(IdiomaManager_GV42.T("err.bitacoraSinTipoEvento"));
 
             if (t.Id > 0) return t.Id;
 

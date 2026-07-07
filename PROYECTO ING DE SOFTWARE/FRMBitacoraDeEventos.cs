@@ -193,15 +193,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
             foreach (string c in aOcultar)
             if (dgvBitacora.Columns.Contains(c)) dgvBitacora.Columns[c].Visible = false;
 
-            if (dgvBitacora.Columns.Contains("Login")) dgvBitacora.Columns["Login"].HeaderText = "Usuario";
-            if (dgvBitacora.Columns.Contains("ModuloNombre")) dgvBitacora.Columns["ModuloNombre"].HeaderText = "Módulo";
-            if (dgvBitacora.Columns.Contains("TipoEventoNombre")) dgvBitacora.Columns["TipoEventoNombre"].HeaderText = "Tipo evento";
-            if (dgvBitacora.Columns.Contains("Detalle")) dgvBitacora.Columns["Detalle"].HeaderText = "Detalle";
+            if (dgvBitacora.Columns.Contains("Login")) dgvBitacora.Columns["Login"].HeaderText = IdiomaManager_GV42.T("bitacora.usuario");
+            if (dgvBitacora.Columns.Contains("ModuloNombre")) dgvBitacora.Columns["ModuloNombre"].HeaderText = IdiomaManager_GV42.T("bitacora.modulo");
+            if (dgvBitacora.Columns.Contains("TipoEventoNombre")) dgvBitacora.Columns["TipoEventoNombre"].HeaderText = IdiomaManager_GV42.T("bitacora.tipoEvento");
+            if (dgvBitacora.Columns.Contains("Detalle")) dgvBitacora.Columns["Detalle"].HeaderText = IdiomaManager_GV42.T("bitacora.detalle");
             if (dgvBitacora.Columns.Contains("Evento")) dgvBitacora.Columns["Evento"].Visible = false;
-            if (dgvBitacora.Columns.Contains("Criticidad")) dgvBitacora.Columns["Criticidad"].HeaderText = "Criticidad";
+            if (dgvBitacora.Columns.Contains("Criticidad")) dgvBitacora.Columns["Criticidad"].HeaderText = IdiomaManager_GV42.T("bitacora.criticidad");
             if (dgvBitacora.Columns.Contains("FechaHora"))
             {
-                dgvBitacora.Columns["FechaHora"].HeaderText = "Fecha y hora";
+                dgvBitacora.Columns["FechaHora"].HeaderText = IdiomaManager_GV42.T("bitacora.fechaHora");
                 dgvBitacora.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
             }
         }
@@ -254,15 +254,22 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                sfd.Filter = "Archivo PDF (*.pdf)|*.pdf";
-                sfd.Title = "Guardar bitácora como PDF";
+                sfd.Filter = IdiomaManager_GV42.T("bitacora.sfdFiltro");
+                sfd.Title = IdiomaManager_GV42.T("bitacora.sfdTitulo");
                 sfd.FileName = $"Bitacora_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
 
                 if (sfd.ShowDialog() != DialogResult.OK) return;
 
                 try
                 {
-                    string[] headers = { "Usuario", "Módulo", "Tipo evento", "Detalle", "Criticidad", "Fecha y hora" };
+                    string[] headers = {
+                        IdiomaManager_GV42.T("bitacora.usuario"),
+                        IdiomaManager_GV42.T("bitacora.modulo"),
+                        IdiomaManager_GV42.T("bitacora.tipoEvento"),
+                        IdiomaManager_GV42.T("bitacora.detalle"),
+                        IdiomaManager_GV42.T("bitacora.criticidad"),
+                        IdiomaManager_GV42.T("bitacora.fechaHora")
+                    };
 
                     float[] proporciones = { 0.12f, 0.12f, 0.22f, 0.22f, 0.10f, 0.22f };
 

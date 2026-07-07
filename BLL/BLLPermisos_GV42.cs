@@ -24,6 +24,7 @@ namespace BLL
 
         private void RecalcularFamilias()
         {
+            if (BLLIntegridad_GV42.IntegridadConocidamenteRota) return;
             try
             {
                 _bllIntegridad.RecalcularTabla("Familia");
@@ -34,6 +35,7 @@ namespace BLL
 
         private void RecalcularRoles()
         {
+            if (BLLIntegridad_GV42.IntegridadConocidamenteRota) return;
             try
             {
                 _bllIntegridad.RecalcularTabla("Roles");

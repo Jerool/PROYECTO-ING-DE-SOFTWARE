@@ -36,6 +36,12 @@ namespace BLL
             _dal = new DALIntegridad_GV42();
         }
 
+        public static bool IntegridadConocidamenteRota
+        {
+            get { return DALIntegridad_GV42.IntegridadConocidamenteRota; }
+            set { DALIntegridad_GV42.IntegridadConocidamenteRota = value; }
+        }
+
         public ResultadoIntegridad Verificar()
         {
             var resultado = new ResultadoIntegridad();
@@ -45,6 +51,7 @@ namespace BLL
                 Recalcular();
                 resultado.EsBootstrap = true;
                 resultado.EsIntegra = true;
+                IntegridadConocidamenteRota = false;
                 return resultado;
             }
 
@@ -55,16 +62,35 @@ namespace BLL
 
                 bool comprometida = false;
 
-                if (dvhsAhora.Count != dvhsBd.Count) comprometida = true;
-                else
+                foreach (var kv in dvhsAhora)
                 {
-                    foreach (var kv in dvhsAhora)
+                    if (!dvhsBd.TryGetValue(kv.Key, out string bd))
                     {
-                        if (!dvhsBd.TryGetValue(kv.Key, out string bd) || bd != kv.Value)
+                        resultado.Detalles.Add(new DetalleTampering
                         {
-                            comprometida = true;
-                            break;
-                        }
+                            Tabla = tabla, IdRegistro = kv.Key, Tipo = TipoTampering.Insertado
+                        });
+                        comprometida = true;
+                    }
+                    else if (bd != kv.Value)
+                    {
+                        resultado.Detalles.Add(new DetalleTampering
+                        {
+                            Tabla = tabla, IdRegistro = kv.Key, Tipo = TipoTampering.Modificado
+                        });
+                        comprometida = true;
+                    }
+                }
+
+                foreach (var kv in dvhsBd)
+                {
+                    if (!dvhsAhora.ContainsKey(kv.Key))
+                    {
+                        resultado.Detalles.Add(new DetalleTampering
+                        {
+                            Tabla = tabla, IdRegistro = kv.Key, Tipo = TipoTampering.Eliminado
+                        });
+                        comprometida = true;
                     }
                 }
 
@@ -75,10 +101,12 @@ namespace BLL
                     if (dvvAhora != dvvBd) comprometida = true;
                 }
 
-                if (comprometida) resultado.TablasComprometidas.Add(tabla);
+                if (comprometida && !resultado.TablasComprometidas.Contains(tabla))
+                    resultado.TablasComprometidas.Add(tabla);
             }
 
             resultado.EsIntegra = resultado.TablasComprometidas.Count == 0;
+            IntegridadConocidamenteRota = !resultado.EsIntegra;
             return resultado;
         }
 
@@ -86,6 +114,7 @@ namespace BLL
         {
             foreach (var tabla in DALIntegridad_GV42.TABLAS_PROTEGIDAS)
                 RecalcularTabla(tabla);
+            IntegridadConocidamenteRota = false;
         }
 
         public void RecalcularTabla(string nombreTabla)
@@ -219,5 +248,20 @@ namespace BLL
         public bool EsIntegra { get; set; }
         public bool EsBootstrap { get; set; }
         public List<string> TablasComprometidas { get; set; } = new List<string>();
+        public List<DetalleTampering> Detalles { get; set; } = new List<DetalleTampering>();
+    }
+
+    public enum TipoTampering
+    {
+        Insertado,
+        Modificado,
+        Eliminado
+    }
+
+    public class DetalleTampering
+    {
+        public string Tabla { get; set; }
+        public string IdRegistro { get; set; }
+        public TipoTampering Tipo { get; set; }
     }
 }

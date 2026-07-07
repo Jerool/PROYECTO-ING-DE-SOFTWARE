@@ -18,6 +18,8 @@ namespace DAL
             "Modulo", "TipoEvento"
         };
 
+        public static bool IntegridadConocidamenteRota { get; set; }
+
         public DALIntegridad_GV42()
         {
             _acceso = Acceso.Instancia;

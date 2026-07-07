@@ -152,9 +152,20 @@ namespace PROYECTO_ING_DE_SOFTWARE
                     return true;
                 }
 
+                string detalleBitacora;
+                if (res.Detalles != null && res.Detalles.Count > 0)
+                {
+                    detalleBitacora = string.Join(" | ",
+                        res.Detalles.Select(d => $"[{d.Tipo}] {d.Tabla}#{d.IdRegistro}"));
+                }
+                else
+                {
+                    detalleBitacora = string.Join(", ", res.TablasComprometidas);
+                }
+
                 BLLBitacora_GV42.Instancia.RegistrarEvento(
                     actual.Login, "Admin", "Integridad comprometida",
-                    string.Join(", ", res.TablasComprometidas), "Alta");
+                    detalleBitacora, "Alta");
 
                 var bllPermisos = new BLLPermisos_GV42();
                 Rol_GV42 rolCompleto = bllPermisos.ObtenerArbolRol(actual.Rol.Id);

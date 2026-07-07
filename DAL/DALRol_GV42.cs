@@ -86,7 +86,7 @@ namespace DAL
             object res = _acceso.leerEscalar(qIns, new[] { new SqlParameter("@Nombre", nombre) });
 
             if (res == null || res == DBNull.Value)
-                throw new Exception("No se pudo obtener el Id del rol recién creado.");
+                throw new Exception(IdiomaManager_GV42.T("err.rolSinIdCreado"));
 
             int idRol = Convert.ToInt32(res);
 

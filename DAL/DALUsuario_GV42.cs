@@ -32,6 +32,7 @@ namespace DAL
 
         private void RecalcularIntegridadUsuario()
         {
+            if (DALIntegridad_GV42.IntegridadConocidamenteRota) return;
             try { _dalIntegridad.RecalcularTabla("Usuario"); } catch { }
         }
 
@@ -189,7 +190,7 @@ namespace DAL
         {
 
             if (usuario.Rol == null)
-                throw new Exception("El usuario no tiene rol asignado.");
+                throw new Exception(IdiomaManager_GV42.T("err.usuarioSinRol"));
             string query = "INSERT INTO Usuario " +
                   "(DNI, Apellido, Nombre, UserName, Contrasena, IdRol, Email, Bloqueo, Activo, IntentosFallidos, UltimoIntentoFallido, DebeCambiarContrasena) " +
                   "VALUES (@DNI, @Ape, @Nom, @Login, @Clave, @IdRol, @Email, 0, 1, 0, NULL, 1)";

@@ -1,4 +1,5 @@
 using BLL;
+using Servicios;
 using Servicios.Instalacion;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void InicializarComponentes()
         {
-            this.Text = "Configuración inicial - Base de datos";
+            this.Text = IdiomaManager_GV42.T("instalacion.titulo");
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Size = new Size(560, 320);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -44,7 +45,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             lblTitulo = new Label
             {
-                Text = "Configurar conexión a la base de datos",
+                Text = IdiomaManager_GV42.T("instalacion.encabezado"),
                 ForeColor = azulOscuro,
                 Font = fuenteTit,
                 AutoSize = true,
@@ -53,7 +54,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             lblSubtitulo = new Label
             {
-                Text = "Elegí la instancia de SQL Server donde querés instalar / conectarte a la base.",
+                Text = IdiomaManager_GV42.T("instalacion.subtitulo"),
                 ForeColor = Color.Black,
                 Font = fuenteSub,
                 AutoSize = true,
@@ -62,7 +63,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             lblInstancia = new Label
             {
-                Text = "Instancia:",
+                Text = IdiomaManager_GV42.T("instalacion.instancia"),
                 ForeColor = azulOscuro,
                 Font = fuenteBase,
                 AutoSize = true,
@@ -79,7 +80,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             btnDetectar = new Button
             {
-                Text = "Detectar",
+                Text = IdiomaManager_GV42.T("instalacion.btnDetectar"),
                 Location = new Point(430, 121),
                 Size = new Size(95, 30),
                 BackColor = Color.White,
@@ -102,7 +103,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             btnContinuar = new Button
             {
-                Text = "Continuar",
+                Text = IdiomaManager_GV42.T("instalacion.btnContinuar"),
                 Location = new Point(320, 235),
                 Size = new Size(115, 35),
                 BackColor = azulOscuro,
@@ -115,7 +116,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             btnCancelar = new Button
             {
-                Text = "Cancelar",
+                Text = IdiomaManager_GV42.T("instalacion.btnCancelar"),
                 Location = new Point(445, 235),
                 Size = new Size(80, 35),
                 BackColor = Color.White,
@@ -136,7 +137,7 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
         private void RecargarLista()
         {
-            lblEstado.Text = "Detectando instancias...";
+            lblEstado.Text = IdiomaManager_GV42.T("instalacion.detectando");
             Application.DoEvents();
 
             List<string> instancias = DetectorInstancias_GV42.DetectarInstancias();
@@ -145,14 +146,15 @@ namespace PROYECTO_ING_DE_SOFTWARE
             foreach (var i in instancias) cboInstancias.Items.Add(i);
             if (cboInstancias.Items.Count > 0) cboInstancias.SelectedIndex = 0;
 
-            lblEstado.Text = $"Se detectaron {instancias.Count} instancia(s).";
+            lblEstado.Text = string.Format(IdiomaManager_GV42.T("instalacion.detectadas"), instancias.Count);
         }
 
         private void BtnContinuar_Click(object sender, EventArgs e)
         {
             if (cboInstancias.SelectedItem == null)
             {
-                MessageBox.Show("Elegí una instancia de la lista.", "Atención",
+                MessageBox.Show(IdiomaManager_GV42.T("instalacion.elegirInstancia"),
+                    IdiomaManager_GV42.T("general.advertencia"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -166,21 +168,21 @@ namespace PROYECTO_ING_DE_SOFTWARE
 
             try
             {
-                lblEstado.Text = "Verificando la base de datos...";
+                lblEstado.Text = IdiomaManager_GV42.T("instalacion.verificando");
                 Application.DoEvents();
 
                 bool existe = BLLInstalador_GV42.ExisteBaseDatos(instancia);
 
                 if (!existe)
                 {
-                    lblEstado.Text = "Instalando la base de datos (esto puede tardar unos segundos)...";
+                    lblEstado.Text = IdiomaManager_GV42.T("instalacion.instalando");
                     Application.DoEvents();
 
                     BLLInstalador_GV42.InstalarBaseDatos(instancia);
 
                     MessageBox.Show(
-                        "La base de datos se instaló correctamente en la instancia elegida.",
-                        "Instalación completa",
+                        IdiomaManager_GV42.T("instalacion.exitoMensaje"),
+                        IdiomaManager_GV42.T("instalacion.exitoTitulo"),
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -192,9 +194,10 @@ namespace PROYECTO_ING_DE_SOFTWARE
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "No se pudo conectar / instalar en la instancia elegida.\n\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                lblEstado.Text = "Error. Elegí otra instancia o revisá el mensaje.";
+                    IdiomaManager_GV42.T("instalacion.errorMensaje") + "\n\n" + ex.Message,
+                    IdiomaManager_GV42.T("general.error"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblEstado.Text = IdiomaManager_GV42.T("instalacion.error");
             }
             finally
             {

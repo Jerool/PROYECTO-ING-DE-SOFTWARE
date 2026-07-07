@@ -98,8 +98,31 @@ namespace PROYECTO_ING_DE_SOFTWARE
         private void CargarTablas()
         {
             lstTablas.Items.Clear();
-            foreach (var t in _resultado.TablasComprometidas)
-                lstTablas.Items.Add("• " + t);
+
+            if (_resultado.Detalles != null && _resultado.Detalles.Count > 0)
+            {
+                foreach (var d in _resultado.Detalles)
+                {
+                    string accion = TraducirTipoTampering(d.Tipo);
+                    lstTablas.Items.Add($"• [{accion}] {d.Tabla} → registro {d.IdRegistro}");
+                }
+            }
+            else
+            {
+                foreach (var t in _resultado.TablasComprometidas)
+                    lstTablas.Items.Add("• " + t);
+            }
+        }
+
+        private string TraducirTipoTampering(TipoTampering tipo)
+        {
+            switch (tipo)
+            {
+                case TipoTampering.Insertado: return IdiomaManager_GV42.T("integridad.tipoInsertado");
+                case TipoTampering.Modificado: return IdiomaManager_GV42.T("integridad.tipoModificado");
+                case TipoTampering.Eliminado: return IdiomaManager_GV42.T("integridad.tipoEliminado");
+                default: return tipo.ToString();
+            }
         }
 
         public void ActualizarIdioma()
@@ -107,7 +130,12 @@ namespace PROYECTO_ING_DE_SOFTWARE
             this.Text = IdiomaManager_GV42.T("integridad.titulo");
             if (lblTitulo != null) lblTitulo.Text = IdiomaManager_GV42.T("integridad.tituloAlerta");
             if (lblMensaje != null) lblMensaje.Text = IdiomaManager_GV42.T("integridad.mensaje");
-            if (lblTablas != null) lblTablas.Text = IdiomaManager_GV42.T("integridad.tablasAfectadas");
+            if (lblTablas != null)
+            {
+                lblTablas.Text = (_resultado?.Detalles != null && _resultado.Detalles.Count > 0)
+                    ? IdiomaManager_GV42.T("integridad.detallesTitulo")
+                    : IdiomaManager_GV42.T("integridad.tablasAfectadas");
+            }
             if (btnRestore != null) btnRestore.Text = IdiomaManager_GV42.T("integridad.botonRestore");
             if (btnBackup != null) btnBackup.Text = IdiomaManager_GV42.T("integridad.botonBackup");
             if (btnCancelar != null) btnCancelar.Text = IdiomaManager_GV42.T("general.cancelar");

@@ -92,7 +92,7 @@ namespace DAL
             object res = _acceso.leerEscalar(qIns, p);
 
             if (res == null || res == DBNull.Value)
-                throw new Exception("No se pudo obtener el Id de la familia recién creada.");
+                throw new Exception(IdiomaManager_GV42.T("err.familiaSinIdCreada"));
 
             int idFamilia = Convert.ToInt32(res);
 

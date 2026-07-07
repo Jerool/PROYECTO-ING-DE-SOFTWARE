@@ -88,12 +88,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_74DAE26D0EF777ACBDBBA012B50911EB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_BC38125C3A0E4FE388E5F2BEA70EA7BF"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -119,6 +113,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AEDC825E31FEE0DA18E8CFB9D89CEE5C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_74DAE26D0EF777ACBDBBA012B50911EB"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -176,6 +176,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -487,15 +495,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GV_42_SetUp"
-        "ProductCode" = "8:{C09669B7-3004-482E-862B-5F1E9DCFA0E0}"
-        "PackageCode" = "8:{66872154-6774-417F-ADBE-4D63C35CDA88}"
+        "ProductCode" = "8:{FDF2160E-C1D3-4D10-B15C-1CAAB976515D}"
+        "PackageCode" = "8:{7C375787-C8DB-4BA3-B719-8AD5E6F663E5}"
         "UpgradeCode" = "8:{715DF092-40F6-434B-B143-6C49513A622A}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.2"
         "Manufacturer" = "8:GV_42"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
