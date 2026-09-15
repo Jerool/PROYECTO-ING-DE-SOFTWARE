@@ -17,6 +17,7 @@ namespace DAL
         protected SqlConnection conexion = null;
 
         public static string ConnectionString { get; set; }
+        public static string InstanciaActual { get; set; }
 
         private Acceso()
         {

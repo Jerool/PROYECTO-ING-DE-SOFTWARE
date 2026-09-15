@@ -22,6 +22,7 @@ namespace BLL
 
         public static void ConfigurarConexion(string instancia)
         {
+            Acceso.InstanciaActual = instancia;
             Acceso.ConnectionString = ConfiguracionBD_GV42.ArmarConnectionString(
                 instancia, InstaladorBD_GV42.NOMBRE_BD);
         }

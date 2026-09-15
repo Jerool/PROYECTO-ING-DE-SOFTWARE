@@ -3,47 +3,61 @@ using System;
 using System.Collections.Generic;
 using System.Data.Sql;
 using System.Diagnostics;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Servicios.Instalacion
 {
     public static class DetectorInstancias_GV42
     {
+        private const int TIMEOUT_SEG_ENUMERATOR = 3;
+
         public static List<string> DetectarInstancias()
         {
             var lista = new List<string>();
 
-            foreach (var inst in DetectarSqlServerLocales())
-                if (!lista.Contains(inst)) lista.Add(inst);
-
             foreach (var inst in DetectarLocalDB())
                 if (!lista.Contains(inst)) lista.Add(inst);
+
+            foreach (var inst in DetectarSqlServerLocalesConTimeout(TIMEOUT_SEG_ENUMERATOR))
+                if (!lista.Contains(inst)) lista.Add(inst);
+
+            if (lista.Count == 0)
+                lista.Add(@"(localdb)\MSSQLLocalDB");
 
             return lista;
         }
 
-        private static List<string> DetectarSqlServerLocales()
+        private static List<string> DetectarSqlServerLocalesConTimeout(int segundos)
         {
             var lista = new List<string>();
-            try
+
+            var task = Task.Run(() =>
             {
-                var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();
-                foreach (System.Data.DataRow r in instancias.Rows)
+                try
                 {
-                    string server = r["ServerName"]?.ToString();
-                    string inst   = r["InstanceName"]?.ToString();
-                    if (string.IsNullOrEmpty(server)) continue;
-                    string nombre = string.IsNullOrEmpty(inst) ? server : $"{server}\\{inst}";
-                    lista.Add(nombre);
+                    var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();
+                    foreach (System.Data.DataRow r in instancias.Rows)
+                    {
+                        string server = r["ServerName"]?.ToString();
+                        string inst = r["InstanceName"]?.ToString();
+                        if (string.IsNullOrEmpty(server)) continue;
+                        string nombre = string.IsNullOrEmpty(inst) ? server : $"{server}\\{inst}";
+                        lock (lista) { lista.Add(nombre); }
+                    }
                 }
-            }
+                catch { }
+            });
+
+            try { task.Wait(TimeSpan.FromSeconds(segundos)); }
             catch { }
-            return lista;
+
+            lock (lista) { return new List<string>(lista); }
         }
 
         private static List<string> DetectarLocalDB()
         {
             var lista = new List<string>();
+
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(
@@ -86,9 +100,6 @@ namespace Servicios.Instalacion
                 }
                 catch { }
             }
-
-            if (lista.Count == 0)
-                lista.Add(@"(localdb)\MSSQLLocalDB");
 
             return lista;
         }

@@ -6,8 +6,24 @@ namespace Servicios.Instalacion
     public static class ConfiguracionBD_GV42
     {
         private const string NOMBRE_ARCHIVO = "conexion.cfg";
+        private const string CARPETA_APP    = "GestionUsuarios";
+
+        private static string CarpetaConfig
+        {
+            get
+            {
+                string appData = Environment.GetFolderPath(
+                    Environment.SpecialFolder.LocalApplicationData);
+                return Path.Combine(appData, CARPETA_APP);
+            }
+        }
 
         private static string RutaArchivo
+        {
+            get { return Path.Combine(CarpetaConfig, NOMBRE_ARCHIVO); }
+        }
+
+        private static string RutaArchivoLegacy
         {
             get
             {
@@ -20,9 +36,23 @@ namespace Servicios.Instalacion
         {
             try
             {
-                if (!File.Exists(RutaArchivo)) return null;
-                string contenido = File.ReadAllText(RutaArchivo).Trim();
-                return string.IsNullOrEmpty(contenido) ? null : contenido;
+                if (File.Exists(RutaArchivo))
+                {
+                    string contenido = File.ReadAllText(RutaArchivo).Trim();
+                    if (!string.IsNullOrEmpty(contenido)) return contenido;
+                }
+
+                if (File.Exists(RutaArchivoLegacy))
+                {
+                    string contenido = File.ReadAllText(RutaArchivoLegacy).Trim();
+                    if (!string.IsNullOrEmpty(contenido))
+                    {
+                        GuardarInstancia(contenido);
+                        return contenido;
+                    }
+                }
+
+                return null;
             }
             catch { return null; }
         }
@@ -31,6 +61,9 @@ namespace Servicios.Instalacion
         {
             try
             {
+                if (!Directory.Exists(CarpetaConfig))
+                    Directory.CreateDirectory(CarpetaConfig);
+
                 File.WriteAllText(RutaArchivo, instancia ?? string.Empty);
             }
             catch { }

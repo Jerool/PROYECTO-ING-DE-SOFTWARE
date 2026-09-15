@@ -8,6 +8,8 @@ namespace PROYECTO_ING_DE_SOFTWARE
 {
     internal static class Program
     {
+        private const string INSTANCIA_DEBUG_DEFAULT = @"(localdb)\MSSQLLocalDB";
+
         [STAThread]
         static void Main()
         {
@@ -25,6 +27,11 @@ namespace PROYECTO_ING_DE_SOFTWARE
         {
             string instancia = ConfiguracionBD_GV42.LeerInstanciaGuardada();
 
+#if DEBUG
+            if (string.IsNullOrEmpty(instancia))
+                instancia = INSTANCIA_DEBUG_DEFAULT;
+#endif
+
             if (!string.IsNullOrEmpty(instancia))
             {
                 try
@@ -34,6 +41,16 @@ namespace PROYECTO_ING_DE_SOFTWARE
                         BLLInstalador_GV42.ConfigurarConexion(instancia);
                         return true;
                     }
+
+#if DEBUG
+                    try
+                    {
+                        BLLInstalador_GV42.InstalarBaseDatos(instancia);
+                        BLLInstalador_GV42.ConfigurarConexion(instancia);
+                        return true;
+                    }
+                    catch { }
+#endif
                 }
                 catch
                 {

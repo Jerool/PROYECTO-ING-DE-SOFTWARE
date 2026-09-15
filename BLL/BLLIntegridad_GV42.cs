@@ -18,8 +18,11 @@ namespace BLL
         {
             get
             {
-                string instancia = Servicios.Instalacion.ConfiguracionBD_GV42.LeerInstanciaGuardada();
-                if (string.IsNullOrEmpty(instancia)) instancia = @"(localdb)\MSSQLLocalDB";
+                string instancia = DAL.Acceso.InstanciaActual;
+                if (string.IsNullOrEmpty(instancia))
+                    instancia = Servicios.Instalacion.ConfiguracionBD_GV42.LeerInstanciaGuardada();
+                if (string.IsNullOrEmpty(instancia))
+                    instancia = @"(localdb)\MSSQLLocalDB";
                 return $"Data Source={instancia};Initial Catalog=master;Integrated Security=True";
             }
         }
